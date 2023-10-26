@@ -29,6 +29,7 @@ django-crispy-forms==1.14.0
 django-crispy-forms-registration==0.1.3
 django-excel-response2==3.0.6
 django-import-export==3.3.1
+django-indian-numbers @ git+https://github.com/narenchoudhary/django-indian-numbers@582ae5dd90fd27fab93db730caab7009c36182e4
 django-jazzmin==2.6.0
 django-js-asset==2.1.0
 django-registration==2.2
