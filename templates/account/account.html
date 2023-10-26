@@ -1,0 +1,612 @@
+{% extends "partials/dashboard_base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <!-- Dashboard Section start -->
+<section class="dashboard-section body-collapse account">
+    <div class="overlay pt-120">
+        <div class="container-fruid">
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-xxl-3 col-xl-4 col-md-6">
+                        <div class="owner-details">
+                            <div class="profile-area">
+                                <div class="profile-img">
+                                    <img style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" src="{{ kyc.image.url }}" alt="image">
+                                </div>
+                                <div class="name-area">
+                                    <h6>{{kyc.full_name|title}}</h6>
+                                    {% if account.account_status == "in-active" %}
+                                        <p class="active-status text-danger">{{account.account_status|title}}</p>
+                                    {% endif %}
+                                    {% if account.account_status == "active" %}
+                                        <p class="active-status">{{account.account_status|title}}</p>
+                                    {% endif %}
+                                    {% if account.account_status == "pending" %}
+                                        <p class="actidve-status text-warning">{{account.account_status|title}}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="owner-info">
+                                <ul>
+                                    <li>
+                                        <p>Account No:</p>
+                                        <span class="mdr">{{account.account_number}}</span>
+                                    </li>
+                                    <li>
+                                        <p>Pin No:</p>
+                                        <span class="mdr">{{account.pin_number}}</span>
+                                    </li>
+                                    <li>
+                                        <p>Joined:</p>
+                                        <span class="mdr"><small>{{account.date|date:"d M, Y"}}</small></span>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                            <div class="owner-action">
+                                
+                                {% if request.user.is_authenticated %}
+                                    
+                                
+                                    
+                                <a href="{% url 'userauths:sign_out' %}">
+                                    <img src="{% static 'assets1/images/icon/logout.png' %}" alt="image">
+                                    Logout
+                                </a>
+                                <a href="" class="delete" data-bs-toggle="modal" data-bs-target="#delete_account">
+                                    <img src="{% static 'assets1/images/icon/delete-2.png' %}" alt="image">
+                                    Delete Account
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-9 col-xl-8">
+                        <div class="tab-main">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="account-tab" data-bs-toggle="tab"
+                                        data-bs-target="#account" type="button" role="tab" aria-controls="account"
+                                        aria-selected="true" style="width: 300px;">Account</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="security-tab" data-bs-toggle="tab"
+                                        data-bs-target="#security" type="button" role="tab" aria-controls="security"
+                                        aria-selected="false" style="width: 300px;">Security</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="payment-tab" data-bs-toggle="tab"
+                                        data-bs-target="#payment" type="button" role="tab" aria-controls="payment"
+                                        aria-selected="false" style="width:     300px;">Payment Methods</button>
+                                </li>
+                                <!-- <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="notification-tab" data-bs-toggle="tab"
+                                        data-bs-target="#notification" type="button" role="tab"
+                                        aria-controls="notification" aria-selected="false">Notification</button>
+                                </li> -->
+                            </ul>
+                            <div class="tab-content mt-40">
+                                <div class="tab-pane fade show active" id="account" role="tabpanel"
+                                    aria-labelledby="account-tab">
+                                    <div class="upload-avatar">
+                                        <div class="avatar-left d-flex align-items-center">
+                                            <div class="profile-img">
+                                                <!-- <img src="{% static 'assets1/images/owner-profile-2.png' %}" alt="image"> -->
+                                                <img style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" src="{{ kyc.image.url }}" alt="image">
+                                            </div>
+                                            <div class="instraction">
+                                                <h6>Your Avatar</h6>
+                                                <!-- <p>Profile picture size: 400px x 400px</p> -->
+                                            </div>
+                                        </div>
+                                        <!-- <div class="avatar-right">
+                                            <div class="file-upload">
+                                                <div class="right-area">
+                                                    <label class="file">
+                                                        <input type="file">
+                                                        <span class="file-custom"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                    <form action="#" >
+                                        <div class="row justify-content-center">
+                                            <div class="col-md-6">
+                                                <div class="single-input">
+                                                    <label for="fName">Full Name</label>
+                                                    <input type="text" id="fName" readonly placeholder="Full Name" value="{{kyc.full_name|title}}">
+                                                </div>
+                                            </div>
+                                            <form action="" method="post">
+                                                <div class="col-md-6">
+                                                    <div class="single-input">
+                                                        <label for="lName">Email</label>
+                                                        <input type="text" id="lName" readonly placeholder="Email" value="{{ kyc.user.email }}">
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <div class="col-md-6">
+                                                <div class="single-input">
+                                                    <label for="lName">Gender</label>
+                                                    <input type="text" id="lName" readonly placeholder="Gender" value="{{ kyc.gender|title }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="single-input">
+                                                    <label for="lName">Marrital</label>
+                                                    <input type="text" id="lName" readonly placeholder="Marrital Status" value="{{ kyc.marrital_status|title }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="single-input">
+                                                    <label for="lName">Date of Birth</label>
+                                                    <input type="text" id="lName" readonly placeholder="Date Of Birth" value="{{ kyc.date_of_birth|date:'d M, Y' }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="single-input">
+                                                    <label for="lName">Mobile</label>
+                                                    <input type="text" id="lName" readonly placeholder="Mobile Number" value="{{ kyc.mobile }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="single-input">
+                                                    <label for="lName">Identity Type</label>
+                                                    <input type="text" id="lName" readonly placeholder="Identity Type" value="{{ kyc.identity_type|title }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="single-input">
+                                                    <label for="lName">Country</label>
+                                                    <input type="text" id="lName" readonly placeholder="Country" value="{{ kyc.country|title }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="single-input">
+                                                    <label for="lName">State</label>
+                                                    <input type="text" id="lName" readonly placeholder="State" value="{{ kyc.state|title }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="single-input">
+                                                    <label for="lName">City</label>
+                                                    <input type="text" id="lName" readonly placeholder="City" value="{{ kyc.city|title }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 ">
+                                                <div class="single-input">
+                                                    <label for="fName">{{ kyc.identity_type|title }}</label>
+                                                    
+                                                    {% if kyc.identity_image %}
+                                                    <img src="{{ kyc.identity_image.url }}" style="width: 100%; height: 200px; border-radius: 10px; object-fit: cover; padding-top: 10px;" alt="">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="single-input">
+                                                    <label for="fName">Signature</label>
+                                                    {% if kyc.signature %}
+                                                        <img src="{{ kyc.signature.url }}" style="width: 100%; height: 200px; border-radius: 10px; object-fit: cover; padding-top: 10px;" alt="">
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <!-- <div class="col-md-12">
+                                                <div class="btn-border">
+                                                    <button class="cmn-btn">Edit KYC</button>
+                                                </div>
+                                            </div> -->
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="tab-pane fade" id="security" role="tabpanel"
+                                    aria-labelledby="security-tab">
+                                    <form action="{% url 'account:is_2fa' %}" method="post">
+                                        {% csrf_token %}
+                                        <div class="single-content authentication d-flex align-items-center justify-content-between">
+                                            <div class="left">
+                                                <h5>Two Factor Authentication (OTP)</h5>
+                                                <p>Two-Factor Authentication (2FA) can be used to help protect your account</p>
+                                            </div>
+                                            {% if user.is_2fa %}
+                                                <div class="right">
+                                                    <button type="submit">Disable</button>
+                                                </div>
+                                            {% else %}
+                                                <div class="right">
+                                                    <button type="submit">Enable</button>
+                                                </div>
+                                            {% endif %}
+                                                
+                                        </div>
+                                    </form>
+                                    <div class="change-pass mb-40">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <h5>Change Password</h5>
+                                                <p>You can always change your password for security reasons or reset your password in case you forgot it.</p>
+                                                <a href="{% url 'userauths:forgot_password' %}">Forgot password?</a>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <form action="{% url 'userauths:change_password' %}" method="post">
+                                                    {% csrf_token %}
+                                                    <div class="row justify-content-center">
+                                                        <div class="col-md-12">
+                                                            <div class="single-input">
+                                                                <label for="current-password">Current password</label>
+                                                                <input type="password" id="current_password" name="current_password" placeholder="Current password">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="single-input">
+                                                                <label for="new-password">New password</label>
+                                                                <input type="password" id="new_password" name="new_password" placeholder="New password">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="single-input">
+                                                                <label for="confirm-password">Confirm New password</label>
+                                                                <input type="password" id="confirm_password" name="confirm_password" placeholder="Confirm New password">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <div class="btn-border w-100">
+                                                                <button type="submit" class="cmn-btn w-100">Update password</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class="single-content additional-security">
+                                        <h5>Additional security</h5>
+                                        <div class="single-setting">
+                                            <div class="left">
+                                                <h6>SMS recovery</h6>
+                                                <p>Number ending with 1234</p>
+                                            </div>
+                                            <div class="right">
+                                                <button class="active">Disable SMS</button>
+                                            </div>
+                                        </div>
+                                        <div class="single-setting">
+                                            <div class="left">
+                                                <h6>Autheticator App</h6>
+                                                <p>Google Authenticator</p>
+                                            </div>
+                                            <div class="right">
+                                                <button>Configure</button>
+                                            </div>
+                                        </div>
+                                        <div class="single-setting">
+                                            <div class="left">
+                                                <h6>SSL Certificate</h6>
+                                                <p>Secure Sockets Layer</p>
+                                            </div>
+                                            <div class="right">
+                                                <button>Configure</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="single-content your-devices">
+                                        <div class="head-item d-flex align-items-center justify-content-between">
+                                            <h5>Your devices</h5>
+                                            <a href="javascript:void(0)">Log out on all devices</a>
+                                        </div>
+                                        <div class="single-setting">
+                                            <div class="left">
+                                                <div class="icon-area">
+                                                    <img src="{% static 'assets1/images/icon/iphone.png' %}" alt="icon">
+                                                </div>
+                                                <div class="text-area">
+                                                    <h6>Iphone 13 Pro Max</h6>
+                                                    <p>New York City · June 20 at 14:00</p>
+                                                </div>
+                                            </div>
+                                            <div class="right">
+                                                <button>Log out</button>
+                                            </div>
+                                        </div>
+                                        <div class="single-setting">
+                                            <div class="left">
+                                                <div class="icon-area">
+                                                    <img src="{% static 'assets1/images/icon/ipad.png' %}" alt="icon">
+                                                </div>
+                                                <div class="text-area">
+                                                    <h6>iPad Pro</h6>
+                                                    <p>New York City · June 20 at 14:00</p>
+                                                </div>
+                                            </div>
+                                            <div class="right">
+                                                <button>Log out</button>
+                                            </div>
+                                        </div>
+                                        <div class="single-setting">
+                                            <div class="left">
+                                                <div class="icon-area">
+                                                    <img src="{% static 'assets1/images/icon/imac.png' %}" alt="icon">
+                                                </div>
+                                                <div class="text-area">
+                                                    <h6>iMac OSX</h6>
+                                                    <p>New York City · June 20 at 14:00</p>
+                                                </div>
+                                            </div>
+                                            <div class="right">
+                                                <button>Log out</button>
+                                            </div>
+                                        </div>
+                                    </div> -->
+                                </div>
+                                <div class="tab-pane pb-120 fade" id="payment" role="tabpanel"
+                                    aria-labelledby="payment-tab">
+                                    <div class="single-item">
+                                        <div class="section-text d-flex align-items-center justify-content-between">
+                                            <h6>Linked Payment system</h6>
+                                            <div class="right-side">
+                                                <div class="dropdown-area">
+                                                    <button type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                        <img src="{% static 'assets1/images/icon/option.png' %}" alt="icon">
+                                                    </button>
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">               
+                                            {% for c in credit_card %}
+                                                <a href="{% url 'core:credit_card_detail' c.credit_card_id %}">
+                                                    <div class="col-12">
+                                                        <div class="card__main" style="height: 230px; width: 400px;">
+                                                            <div class="{% if c.card_type == 'rupay' %}Front_card{% endif %}    {% if c.card_type == 'master' %}masterCard{% endif %}    {% if c.card_type == 'visa' %}visaCard{% endif %}">
+                                                            <div class="top_card"  style="padding: 15px;">
+                                                                <span class="visa">{{c.card_type|upper}}  <small style="font-weight: lighter; font-size:11px" class="{% if c.card_tier == 'classic' %}classic_card{% endif %}    {% if c.card_type == 'gold' %}gold_card{% endif %}    {% if c.card_type == 'platinum' %}platinum_card{% endif %}   {% if c.card_type == 'signature' %}signature_card{% endif %}  {% if c.card_type == 'infinite' %}infinite_card{% endif %}">{{c.card_tier|upper}}</small> </span>  
+                                                                <div class="logo">
+                                                                    <img src="{% static 'assets1/images/easypay_logo.png' %}" alt="logo">
+                                                                    <div class="image-container" style="display: flex;">
+                                                                        <img src="{% static 'assets1/images/icon/chip.png' %}"  alt="" style="width: 40px; height: 35px; margin-left: 75px; margin-top: 25px;">  
+                                                                        <img src="{% static 'assets1/images/icon/sigmal_icon.png' %}"  alt="" style="width: 18px; height: 28px; margin-left: 3px;  margin-top: 28px;">    
+                                                                    </div>                                                             
+                                                                </div>
+                                                            </div>
+                                                            <div class="middle_card">
+                                                            </div>
+                                                            <div class="bottom_card">
+                                                                <div class="card_info">
+                                                                    <div class="card_holder_name">₹ {{c.amount|intcomma }} </div>                                  
+                                                                    <div class="card_number">{{c.format_card_number}}</div>
+                                                                    <div class="card_holder_name">{{c.name}}</div>
+                                                                    <div>
+                                                                        {% if c.card_status == True %}
+                                                                        <span style="color: rgb(4, 203, 4); font-weight: bolder;">Active</span>
+                                                                        {% else %}
+                                                                        <span style="color: #fc0034; font-weight: bold;">In-Active</span>
+                                                                        {% endif %}
+                                                                    </div>
+                                                                </div>
+                                                                <div class="card_info">
+                                                                <div class="card_holder_info" style="margin-top: 80px;">
+                                                                    <span class="expire_month" >{{c.month}}</span>
+                                                                    <span class="slash">/</span>
+                                                                    <span class="expire_year">{{c.year_in_two_digits}}</span>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                            <div class="back_card">
+                                                            <div class="top_card">
+                                                                <span class="black_strip"></span>
+                                                                <div class="cvc_strip">
+                                                                <span class="cvc_number">{{c.cvv}}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div class="bottom_card">
+                                                                <div class="flex">
+                                                                <span class="sticker"></span>
+                                                                <div class="logo1">
+                                                                    <span></span>
+                                                                    <span></span>
+                                                                    <span></span>
+                                                                </div>
+                                                                </div>
+                                                            </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            {% endfor %}
+                                            
+                                            <div class="col-4">
+                                                <div class="single-card">
+                                                    <button type="button" class="reg w-100" data-bs-toggle="modal" data-bs-target="#addcardMod">
+                                                        <img src="{% static 'assets1/images/add-new.png' %}" alt="image" class="w-100">
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="tab-pane fade" id="notification" role="tabpanel"
+                                    aria-labelledby="notification-tab">
+
+                                    <div class="notification-single">
+                                        <h6>Announcements</h6>
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                    <div class="notification-single">
+                                        <h6>Send payment</h6>
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                    <div class="notification-single">
+                                        <h6>Receive a payment</h6>
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                    <div class="notification-single">
+                                        <h6>Request payment</h6>
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                    <div class="notification-single">
+                                        <h6>Have a problem with a payment</h6>
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                    <div class="notification-single">
+                                        <h6>Special Offers</h6>
+                                        <label class="switch">
+                                            <input type="checkbox" checked>
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Dashboard Section end -->
+
+
+
+
+<!-- Delete account start -->
+    <div class="transfer-popup">
+        <div class="container-fruid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="modal fade" id="delete_account" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <ul class="nav nav-tabs d-none" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="transfer-tab" data-bs-toggle="tab"
+                                        data-bs-target="#transfer" type="button" role="tab" aria-controls="transfer"
+                                        aria-selected="true">Delete Account</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="success-tab" data-bs-toggle="tab"
+                                        data-bs-target="#success" type="button" role="tab" aria-controls="success"
+                                        aria-selected="false">Confirm</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" style="width: 400px;">
+                                <div class="tab-pane fade show active" id="transfer" role="tabpanel" aria-labelledby="transfer-tab">
+                                    <div class="modal-content">
+                                        <div class="modal-header mb-60 justify-content-between">
+                                            <h4 style="display: inline-block;"><b>Delete Account</b></h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                <i class="fa-solid fa-xmark" style="float: right;"></i>
+                                            </button>
+                                        </div>
+                                        <small class="" style="font-size: 15px;">When you delete the account will be in the system for one year, if there is any outstanding payment you will be contacted by the customer service, And if you want to recover the account kindly contact the customer service.</small>
+                                        <br><br><br>
+                                        <div class="main-content">
+                                            <p>Enter your pin number below</p>
+                                            <form action="{% url 'account:delete_account' account.id  %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="userInput">
+                                                    <input minlength="4" maxlength="4" name="pin_number" type="text">
+                                                </div>
+                                                <button type="submit" style="background-color: red;">Confirm</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Delete account start -->
+ <!-- Add Card Popup start -->
+ <div class="add-card">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="modal fade" id="addcardMod" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header justify-content-between">
+                                <h6>Add Card</h6>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <form method="POST" action="" >
+                                {% csrf_token %}
+                                <div class="row justify-content-center">
+                                    <div class="col-md-12">
+                                        <label for="cardNumber">Card name :</label>
+                                        <div class="single-input">
+                                            <b>{{kyc.full_name|title}}</b>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="cardName">Card Number</label>
+                                        <div class="single-input">
+                                            <b>47** **** **** ****</b>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="expiryMonth">Expiry Month</label>
+                                        <div class="single-input">
+                                            {{month}}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="expiryYear">Expiry Year</label>
+                                        <div class="single-input">
+                                            {{year}}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="cvv">CVV</label>
+                                        <div class="single-input">
+                                            <b>***</b>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cardType">Card Type</label>
+                                        <div class="single-input">
+                                            {{form.card_type}}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="cardTier">Card Tier</label>
+                                        <div class="single-input">
+                                            {{form.card_tier}}
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="btn-border w-100">
+                                            <button type="submit" class="cmn-btn w-100">Add Card</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add Card Popup end -->
+    {% endblock content %}
