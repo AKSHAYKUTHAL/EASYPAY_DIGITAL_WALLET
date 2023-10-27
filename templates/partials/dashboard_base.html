@@ -7,14 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Paylio - Money Transfer and Online Payments Dashboard HTML Template</title>
+    <title>Easypay - Money Transfer and Online Payments Dashboard HTML Template</title>
     <!-- ... (your existing code) ... -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- ... (your existing code) ... -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
 
-    <link rel="shortcut icon" href="{% static 'assets1/images/fav.png' %}" type="image/x-icon">
+    <link rel="shortcut icon" href="{% static 'assets1/images/easypay_icon.png' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'assets1/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets1/css/fontawesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'assets1/css/jquery-ui.css' %}">
@@ -84,7 +84,7 @@
                                         <h5>Notifications</h5>
                                         <span class="mdr">{{ notifications.count }}</span>
                                     </div>
-                                    <a class="font-weight-light" href="{% url 'core:all_history' %}">Go to History</a>
+                                    <a class="font-weight-light" href="{% url 'core:all_history' %}" style="margin-left: 190px;"><small>Go to History <i class="fa fa-arrow-right" aria-hidden="true"></i></small></a>
                                     <div class="notifications-list" id="notifications-list">
                                     <ul>
                                         {% for n in notifications %}
@@ -198,13 +198,17 @@
                                     </div>
                                     <ul>
                                         <li class="border-area">
-                                            <a href=""><i class="fas fa-user"></i>Dashboard</a>
+                                            <a href="{% url 'account:dashboard' %}"><i class="fas fa-user"></i>Dashboard</a>
                                         </li>
+                                        
+                                        {% if user.is_superuser == True %}
+                                            <li class="border-area">
+                                                <a href="/admin"><i class="fas fa-user"></i>Admin</a>
+                                            </li>                                            
+                                        {% endif %}
+                                            
                                         <li class="border-area">
-                                            <a href="/admin"><i class="fas fa-user"></i>Admin</a>
-                                        </li>
-                                        <li class="border-area">
-                                            <a href="javascript:void(0)"><i class="fas fa-cog"></i>Settings</a>
+                                            <a href="{% url 'account:account' %}"><i class="fas fa-cog"></i>Account</a>
                                         </li>
                                         <li>
                                             <a href="{% url 'userauths:sign_out' %}"><i class="fas fa-sign-out"></i>Logout</a>
@@ -219,7 +223,7 @@
                             <i class="fa-solid fa-xmark"></i>
                         </div>
                         <div class="sidebar-logo">
-                            <a href=""><img src="{% static 'assets1/images/easypay_logo.png' %}" alt="logo"></a>
+                            <a href=""><img src="{% static 'assets1/images/easypay_blue_logo.png' %}" alt="logo"></a>
                         </div>
                         <ul>
                             <li>
@@ -253,7 +257,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="crypto.html">
+                                <a href="{% url 'core:crypto' %}">
                                     <img src="{% static 'assets1/images/icon/crypto.png' %}" alt="Crypto"> <span>Crypto</span>
                                 </a>
                             </li>

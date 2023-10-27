@@ -45,40 +45,45 @@ def fund_credit_card(request, credit_card_id):
         fund_transfer_pin_number = request.POST.get('fund_transfer_pin_number')
         account = Account.objects.get(user=request.user)
 
-        if Decimal(funding_amount) <= account.account_balance:
-            if fund_transfer_pin_number == account.pin_number:
-                account.account_balance -= Decimal(funding_amount) ## 14,790.00 - 20
-                account.save()
+        if funding_amount:
+            if Decimal(funding_amount) <= account.account_balance:
+                if fund_transfer_pin_number == account.pin_number:
+                    account.account_balance -= Decimal(funding_amount) ## 14,790.00 - 20
+                    account.save()
+                    
+                    credit_card.amount += Decimal(funding_amount)
+                    credit_card.save()
+                    
+                    Notification.objects.create(
+                        amount  = funding_amount,
+                        user = request.user,
+                        notification_type = "Funded Credit Card",
+                        card_number = credit_card.format_card_number(),
+                        card_type = credit_card.card_type,
+                        card_tier = credit_card.card_tier
+                    )
+                    History.objects.create(
+                        amount  = funding_amount,
+                        user = request.user,
+                        history_type = "Funded Credit Card",
+                        card_number = credit_card.format_card_number(),
+                        card_type = credit_card.card_type,
+                        card_tier = credit_card.card_tier
+                    )
+                    
+                    messages.success(request, "Funding Successfull")
+                    return redirect("core:credit_card_detail", credit_card.credit_card_id)
                 
-                credit_card.amount += Decimal(funding_amount)
-                credit_card.save()
-                
-                Notification.objects.create(
-                    amount  = funding_amount,
-                    user = request.user,
-                    notification_type = "Funded Credit Card",
-                    card_number = credit_card.format_card_number(),
-                    card_type = credit_card.card_type,
-                    card_tier = credit_card.card_tier
-                )
-                History.objects.create(
-                    amount  = funding_amount,
-                    user = request.user,
-                    history_type = "Funded Credit Card",
-                    card_number = credit_card.format_card_number(),
-                    card_type = credit_card.card_type,
-                    card_tier = credit_card.card_tier
-                )
-                
-                messages.success(request, "Funding Successfull")
-                return redirect("core:credit_card_detail", credit_card.credit_card_id)
-            
+                else:
+                    messages.error(request,'Incorrect Pin Number.')
+                    return redirect("core:credit_card_detail", credit_card.credit_card_id)
             else:
-                messages.error(request,'Incorrect Pin Number.')
+                messages.error(request, "Insufficient Funds")
                 return redirect("core:credit_card_detail", credit_card.credit_card_id)
         else:
-            messages.error(request, "Insufficient Funds")
-            return redirect("core:credit_card_detail", credit_card.credit_card_id)
+                messages.error(request, "Type a valid amount to send")
+                return redirect("core:credit_card_detail", credit_card.credit_card_id)
+        
         
 
 
@@ -138,6 +143,7 @@ def withdraw_fund_from_credit_card(request, credit_card_id):
 
 def delete_credit_card(request, credit_card_id):
     credit_card = CreditCard.objects.get(credit_card_id=credit_card_id, user=request.user)
+    user_account = Account.objects.get(user=request.user)
     account = request.user.account
     
     if request.method == 'POST':
@@ -185,7 +191,8 @@ def delete_credit_card(request, credit_card_id):
                     card_type = credit_card.card_type,
                     card_tier = credit_card.card_tier
                 )
-
+                user_account.credit_card_count -= 1
+                user_account.save()
                 messages.success(request, "Credit Card Deleted Successfull")
                 return redirect("account:dashboard")
         else:

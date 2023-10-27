@@ -34,10 +34,11 @@
                                                                                     <div class="top_card"  style="padding: 15px;">
                                                                                         <span class="visa">{{credit_card.card_type|upper}}  <small style="font-weight: lighter; font-size:11px" class="{% if credit_card.card_tier == 'classic' %}classic_card{% endif %}    {% if credit_card.card_type == 'gold' %}gold_card{% endif %}    {% if credit_card.card_type == 'platinum' %}platinum_card{% endif %}   {% if credit_card.card_type == 'signature' %}signature_card{% endif %}  {% if credit_card.card_type == 'infinite' %}infinite_card{% endif %}">{{credit_card.card_tier|upper}}</small> </span>  
                                                                                         <div class="logo">
-                                                                                            <img src="{% static 'assets1/images/easypay_logo.png' %}" alt="logo">
+                                                                                            <img src="{% static 'assets1/images/easypay_blue_logo.png' %}" alt="logo">
+                                                                                            <small class="expire_year" style="font-size: 12px; margin-left:75px;">Credit card</small>
                                                                                             <div class="image-container" style="display: flex;">
-                                                                                                <img src="{% static 'assets1/images/icon/chip.png' %}"  alt="" style="width: 40px; height: 35px; margin-left: 75px; margin-top: 25px;">  
-                                                                                                <img src="{% static 'assets1/images/icon/sigmal_icon.png' %}"  alt="" style="width: 18px; height: 28px; margin-left: 3px;  margin-top: 28px;">    
+                                                                                                <img src="{% static 'assets1/images/icon/chip.png' %}"  alt="" style="width: 40px; height: 35px; margin-left: 75px;">  
+                                                                                                <img src="{% static 'assets1/images/icon/sigmal_icon.png' %}"  alt="" style="width: 18px; height: 28px; margin-left: 3px;  margin-top: 3px;">    
                                                                                             </div>                                                             
                                                                                         </div>
                                                                                     </div>

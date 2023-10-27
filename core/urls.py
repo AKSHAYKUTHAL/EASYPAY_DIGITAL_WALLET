@@ -1,5 +1,5 @@
 from django.urls import path
-from core import notificaton_and_history, views,transfer,transaction,payment_request,credit_card
+from core import notificaton_and_history, views,transfer,transaction,payment_request,credit_card,crypto
 
 
 app_name = "core"
@@ -57,7 +57,14 @@ urlpatterns = [
 
     path('notification_detail/<nid>/',notificaton_and_history.notification_detail,name='notification_detail'),
     path('history_detail/<nid>/',notificaton_and_history.history_detail,name='history_detail'),
-    path('all_history',notificaton_and_history.all_history,name='all_history')
+    path('all_history',notificaton_and_history.all_history,name='all_history'),
+
+
+
+    # crypto
+    path('crypto',crypto.crypto,name='crypto'),
+
+
 
 
 ]

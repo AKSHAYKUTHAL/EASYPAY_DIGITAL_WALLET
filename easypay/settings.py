@@ -153,7 +153,7 @@ AUTH_USER_MODEL = 'userauths.User'
 JAZZMIN_SETTINGS = {
     "site_header": "Admin Dashboard",
     "site_brand":"Payments Made Easy",
-    "copyright": "Paylio - All Rights Resevered Copyright 2023 - Till Date",
+    "copyright": "Easypay - All Rights Resevered Copyright 2023 - Till Date",
     "order_with_respect_to": ["core", 'userauths', "transactions", 'addon', 'blog']
 }
  

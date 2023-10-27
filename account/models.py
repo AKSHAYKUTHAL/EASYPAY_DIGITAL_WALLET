@@ -3,6 +3,8 @@ from django.db import models
 from shortuuid.django_fields import ShortUUIDField
 from userauths.models import User
 from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 
 
 
@@ -53,6 +55,8 @@ class Account(models.Model):
     kyc_confirmed = models.BooleanField(default=False)
     recommended_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, blank=True, null=True, related_name='recommended_by')
     deleted_account = models.BooleanField(default=False )
+    credit_card_count = models.IntegerField(default=0, blank=True, null=True)
+    debit_card_count = models.IntegerField(default=0, blank=True, null=True)
 
     class Meta:
         ordering = ['-date']
@@ -91,15 +95,19 @@ class KYC(models.Model):
 
         
 
+@receiver(post_save, sender=User)
 def create_account(sender, instance, created, **kwargs):
     if created:
         Account.objects.create(user=instance)
 
-def  save_account(sender, instance, **kwargs):
+@receiver(post_save, sender=User)
+def save_account(sender, instance, **kwargs):
     instance.account.save()
 
 post_save.connect(create_account, sender=User)
 post_save.connect(save_account, sender=User)
+
+
 
 
 

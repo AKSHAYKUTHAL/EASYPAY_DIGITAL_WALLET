@@ -1,0 +1,55 @@
+{% extends "partials/dashboard_base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <!-- Dashboard Section start -->
+    <section class="dashboard-section body-collapse">
+        <div class="overlay pt-120">
+            <div class="container-fruid">
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12">
+                        <div class="section-content">
+                            <div class="transactions-area">
+                                <div class="section-text">
+                                    <h5>BTCINR</h5><hr>
+                            
+                            <!-- TradingView Widget BEGIN -->
+                                <div class="tradingview-widget-container">
+                                    <div id="tradingview_d6b2b"></div>
+                                    <div class="tradingview-widget-copyright"><a href="https://www.tradingview.com/" rel="noopener nofollow" target="_blank"><span class="blue-text">Track all markets on TradingView</span></a></div>
+                                    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                                    <script type="text/javascript">
+                                    new TradingView.widget(
+                                    {
+                                    "width": 1500,
+                                    "height": 650,
+                                    "symbol": "BITBNS:BTCINR",
+                                    "interval": "1",
+                                    "timezone": "Etc/UTC",
+                                    "theme": "light",
+                                    "style": "8",
+                                    "locale": "en",
+                                    "enable_publishing": true,
+                                    "backgroundColor": "rgba(201, 218, 248, 1)",
+                                    "gridColor": "rgba(0, 0, 0, 0.06)",
+                                    "withdateranges": true,
+                                    "allow_symbol_change": true,
+                                    "details": true,
+                                    "hotlist": true,
+                                    "calendar": true,
+                                    "container_id": "tradingview_d6b2b"
+                                }
+                                    );
+                                    </script>
+                                </div>
+                            <!-- TradingView Widget END -->
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endblock content %}
