@@ -1,5 +1,5 @@
 from django.urls import path
-from core import notificaton_and_history, views,transfer,transaction,payment_request,credit_card,crypto
+from core import notificaton_and_history, views,transfer,transaction,payment_request,credit_card,crypto,debit_card
 
 
 app_name = "core"
@@ -63,6 +63,14 @@ urlpatterns = [
 
     # crypto
     path('crypto',crypto.crypto,name='crypto'),
+
+
+    # debit card
+    path('add_debit_card',debit_card.add_debit_card,name='add_debit_card'),
+    path('debit_card_detail/<debit_card_id>/',debit_card.debit_card_detail,name='debit_card_detail'),
+    path('deactivate_debit_card/<debit_card_id>/',debit_card.deactivate_debit_card,name='deactivate_debit_card'),
+    path('delete_debit_card/<debit_card_id>/',debit_card.delete_debit_card,name='delete_debit_card'),
+
 
 
 

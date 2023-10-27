@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import Transaction,CreditCard,Notification,History
+from core.models import Transaction,CreditCard,Notification,History,DebitCard
 
 
 class TransactionAdmin(admin.ModelAdmin):
@@ -21,9 +21,16 @@ class HistoryAdmin(admin.ModelAdmin):
     list_display = ['user', 'history_type', 'amount' ,'date','sender','receiver','is_read']
 
 
+class DebitCardAdmin(admin.ModelAdmin):
+    list_editable = ['amount', 'card_type','card_tier','card_status']
+    list_display = ['user', 'amount','format_card_number','name','month','year', 'card_type','card_tier','card_status']
+
+
 admin.site.register(Transaction,TransactionAdmin)
 admin.site.register(CreditCard,CreditCardAdmin)
 admin.site.register(Notification, NotificationAdmin)
 admin.site.register(History, HistoryAdmin)  
+admin.site.register(DebitCard,DebitCardAdmin)
+
 
 

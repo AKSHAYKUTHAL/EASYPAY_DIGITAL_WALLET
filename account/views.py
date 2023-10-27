@@ -3,7 +3,7 @@ from account.models import KYC, Account
 from account.forms import KYCForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from core.forms import CreditCardForm,DebitCardForm
+from core.forms import CreditCardForm
 from core.models import CreditCard,Notification,History,Transaction,DebitCard
 import datetime
 from django.contrib.auth import authenticate,login,logout
@@ -22,6 +22,8 @@ def account(request):
         
         account = Account.objects.get(user=request.user)
         credit_card = CreditCard.objects.filter(user=request.user).order_by('-id')
+        debit_card = DebitCard.objects.filter(user=request.user).order_by('-id')
+
 
         form = CreditCardForm(request.POST)
 
@@ -76,7 +78,8 @@ def account(request):
         'credit_card':credit_card,
         'month':month,
         'year':year,
-        'form':form
+        'form':form,
+        'debit_card':debit_card,
     }
     return render(request,'account/account.html',context)
 
@@ -182,6 +185,7 @@ def dashboard(request):
         credit_card = CreditCard.objects.filter(user=request.user).order_by('-id')
         debit_card = DebitCard.objects.filter(user=request.user).order_by('-id')
 
+
         if request.method == 'POST':
             if account.credit_card_count < 2:
                 form = CreditCardForm(request.POST)
@@ -237,7 +241,8 @@ def dashboard(request):
         'sent_transaction_count':sent_transaction_count,
         'recieved_transaction_count':recieved_transaction_count,
         'request_sent_transaction_count':request_sent_transaction_count,
-        'request_recieved_transaction_count':request_recieved_transaction_count
+        'request_recieved_transaction_count':request_recieved_transaction_count,
+        'debit_card':debit_card,
 
 
     }
