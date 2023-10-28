@@ -153,15 +153,17 @@ def transfer_process(request,account_number,transaction_id):
                 sender_account.account_balance -= transaction.amount
                 sender_account.save()
 
-                sender_debit_card.amount -= transaction.amount
-                sender_debit_card.save()
+                if sender_debit_card is not None:
+                    sender_debit_card.amount -= transaction.amount
+                    sender_debit_card.save()
 
                 # add the monney to the reciever after the fee
                 reciever_account.account_balance +=  transaction.receiving_amount()
                 account.save()
 
-                receiver_debit_card.amount += transaction.receiving_amount()
-                receiver_debit_card.save()
+                if receiver_debit_card is not None:
+                    receiver_debit_card.amount += transaction.receiving_amount()
+                    receiver_debit_card.save()
 
                 Notification.objects.create(
                     amount=transaction.receiving_amount(),

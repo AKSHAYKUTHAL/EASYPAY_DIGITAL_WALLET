@@ -8,6 +8,8 @@ from core.models import CreditCard,Notification,History,Transaction,DebitCard
 import datetime
 from django.contrib.auth import authenticate,login,logout
 from userauths.models import User
+from django.db.models import Q
+
 
 
 
@@ -354,3 +356,54 @@ def is_2fa(request):
         messages.success(request,'You Enabled the 2FA')
         return redirect('account:account')
 
+
+
+
+from django.db.models import Q
+
+def search_user_transactions(request):
+    
+    query = None
+    transaction_results = []
+    if request.method == 'POST':
+        my_account = request.user
+
+        query = request.POST.get('search_user_transactions')
+        print(f"this is the query = {query}")
+
+        related_users = User.objects.filter(
+            Q(username__icontains=query) | Q(kyc__full_name__icontains=query)
+        )
+
+        transaction_results = Transaction.objects.filter(
+            Q(sender__in=related_users) | Q(reciever__in=related_users)
+        ).order_by('-id')
+
+    transaction_results_count = transaction_results.count()
+    print(f"this is the transaction_results = {transaction_results}")
+
+    context = {
+        'transaction_results': transaction_results,
+        'query': query,
+        'transaction_results_count': transaction_results_count,
+        'my_account':my_account
+    }
+    return render(request, 'account/search_user_transactions.html', context)
+
+
+
+def recipients(request):
+    user_transactions = Transaction.objects.filter(Q(sender=request.user) | Q(reciever=request.user))
+
+    recipients = set()
+    for transaction in user_transactions:
+        if transaction.sender != request.user:
+            recipients.add(transaction.sender)
+        if transaction.reciever != request.user:
+            recipients.add(transaction.reciever)
+
+    context = {
+        'recipients':recipients
+    }
+
+    return render(request,'account/recipients.html')
