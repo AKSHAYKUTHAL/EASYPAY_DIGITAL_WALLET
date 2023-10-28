@@ -692,6 +692,27 @@
                                                         <p class="mdr time-area">{{h.date}}</p>
                                                         <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
                                                     {% endif %}
+
+                                                    {% if h.history_type == "Deleted Debit Card"  %}
+                                                        <p class="mdr" style="font-size: 14px;">You deleted your debit card.</p><br>Card Number : <b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </b>
+                                                        <p class="mdr time-area">{{h.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>   
+                                                    {% endif %}
+                                                    {% if h.history_type == "Added Debit Card"  %}
+                                                        <p class="mdr" style="font-size: 14px;">You added a new  debit card.</p><br>Card Number : <b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p>
+                                                        <p class="mdr time-area">{{h.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>    
+                                                    {% endif %}
+                                                    {% if h.history_type == "De-Activated Debit Card"  %}
+                                                        <p class="mdr" style="font-size: 14px;">You de-activated your debit card.</p><br>Card Number :<b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p>
+                                                        <p class="mdr time-area">{{h.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
+                                                    {% if h.history_type == "Activated Debit Card" %}
+                                                        <p class="mdr" style="font-size: 14px;">You activated your debit card.</p><br>Card Number :<b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p >
+                                                        <p class="mdr time-area">{{h.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
                                                     
                                                 </div>
                                             </a>

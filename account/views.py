@@ -9,7 +9,7 @@ import datetime
 from django.contrib.auth import authenticate,login,logout
 from userauths.models import User
 from django.db.models import Q
-
+from django.db.models import Count
 
 
 
@@ -294,14 +294,14 @@ def add_debit_card(request):
 
                     Notification.objects.create(
                         user=request.user,
-                        notification_type="Added Credit Card",
+                        notification_type="Added Debit Card",
                         card_number = new_form.format_card_number(),
                         card_type = new_form.card_type,
                         card_tier = new_form.card_tier
                     )
                     History.objects.create(
                         user=request.user,
-                        history_type="Added Credit Card",
+                        history_type="Added Debit Card",
                         card_number = new_form.format_card_number(),
                         card_type = new_form.card_type,
                         card_tier = new_form.card_tier
@@ -359,10 +359,8 @@ def is_2fa(request):
 
 
 
-from django.db.models import Q
 
 def search_user_transactions(request):
-    
     query = None
     transaction_results = []
     if request.method == 'POST':
@@ -376,7 +374,7 @@ def search_user_transactions(request):
         )
 
         transaction_results = Transaction.objects.filter(
-            Q(sender__in=related_users) | Q(reciever__in=related_users)
+            Q(sender=my_account, reciever__in=related_users) | Q(reciever=my_account, sender__in=related_users)
         ).order_by('-id')
 
     transaction_results_count = transaction_results.count()
@@ -386,24 +384,60 @@ def search_user_transactions(request):
         'transaction_results': transaction_results,
         'query': query,
         'transaction_results_count': transaction_results_count,
-        'my_account':my_account
+        'my_account': my_account
     }
     return render(request, 'account/search_user_transactions.html', context)
+
 
 
 
 def recipients(request):
     user_transactions = Transaction.objects.filter(Q(sender=request.user) | Q(reciever=request.user))
 
-    recipients = set()
+    recipients = {}
     for transaction in user_transactions:
         if transaction.sender != request.user:
-            recipients.add(transaction.sender)
+            if transaction.sender not in recipients:
+                recipients[transaction.sender] = 1
+            else:
+                recipients[transaction.sender] += 1
+
         if transaction.reciever != request.user:
-            recipients.add(transaction.reciever)
+            if transaction.reciever not in recipients:
+                recipients[transaction.reciever] = 1
+            else:
+                recipients[transaction.reciever] += 1
+    
+    recipient_counts = {}
+    for recipient in recipients:
+        recipient_count = Transaction.objects.filter(Q(sender=request.user, reciever=recipient) | Q(sender=recipient, reciever=request.user)).count()
+        recipient_counts[recipient] = recipient_count
+
+    print(f"recipients: {recipients}")
+    print(f"recipient_counts: {recipient_counts}")
 
     context = {
-        'recipients':recipients
+        'recipients': recipients,
+        'recipient_counts': recipient_counts
     }
 
-    return render(request,'account/recipients.html')
+    return render(request, 'account/recipients.html', context)
+
+
+
+def recipient_transactions(request, recipient_id):
+    recipient = User.objects.get(id=recipient_id)
+    user = request.user
+    transactions = Transaction.objects.filter(Q(sender=user, reciever=recipient) | Q(sender=recipient, reciever=user)).order_by('-id')
+
+    transactions_count = transactions.count()
+
+    context = {
+        'transactions': transactions,
+        'recipient': recipient,
+        'user': user,
+        'transactions_count':transactions_count
+    }
+    return render(request, 'account/recipient_transactions.html', context)
+
+

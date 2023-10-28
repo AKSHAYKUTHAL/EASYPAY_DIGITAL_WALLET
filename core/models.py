@@ -62,6 +62,10 @@ NOTIFICATION_TYPE = (
     ("Added Credit Card", "Added Credit Card"),
     ("Activated Credit Card", "Activated Credit Card"),
     ("De-Activated Credit Card", "De-Activated Credit Card"),
+    ("Deleted Debit Card", "Deleted Debit Card"),
+    ("Added Debit Card", "Added Debit Card"),
+    ("Activated Debit Card", "Activated Debit Card"),
+    ("De-Activated Debit Card", "De-Activated Debit Card"),
 
 )
 

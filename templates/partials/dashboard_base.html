@@ -151,6 +151,26 @@
                                                         <p class="mdr time-area">{{n.date}}</p>
                                                         <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
                                                     {% endif %}
+
+                                                    {% if n.notification_type == "Deleted Debit Card" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You deleted your debit card.</p><br>Card Number : <b>{{n.card_number}}</b><br>Card Type : <b>{{n.card_type | upper}}</b><br>Card Tier : <b>{{n.card_tier | upper}}</b> </b>
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>   
+                                                    {% endif %}
+                                                    {% if n.notification_type == "Added Debit Card" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You added a new debit card.</p><br>Card Number : <b>{{n.card_number}}</b><br>Card Type : <b>{{n.card_type | upper}}</b><br>Card Tier : <b>{{n.card_tier | upper}}</b> </p>
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>    
+                                                    {% endif %}
+                                                    {% if n.notification_type == "De-Activated Debit Card" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You de-activated your debit card.</p><br>Card Number :<b>{{n.card_number}}</b><br>Card Type : <b>{{n.card_type | upper}}</b><br>Card Tier : <b>{{n.card_tier | upper}}</b> </p>
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                    {% endif %}
+                                                    {% if n.notification_type == "Activated Debit Card" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You activated your debit card.</p><br>Card Number :<b>{{n.card_number}}</b><br>Card Type : <b>{{n.card_type | upper}}</b><br>Card Tier : <b>{{n.card_tier | upper}}</b> </p >
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
                                                     
                                                 </div>
                                             </a>

@@ -12,6 +12,7 @@ class User(AbstractUser):
     is_superuser = models.BooleanField(default=False)
     is_2fa = models.BooleanField(default=False)
     otp = models.CharField(max_length=10,blank=True,null=True)
+    total_transactions = models.IntegerField(default=0)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']

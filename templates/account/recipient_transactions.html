@@ -12,7 +12,7 @@
                             
                             <div class="transactions-area">
                                 <div class="section-text">
-                                    <h5>Search Results for "{{query}}"({{transaction_results_count}})</h5>
+                                    <h5>Transactions with {{recipient.kyc.full_name}} ({{transactions_count}})</h5>
                                 </div>
                                 <div class="tab-content mt-40">
                                     <div class="tab-pane fade show active" id="latest" role="tabpanel" aria-labelledby="latest-tab">
@@ -29,15 +29,15 @@
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                
-                                                    {% for tr in transaction_results %}
-                                                        {% if tr.sender != my_account and tr.transaction_status == 'processing'  %}
+                                                    
+                                                    {% for tr in transactions %}
+                                                        {% if tr.sender != user and tr.transaction_status == 'processing'  %}
                                                              
                                                         {% else %}      
                                                             <tr data-bs-toggle="modal" data-bs-target="#transactions_details_sent">
                                                                 <th scope="row">
                                                                     
-                                                                    {% if tr.sender == my_account %}
+                                                                    {% if tr.sender == user %}
                                                                         <p>{{tr.sender.kyc.full_name|title}}<span style="color: green;">(ME)</span> </p>
                                                                         <p class="mdr">{{tr.transaction_type|title}}</p>
                                                                     {% else %}
@@ -47,7 +47,7 @@
                                                                         
                                                                 </th>
                                                                 <th scope="row">
-                                                                {% if tr.reciever == my_account %}
+                                                                {% if tr.reciever == user %}
                                                                     <p>{{tr.reciever.kyc.full_name|title}} <span style="color: green;">(ME)</span> </p>
                                                                     <p class="mdr">{{tr.transaction_type|title}}</p>
                                                                 {% else %}
@@ -90,14 +90,14 @@
                                                                 </td>
                                                                 <td>
                                                                     {% if tr.transaction_type == 'transfer' %}
-                                                                        {% if tr.reciever == my_account %}
+                                                                        {% if tr.reciever == user %}
                                                                             <p>+₹{{tr.amount|intcomma}}</p>
                                                                         {% else %}
                                                                             <p>-₹{{tr.amount|intcomma}}</p>
                                                                         {% endif %}
                                                                     {% endif %}
                                                                     {% if tr.transaction_type == 'request' %}
-                                                                        {% if tr.reciever == my_account %}
+                                                                        {% if tr.reciever == user %}
                                                                             <p>-₹{{tr.amount|intcomma}}</p>
                                                                         {% else %}
                                                                             <p>+₹{{tr.amount|intcomma}}</p>
@@ -108,7 +108,7 @@
                                                                 
                                                                 {% if tr.transaction_type == 'transfer' %}
                                                                         {% if tr.transaction_status == 'completed' or tr.transaction_status == 'failed' or   tr.transaction_status == 'cancelled' %}
-                                                                            {% if tr.reciever == my_account %}
+                                                                            {% if tr.reciever == user %}
                                                                                 <a href="{% url 'core:transaction_detail_received' tr.transaction_id %}" class="btn btn-success"><i class="fas fa-eye"></i></a>
                                                                             {% else %}
                                                                                 <a href="{% url 'core:transaction_detail_sent' tr.transaction_id %}" class="btn btn-success"><i class="fas fa-eye"></i></a>
@@ -123,16 +123,16 @@
                                                                 {% endif %}
 
                                                                 {% if tr.transaction_type == 'request' %}
-                                                                    {% if tr.transaction_status == "request_sent" and tr.sender == my_account  %}
+                                                                    {% if tr.transaction_status == "request_sent" and tr.sender == user  %}
                                                                         <a href="{% url 'core:request_details_sent' tr.transaction_id %}" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
                                                                         <a href="{% url 'core:delete_payment_request' tr.sender.account.account_number tr.transaction_id %}" class=" btn btn-danger"> <i class="fas fa-x"></i> Cancel</a>
-                                                                    {% elif tr.transaction_status == "request_sent" and tr.sender != my_account %}
+                                                                    {% elif tr.transaction_status == "request_sent" and tr.sender != user %}
                                                                         <a href="{% url 'core:request_details_sent' tr.transaction_id %}" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
                                                                         <a href="{% url 'core:amount_request_confirmation' tr.sender.account.account_number tr.transaction_id %}" class=" btn btn-success"> <i class="fas fa-arrow-circle-right"></i> Complete</a>
                                                                         <a href="{% url 'core:delete_payment_request' tr.sender.account.account_number tr.transaction_id %}" class=" btn btn-danger"> <i class="fas fa-x"></i> Cancel</a>
                                                                     {% endif %}
 
-                                                                    {% if tr.transaction_status == "request_processing" and tr.sender == my_account %}
+                                                                    {% if tr.transaction_status == "request_processing" and tr.sender == user %}
                                                                         <a href="{% url 'core:request_details_sent' tr.transaction_id %}" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
                                                                         <a href="{% url 'core:amount_request_confirmation' tr.sender.account.account_number tr.transaction_id %}" class=" btn btn-success"> <i class="fas fa-arrow-circle-right"></i> Complete</a>
                                                                         <a href="{% url 'core:delete_payment_request' tr.sender.account.account_number tr.transaction_id %}" class=" btn btn-danger"> <i class="fas fa-x"></i> Cancel</a>
@@ -198,7 +198,7 @@
                                                                 {% endif %}
                                                             </td>
                                                             <td>
-                                                                {% if tr.transaction_typr == 'recieved' %}
+                                                                {% if tr.transaction_type == 'recieved' %}
                                                                     <p>+₹{{tr.receiving_amount|intcomma}}</p>
                                                                 {% endif %}
                                                             </td>
