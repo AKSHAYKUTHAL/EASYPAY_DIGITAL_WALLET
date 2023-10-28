@@ -5,7 +5,7 @@ from account.models import Account,KYC
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib import messages
-from core.models import Transaction,Notification,History
+from core.models import Transaction,Notification,History,DebitCard
 import time
 from decimal import Decimal
 
@@ -70,8 +70,6 @@ def amount_transfer_process(request, account_number):
         amount = request.POST.get('amount_send')
         description = request.POST.get('description')
 
-        print(amount)
-        print(description)
 
         if sender_account.account_balance >= Decimal(amount):
             new_transation = Transaction.objects.create(
@@ -124,6 +122,19 @@ def transfer_process(request,account_number,transaction_id):
     sender = request.user
     reciever = account.user 
 
+    try:
+        sender_debit_card = DebitCard.objects.get(user=sender)
+        print(f" the sender debit card is {sender}")
+    except:
+        sender_debit_card = None
+    
+    try:
+        receiver_debit_card = DebitCard.objects.get(user=reciever)
+        print(f" the reciever debit card is {reciever}")
+    except:
+        receiver_debit_card = None
+
+
     sender_account = sender.account
     reciever_account = account
 
@@ -142,9 +153,15 @@ def transfer_process(request,account_number,transaction_id):
                 sender_account.account_balance -= transaction.amount
                 sender_account.save()
 
+                sender_debit_card.amount -= transaction.amount
+                sender_debit_card.save()
+
                 # add the monney to the reciever after the fee
                 reciever_account.account_balance +=  transaction.receiving_amount()
                 account.save()
+
+                receiver_debit_card.amount += transaction.receiving_amount()
+                receiver_debit_card.save()
 
                 Notification.objects.create(
                     amount=transaction.receiving_amount(),

@@ -103,7 +103,7 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">Name/ Business</th>
+                                                        <th scope="col" style="width: 250px;">Name/ Business</th>
                                                         <th scope="col">Date</th>
                                                         <th scope="col">Status</th>
                                                         <th scope="col">Amount</th>
@@ -147,7 +147,7 @@
                                                                     <a href="{% url 'core:transaction_detail_sent' s.transaction_id %}" class="btn btn-success"><i class="fas fa-eye"></i></a>
                                                                 {% else %}
                                                                     <a href="{% url 'core:transaction_detail_sent' s.transaction_id %}" class="btn btn-primary"><i class="fas fa-eye"></i></a>
-                                                                    <a href="{% url 'core:transfer_confirmation' s.sender.account.account_number s.transaction_id %}" class=" btn btn-success "> <i class="fas fa-arrow-circle-right"></i> Continue</a>
+                                                                    <a href="{% url 'core:transfer_confirmation' s.reciever.account.account_number s.transaction_id %}" class=" btn btn-success "> <i class="fas fa-arrow-circle-right"></i> Continue</a>
                                                                     <a href="{% url 'core:cancel_transfer' s.sender.account.account_number s.transaction_id %}" class=" btn btn-danger "> <i class="fas fa-x"></i> Cancel</a>
                                                                 {% endif %}
                                                             </td>

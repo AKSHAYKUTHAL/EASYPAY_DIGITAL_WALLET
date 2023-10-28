@@ -5,8 +5,47 @@
                 <div class="alert {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'success' %}alert-success{% endif %}" role="alert">
                     <b><span style="font-weight: bold;">{% if message.tags == 'error' %}Error: {% endif %}</span>
                     {{ message }}</b>
+                    <button type="button" class="close" aria-label="Close">
+                        <span aria-hidden="true" style="font-size: 1.5em; font-weight: bolder;" >&times;</span>
+                    </button>
                 </div>
             {% endfor %}
         </div>
     {% endif %}
 </div>
+
+<style>
+    .alert {
+        position: relative;
+        padding-right: 35px;
+    }
+
+    .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 0.75rem 1.25rem;
+        background-color: inherit;
+        border: none;
+    }
+
+    .alert.alert-danger .close {
+        color: #721c24;
+    }
+
+    .alert.alert-success .close {
+        color: #155724;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var closeButtons = document.querySelectorAll('.close');
+        closeButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                var alert = this.parentElement;
+                alert.style.display = 'none';
+            });
+        });
+    });
+</script>

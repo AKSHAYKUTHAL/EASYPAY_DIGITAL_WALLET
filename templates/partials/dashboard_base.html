@@ -58,7 +58,11 @@
                             
                             <div class="form-group d-flex align-items-center">
                                 <img src="{% static 'assets1/images/icon/search.png' %}" alt="icon">
-                                <input type="text" placeholder="Type to search...">
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <input type="text" placeholder="Type to search..." name="search_user_transactions">
+                                    <button type="submit"><i class="fa fa-search" aria-hidden="true"></i></button>
+                                </form>
                             </div>
                         </form>
                         <div class="dashboard-nav">

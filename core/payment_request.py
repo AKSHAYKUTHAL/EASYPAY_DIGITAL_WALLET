@@ -3,7 +3,7 @@ from account.models import Account
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib import messages
-from core.models import Transaction,Notification,History
+from core.models import Transaction,Notification,History,DebitCard,CreditCard
 import time
 from account.models import KYC
 from decimal import Decimal
@@ -237,6 +237,17 @@ def request_settlement_confirmation(request, account_number, transaction_id):
 def request_settlement_processing(request,account_number,transaction_id):
     account = Account.objects.get(account_number=account_number)
     transaction = Transaction.objects.get(transaction_id=transaction_id)
+    try:
+        receiver_debit_card = DebitCard.objects.get(user=request.user)
+        print(f" the reciever debit card is {request.user}")
+    except:
+        receiver_debit_card = None
+
+    try:
+        sender_debit_card = DebitCard.objects.get(user=transaction.sender)
+        print(f" the sender debit card is {transaction.sender}")
+    except:
+        sender_debit_card = None
 
     sender_account = request.user.account
 
@@ -251,8 +262,17 @@ def request_settlement_processing(request,account_number,transaction_id):
                     sender_account.account_balance -= transaction.payment_with_fee()
                     sender_account.save()
 
+                    if sender_debit_card is not None:
+                        sender_debit_card.amount += transaction.payment_with_fee()
+                        sender_debit_card.save()
+                    
+                    if receiver_debit_card is not None:
+                        receiver_debit_card.amount -= transaction.amount
+                        receiver_debit_card.save()
+
                     account.account_balance += transaction.amount
                     account.save()
+                    
 
                     transaction.transaction_status = 'request_settled'
                     transaction.save()

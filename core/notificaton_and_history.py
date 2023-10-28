@@ -85,15 +85,7 @@ def all_history(request):
             transactions += list(Transaction.objects.filter(transaction_id=history.transaction_id))
         except Transaction.DoesNotExist:
             transactions = None
-    
-    # for transaction in transactions:
-    #     if transaction:
-    #         print(f"transaction_status = {transaction.transaction_status}")
 
-    # for h in all_history:
-    #     if h.amount:
-    #         for t in transactions:
-    #             print(f"status = {t.transaction_status}")
 
 
 

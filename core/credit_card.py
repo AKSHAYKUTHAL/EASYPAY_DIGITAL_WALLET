@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from core.models import CreditCard,Notification,History
+from core.models import CreditCard,Notification,History,DebitCard
 from account.models import Account
 import datetime
 from decimal import Decimal
@@ -39,6 +39,11 @@ def credit_card_detail(request,credit_card_id):
 def fund_credit_card(request, credit_card_id):
     credit_card = CreditCard.objects.get(credit_card_id=credit_card_id, user=request.user,card_status=True)
     account = request.user.account
+    try:
+        debit_card = DebitCard.objects.get(user=request.user)
+    except:
+        debit_card = None
+
     
     if request.method == "POST":
         funding_amount = request.POST.get("funding_amount") # 25
@@ -50,7 +55,10 @@ def fund_credit_card(request, credit_card_id):
                 if fund_transfer_pin_number == account.pin_number:
                     account.account_balance -= Decimal(funding_amount) ## 14,790.00 - 20
                     account.save()
-                    
+                    if debit_card is not None:
+                        debit_card.amount -= Decimal(funding_amount)
+                        debit_card.save()
+
                     credit_card.amount += Decimal(funding_amount)
                     credit_card.save()
                     
@@ -91,6 +99,11 @@ def withdraw_fund_from_credit_card(request, credit_card_id):
     account = Account.objects.get(user=request.user)
     credit_card = CreditCard.objects.get(credit_card_id=credit_card_id, user=request.user,card_status=True)
 
+    try:
+        debit_card = DebitCard.objects.get(user=request.user)
+    except:
+        debit_card = None
+
     if request.method == "POST":
         withdraw_amount = request.POST.get("withdraw_amount")
         card_pin_number = request.POST.get("card_pin_number")
@@ -101,6 +114,11 @@ def withdraw_fund_from_credit_card(request, credit_card_id):
 
                     account.account_balance += Decimal(withdraw_amount)
                     account.save()
+
+                    if debit_card is not None:
+                        debit_card.amount += Decimal(withdraw_amount)
+                        debit_card.save()
+
 
                     credit_card.amount -= Decimal(withdraw_amount)
                     credit_card.save()
@@ -145,6 +163,11 @@ def delete_credit_card(request, credit_card_id):
     credit_card = CreditCard.objects.get(credit_card_id=credit_card_id, user=request.user)
     user_account = Account.objects.get(user=request.user)
     account = request.user.account
+
+    try:
+        debit_card = DebitCard.objects.get(user=request.user)
+    except:
+        debit_card = None
     
     if request.method == 'POST':
         card_pin_number = request.POST.get('card_pin_number')
@@ -154,7 +177,10 @@ def delete_credit_card(request, credit_card_id):
                 account.account_balance += credit_card.amount
                 account.save()
                 
-                
+                if debit_card is not None:
+                    debit_card.amount += credit_card.amount
+                    debit_card.save()
+                    
                 credit_card.delete()
 
                 Notification.objects.create(
