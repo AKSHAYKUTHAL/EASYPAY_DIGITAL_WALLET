@@ -58,6 +58,7 @@ urlpatterns = [
     path('notification_detail/<nid>/',notificaton_and_history.notification_detail,name='notification_detail'),
     path('history_detail/<nid>/',notificaton_and_history.history_detail,name='history_detail'),
     path('all_history',notificaton_and_history.all_history,name='all_history'),
+    path('delete_all_notifications',notificaton_and_history.delete_all_notifications,name='delete_all_notifications'),
 
 
 

@@ -47,11 +47,11 @@ def history_detail(request,nid):
         return redirect('account:dashboard')
 
     try:
-        if history.transaction_id:
-            transaction = Transaction.objects.get(transaction_id=history.transaction_id)
-    except:
+        transaction = Transaction.objects.get(transaction_id=history.transaction_id)
+    except Transaction.DoesNotExist:
         transaction = None
 
+    print(f"transaction = {transaction}")
     # if notification.card_number:
     #     credit_card = CreditCard.objects.get(number=notification.card_number)
     # else:
@@ -95,3 +95,16 @@ def all_history(request):
         'credit_cards':credit_cards
     }
     return render(request,'notificaton_and_history/all_history.html',context)
+
+
+
+def delete_all_notifications(request):
+    user = request.user
+    try:
+        notifications = Notification.objects.filter(user=user)
+        notifications.delete()
+        messages.success(request, 'Deleted all notifications. For more information, check History.')
+    except Notification.DoesNotExist:
+        messages.error(request, 'No notifications found.')
+
+    return redirect(request.META.get('HTTP_REFERER'))

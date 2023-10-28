@@ -781,5 +781,167 @@
             </div>
         </div>
     </section>
+    {% elif notification.notification_type == "Deleted Debit Card" %}
+    <section class="dashboard-section body-collapse">
+        <div class="overlay pt-120">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-11 col-lg-11">
+                        <div class="section-content">
+                            <div class="transactions-popup">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header justify-content-between">
+                                                        <h5>Debit Card Deleted</h5>
+                                                        <a href="#" onclick="location.href = document.referrer; return false;"><i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i></a>
+                                                    </div>
+                                                    <div class="right-area">
+                                                        <h6>Card Details</h6>               
+                                                        <ul class="payment-info">
+                                                            <li>
+                                                                <p>Deleted Card Details</p>
+                                                                <span class="mdr">{{notification.card_number|title}}</span><br>
+                                                                <span class="mdr">{{notification.card_type|title}}</span><br>
+                                                                <span class="mdr">{{notification.card_tier|title}}</span><br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% elif notification.notification_type == "Added Debit Card" %}
+    <section class="dashboard-section body-collapse">
+        <div class="overlay pt-120">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-11 col-lg-11">
+                        <div class="section-content">
+                            <div class="transactions-popup">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header justify-content-between">
+                                                        <h5>Debit Card Added</h5>
+                                                        <a href="#" onclick="location.href = document.referrer; return false;"><i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i></a>
+                                                    </div>
+                                                    <div class="right-area">
+                                                        <h6>Card Details</h6>               
+                                                        <ul class="payment-info">
+                                                            <li>
+                                                                <p>Added Card Details</p>
+                                                                <span class="mdr">{{notification.card_number|title}}</span><br>
+                                                                <span class="mdr">{{notification.card_type|title}}</span><br>
+                                                                <span class="mdr">{{notification.card_tier|title}}</span><br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% elif notification.notification_type == "De-Activated Debit Card" %}
+    <section class="dashboard-section body-collapse">
+        <div class="overlay pt-120">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-11 col-lg-11">
+                        <div class="section-content">
+                            <div class="transactions-popup">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header justify-content-between">
+                                                        <h5>Debit Card De-Activated</h5>
+                                                        <a href="#" onclick="location.href = document.referrer; return false;"><i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i></a>
+
+                                                    </div>
+                                                    <div class="right-area">
+                                                        <h6>Card Details</h6>               
+                                                        <ul class="payment-info">
+                                                            <li>
+                                                                <p>Card Details</p>
+                                                                <span class="mdr">{{notification.card_number|title}}</span><br>
+                                                                <span class="mdr">{{notification.card_type|title}}</span><br>
+                                                                <span class="mdr">{{notification.card_tier|title}}</span><br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% elif notification.notification_type == "Activated Debit Card" %}
+    <section class="dashboard-section body-collapse">
+        <div class="overlay pt-120">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-11 col-lg-11">
+                        <div class="section-content">
+                            <div class="transactions-popup">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header justify-content-between">
+                                                        <h5>Debit Card Activated</h5>
+                                                        <a href="#" onclick="location.href = document.referrer; return false;"><i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i></a>
+
+                                                    </div>
+                                                    <div class="right-area">
+                                                        <h6>Card Details</h6>               
+                                                        <ul class="payment-info">
+                                                            <li>
+                                                                <p>Card Details</p>
+                                                                <span class="mdr">{{notification.card_number|title}}</span><br>
+                                                                <span class="mdr">{{notification.card_type|title}}</span><br>
+                                                                <span class="mdr">{{notification.card_tier|title}}</span><br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 {% endif %}
 {% endblock content %}

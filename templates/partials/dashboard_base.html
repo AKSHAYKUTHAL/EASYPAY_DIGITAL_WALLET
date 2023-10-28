@@ -85,7 +85,12 @@
                                         <h5>Notifications</h5>
                                         <span class="mdr">{{ notifications.count }}</span>
                                     </div>
-                                    <a class="font-weight-light" href="{% url 'core:all_history' %}" style="margin-left: 190px;"><small>Go to History <i class="fa fa-arrow-right" aria-hidden="true"></i></small></a>
+                                    <br>
+                                    <div class="d-flex justify-content-between">
+                                        <a class="font-weight-light" href="{% url 'core:delete_all_notifications' %}"><small>Clear All</small></a>
+                                        <a class="font-weight-light" href="{% url 'core:all_history' %}"><small>Go to History <i class="fa fa-arrow-right" aria-hidden="true"></i></small></a>
+                                    </div>
+                                    <hr>
                                     <div class="notifications-list" id="notifications-list">
                                     <ul>
                                         {% for n in notifications %}
