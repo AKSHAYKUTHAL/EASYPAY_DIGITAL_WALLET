@@ -26,7 +26,8 @@
                                 </div>
                                 <div class="col-xxl-4 col-xl-5 col-md-6" style="box-shadow: 0 0 10px rgba(27, 24, 228, 0.657); border-radius: 15px; padding: 20px; background-color: white;" >
                                     <div class="">
-                                        <form action="#">
+                                        <form action="#" method="post">
+                                            {% csrf_token %}
                                             <div class="" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background-color: #edefff; padding: 25px; border-radius: 15px;">
                                                 <div class="" style="flex-basis: 60%;">
                                                     <span class="mdr" style="color: #4743c9; font-size: 20px;"><b>You send</b></span>
@@ -60,7 +61,7 @@
                                                     <div class="single-area" style="margin-bottom: 10px; display: flex; align-items: center;">
                                                         <div class="left-area" style="flex-basis: 50%;">
                                                             <i class="fas fa-minus" style="color: #4743c9;"></i>
-                                                            <span class="mdr" style="color: #4743c9;">10.04 USD</span>
+                                                            <span id="conversion_fee" class="mdr" style="color: #4743c9;"></span>
                                                         </div>  
                                                         <div class="right-area" style="flex-basis: 50%;">
                                                             <span class="mdr" style="color: #4743c9;">Our fee</span>
@@ -69,7 +70,7 @@
                                                     <div class="single-area" style="margin-bottom: 10px; display: flex; align-items: center;">
                                                         <div class="left-area" style="flex-basis: 50%;">
                                                             <i class="fas fa-equals" style="color: #4743c9;"></i>
-                                                            <span class="mdr" style="color: #4743c9;">989.96 USD</span>
+                                                            <span id="money_after_fee" class="mdr" style="color: #4743c9;"></span>
                                                         </div>
                                                         <div class="right-area" style="flex-basis: 50%;">
                                                             <span class="mdr" style="color: #4743c9;">We’ll Convert</span>
@@ -78,13 +79,13 @@
                                                     <div class="single-area" style="margin-bottom: 10px; display: flex; align-items: center;">
                                                         <div class="left-area" style="flex-basis: 50%;">
                                                             <i class="fas fa-times" style="color: #4743c9;"></i>
-                                                            <span class="mdr" style="color: #4743c9;">1.3947</span>
+                                                            <span id="easypay_rate" class="mdr" style="color: #4743c9;"></span>
                                                         </div>
                                                         <div class="right-area" style="flex-basis: 50%;">
                                                             <span class="mdr highlight" style="color: #4743c9;">Easypay Rate</span>
                                                         </div>
                                                     </div>
-                                                    <button class="btn" id="exchange_button" style="margin-left: 120px; margin-top: 15px;margin-bottom: 15px;color: white; background-color:#4743c9 ;">
+                                                    <button class="btn" id="exchange_button" style="margin-left: 120px; margin-top: 15px;margin-bottom: 15px;color: white; background-color:#4743c9 ;border-radius: 15px;">
                                                         <i class="fas fa-exchange-alt"> Convert</i>
                                                     </button>
                                                 </div>
@@ -92,7 +93,7 @@
                                             <div class="" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background-color: #edefff; padding: 25px; border-radius: 15px;">
                                                 <div class="" style="flex-basis: 60%;">
                                                     <span class="mdr" style="color: #4743c9; font-size: 20px;"><b>Recipient Gets</b></span>
-                                                    <p id="to" name="to" style="border: 1px solid #4743c9; border-radius: 10px; padding: 8px; margin-top: 5px; width: 220px; height: 47px; background-color: white;"> </p>
+                                                    <p id="recipient_gets" name="to" style="border: 1px solid #4743c9; border-radius: 10px; padding: 8px; margin-top: 5px; width: 220px; height: 47px; background-color: white;"> </p>
                                                 </div>
                                                 <div class="" style="flex-basis: 40%; border-radius: 20px ; margin-top: 30px; margin-left: 25px;">
                                                     <select id="to_currency"  style="border: 1px solid #4743c9; padding: 10px; color: #4743c9;">
@@ -102,7 +103,7 @@
                                                 </div>
                                             </div>
                                             <div class="btn-area mt-40">
-                                                <a href="javascript:void(0)" class="cmn-btn w-100" style="display: inline-block; padding: 12px 30px; background-color: #4743c9; color: #fff; border: none; border-radius: 5px; text-transform: uppercase; text-decoration: none; transition: background-color 0.3s; text-align: center;">Get Started</a>
+                                                <button type="submit" class="cmn-btn w-100" style="display: inline-block; padding: 12px 30px; background-color: #4743c9; color: #fff; border: none; border-radius: 15px; text-transform: uppercase; text-decoration: none; transition: background-color 0.3s; text-align: center;">Get Started</button>
                                             </div>
                                         </form>
                                     </div>
@@ -121,33 +122,60 @@
         var from_currency = document.getElementById("from_currency");
         var to_currency = document.getElementById("to_currency");
         var exchange_rate = document.getElementById("exchange-rate");
+        var conversion_fee = document.getElementById("conversion_fee");
+        var money_after_fee = document.getElementById("money_after_fee");
+        var easypay_rate = document.getElementById("easypay_rate");
+        var recipient_gets_amount = document.getElementById("recipient_gets");
+
         var exchange = document.getElementById("exchange");
-        var output_from = document.getElementById("from");
-        var output_to = document.getElementById("to");
-    
         exchange.addEventListener("click", (e) => {
             e.preventDefault();
-            [from_currency.value, to_currency.value] = [to_currency.value, from_currency.value];
+            var temp = from_currency.value;
+            from_currency.value = to_currency.value;
+            to_currency.value = temp;
             calculate();
         });
-    
-        var to_amount = 0;
+
         function calculate() {
             const from_currency_value = from_currency.value;
             const to_currency_value = to_currency.value;
-    
-            fetch(`https://api.exchangerate-api.com/v4/latest/${from_currency_value}`)
+            let minimum_amount = 100;
+
+            if (from_currency_value === 'INR') {
+                minimum_amount = 5000;
+            }
+
+            if (input_amount.value < minimum_amount) {
+                alert(`Minimum amount should be ${minimum_amount}`);
+                return;
+            }
+
+            const fee = (input_amount.value * 0.03).toFixed(4);
+            const total_amount = parseFloat(input_amount.value);
+            
+
+            fetch(`https://api.exchangerate-api.com/v4/latest/${to_currency_value}`)
                 .then(res => res.json())
                 .then(res => {
-                    const rate = res.rates[to_currency_value];
-                    exchange_rate.innerText = `${rate}`;
-                    to_amount = (input_amount.value * rate).toFixed(3);
-                    output_from.innerText = `${input_amount.value} ${from_currency_value}`;
-                    output_to.innerText = `${to_amount} ${to_currency_value}`;
-                    output_to.style.display = "block";
-                });
+                    const exchange_rate_value = res.rates[from_currency_value];
+                    alert(exchange_rate_value)
+                    
+                    const to_amount = (input_amount.value * exchange_rate_value).toFixed(4);
+                    const converted_fee = (fee * exchange_rate_value).toFixed(4);
+                    const converted_total_amount = (total_amount - fee).toFixed(4);
+                    const recipient_gets =parseFloat(converted_total_amount/exchange_rate_value)
+                    const rate = parseFloat(total_amount/recipient_gets);
+
+                    exchange_rate.innerText = `${exchange_rate_value} ${to_currency_value}`;
+                    conversion_fee.innerText = `${fee} ${from_currency_value}`;
+                    money_after_fee.innerText = `${converted_total_amount} ${from_currency_value}`;
+                    easypay_rate.innerText = rate.toFixed(4);
+                    recipient_gets_amount.innerText = `${recipient_gets.toFixed(4)} ${to_currency_value}`;
+                })
+                .catch(err => console.log('Error fetching data:', err));
         }
-    
+
+
         document.getElementById("exchange_button").addEventListener("click", (e) => {
             e.preventDefault();
             calculate();
