@@ -7,3 +7,31 @@ from django.shortcuts import render, redirect
 
 def exchange(request):
     return render(request,'exchange/exchange.html')
+
+
+
+def exchange_account_detail(request):
+    if request.method == 'POST':
+        original_currency_amount = request.POST.get('original_currency_amount')
+        exchange_rate_input = request.POST.get('exchange_rate_input')
+        conversion_fee_input = request.POST.get('conversion_fee_input')
+        money_after_fee_input = request.POST.get('money_after_fee_input')
+        easypay_rate_input = request.POST.get('easypay_rate_input')
+        recipient_gets_amount_input = request.POST.get('recipient_gets_amount_input')
+        to_currency = request.POST.get('to_currency')
+        from_currency = request.POST.get('from_currency')
+
+
+        context = {
+            'original_currency_amount': original_currency_amount,
+            'exchange_rate_input': exchange_rate_input,
+            'conversion_fee_input': conversion_fee_input,
+            'money_after_fee_input': money_after_fee_input,
+            'easypay_rate_input': easypay_rate_input,
+            'recipient_gets_amount_input': recipient_gets_amount_input,
+            'to_currency':to_currency,
+            'from_currency':from_currency
+        }
+
+
+    return render(request,'exchange/exchange_account_detail.html',context)

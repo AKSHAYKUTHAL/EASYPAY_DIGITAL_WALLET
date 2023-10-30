@@ -159,7 +159,7 @@ def kyc_registration(request):
 
 
 
-def dashboard(request):
+def dashboard(request,currency):
     sent_transaction = Transaction.objects.filter(sender=request.user,transaction_type='transfer').order_by('-id')
     recieved_transaction = Transaction.objects.filter(reciever=request.user,transaction_type='transfer').exclude(transaction_status='cancelled').order_by('-id')
 

@@ -4,7 +4,7 @@ from account import views
 app_name = "account"
 
 urlpatterns = [
-    path('dashboard/',views.dashboard,name='dashboard'),
+    path('dashboard/<currency>/',views.dashboard,name='dashboard'),
     path('',views.account,name='account'),
     path('kyc_reg/',views.kyc_registration,name='kyc_reg'),
     path('delete_account/<id>/',views.delete_account,name='delete_account'),

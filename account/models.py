@@ -15,8 +15,16 @@ ACCOUNT_STATUS = (
 )
 
 ACCOUNT_COUNTRY_CURRENCY = (
-    ("inr", "INR"),
-    ("usd", "USD"),
+    ("INR", "INR"),
+    ("USD", "USD"),
+)
+
+ACCOUNT_IFSC = (
+    ("EPDWIN00902", "EPDWIN00902"),
+)
+
+ACCOUNT_SWIFT = (
+    ("EPDWINKL902", "EPDWINKL902"),
 )
 
 MARITAL_STATUS = (
@@ -50,7 +58,7 @@ class Account(models.Model):
     id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     account_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
-    account_number = ShortUUIDField(unique=True,length=10, max_length=25, prefix='217',alphabet='1234567890')
+    account_number = ShortUUIDField(unique=True,length=10, max_length=25, prefix='INR',alphabet='1234567890')
     account_id = ShortUUIDField(unique=True,length=7, max_length=25, prefix='DEX',alphabet='1234567890')
     pin_number = ShortUUIDField(unique=True,length=4, max_length=7,alphabet='1234567890')
     ref_code = ShortUUIDField(unique=True,length=10, max_length=20,alphabet='abcdefgh1234567890')
@@ -62,6 +70,7 @@ class Account(models.Model):
     deleted_account = models.BooleanField(default=False )
     credit_card_count = models.IntegerField(default=0, blank=True, null=True)
     debit_card_count = models.IntegerField(default=0, blank=True, null=True)
+    account_currency = models.CharField(max_length=10,choices=ACCOUNT_COUNTRY_CURRENCY,default='INR')
 
     class Meta:
         ordering = ['-date']
@@ -114,7 +123,28 @@ post_save.connect(save_account, sender=User)
 
 
 
+class AccountForeign(models.Model):
+    id = models.UUIDField(primary_key=True, unique=True, default=uuid.uuid4, editable=False)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    account_balance = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    account_number = ShortUUIDField(unique=True,length=10, max_length=25, prefix='USD',alphabet='1234567890')
+    account_id = ShortUUIDField(unique=True,length=7, max_length=25, prefix='DEX',alphabet='1234567890')
+    pin_number = ShortUUIDField(unique=True,length=4, max_length=7,alphabet='1234567890')
+    account_status = models.CharField(max_length=100, choices=ACCOUNT_STATUS, default='in-active')
+    date = models.DateTimeField(auto_now_add=True)
+    deleted_account = models.BooleanField(default=False )
+    debit_card_count = models.IntegerField(default=0, blank=True, null=True)
+    account_currency = models.CharField(max_length=10,choices=ACCOUNT_COUNTRY_CURRENCY,default='USD')
+    ifsc_code = models.CharField(max_length=11,choices=ACCOUNT_IFSC,default='EPDWIN00902')
+    swift_code = models.CharField(max_length=11,choices=ACCOUNT_SWIFT,default='EPDWINKL902')
 
+
+
+    class Meta:
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"{self.user}"
 
 
 

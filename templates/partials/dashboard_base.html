@@ -53,7 +53,7 @@
                 background-size: 100% auto, auto, 100% 100%;
             }
         }
- 
+
       </style>
 </head>
 
@@ -247,7 +247,7 @@
                                     </div>
                                     <ul>
                                         <li class="border-area">
-                                            <a href="{% url 'account:dashboard' %}"><i class="fas fa-user"></i>Dashboard</a>
+                                            <a href="{% url 'account:dashboard' request.user.account.account_currency %}"><i class="fas fa-user"></i>Dashboard</a>
                                         </li>
                                         
                                         {% if user.is_superuser == True %}
@@ -276,7 +276,7 @@
                         </div>
                         <ul>
                             <li>
-                                <a href="{% url 'account:dashboard' %}">
+                                <a href="{% url 'account:dashboard'  request.user.account.account_currency %}">
                                     <img src="{% static 'assets1/images/icon/dashboard.png' %}" alt="Dashboard"> <span>Dashboard</span>
                                 </a>
                             </li>
@@ -359,6 +359,18 @@
             setTimeout (() => {
                 $(".alert").alert("close");
             }, 10000)
+
+
+            function printDiv(divName) {
+                var printContents = document.getElementById(divName).innerHTML;
+                var originalContents = document.body.innerHTML;
+
+                document.body.innerHTML = printContents;
+
+                window.print();
+
+                document.body.innerHTML = originalContents;
+            }
         </script>
         
         <!-- alert end -->

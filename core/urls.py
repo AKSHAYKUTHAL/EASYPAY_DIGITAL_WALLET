@@ -74,6 +74,7 @@ urlpatterns = [
 
     # exchange
     path('exchange',exchange.exchange,name='exchange'),
+    path('exchange_account_detail',exchange.exchange_account_detail,name='exchange_account_detail'),
 
 
 
