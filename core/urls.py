@@ -1,5 +1,5 @@
 from django.urls import path
-from core import notificaton_and_history, views,transfer,transaction,payment_request,credit_card,crypto,debit_card
+from core import notificaton_and_history, views,transfer,transaction,payment_request,credit_card,crypto,debit_card,exchange
 
 
 app_name = "core"
@@ -15,7 +15,6 @@ urlpatterns = [
     path('transfer_process/<account_number>/<transaction_id>/',transfer.transfer_process,name='transfer_process'),
     path('transfer_completed/<account_number>/<transaction_id>/',transfer.transfer_completed,name='transfer_completed'),
     # path('transfer_completed_pdf/<transaction_id>/',transfer.transfer_completed_pdf,name='transfer_completed_pdf'),
-
     path('cancel_transfer/<account_number>/<transaction_id>/',transfer.cancel_transfer,name='cancel_transfer'),
 
     
@@ -24,6 +23,7 @@ urlpatterns = [
     path('transactions/',transaction.transaction_list,name='transactions'),
     path('transaction_detail_sent/<transaction_id>/',transaction.transaction_detail_sent,name='transaction_detail_sent'),
     path('transaction_detail_received/<transaction_id>/',transaction.transaction_detail_received,name='transaction_detail_received'),
+
 
     # payment request
     path('request_payment_search_account/',payment_request.request_payment_search_account,name='request_payment_search_account'),
@@ -35,8 +35,8 @@ urlpatterns = [
     path('request_details_sent/<transaction_id>/',payment_request.request_details_sent,name='request_details_sent'),
     path('request_details_received/<transaction_id>/',payment_request.request_details_received,name='request_details_received'),
 
-    # request settlement confirmation
 
+    # request settlement confirmation
     path('request_settlement_confirmation/<account_number>/<transaction_id>/',payment_request.request_settlement_confirmation,name='request_settlement_confirmation'),
     path('request_settlement_processing/<account_number>/<transaction_id>/',payment_request.request_settlement_processing,name='request_settlement_processing'),
     path('request_settlement_completed/<account_number>/<transaction_id>/',payment_request.request_settlement_completed,name='request_settlement_completed'),
@@ -54,7 +54,6 @@ urlpatterns = [
 
 
     # notifications
-
     path('notification_detail/<nid>/',notificaton_and_history.notification_detail,name='notification_detail'),
     path('history_detail/<nid>/',notificaton_and_history.history_detail,name='history_detail'),
     path('all_history',notificaton_and_history.all_history,name='all_history'),
@@ -71,6 +70,10 @@ urlpatterns = [
     path('debit_card_detail/<debit_card_id>/',debit_card.debit_card_detail,name='debit_card_detail'),
     path('deactivate_debit_card/<debit_card_id>/',debit_card.deactivate_debit_card,name='deactivate_debit_card'),
     path('delete_debit_card/<debit_card_id>/',debit_card.delete_debit_card,name='delete_debit_card'),
+
+
+    # exchange
+    path('exchange',exchange.exchange,name='exchange'),
 
 
 

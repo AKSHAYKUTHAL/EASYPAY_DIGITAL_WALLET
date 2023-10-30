@@ -14,6 +14,11 @@ ACCOUNT_STATUS = (
     ("in-active", "In-active")
 )
 
+ACCOUNT_COUNTRY_CURRENCY = (
+    ("inr", "INR"),
+    ("usd", "USD"),
+)
+
 MARITAL_STATUS = (
     ("married", "Married"),
     ("single", "Single"),

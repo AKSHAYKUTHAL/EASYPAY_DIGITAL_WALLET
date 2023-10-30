@@ -23,6 +23,8 @@
     <link rel="stylesheet" href="{% static 'assets1/css/arafat-font.css' %}">
     <link rel="stylesheet" href="{% static 'assets1/css/plugin/animate.css' %}">
     <link rel="stylesheet" href="{% static 'assets1/css/style.css' %}">
+
+    
     
     <style>
         .custom-bg-gray {
@@ -31,12 +33,33 @@
         .table tbody tr:hover {
             background-color: #f5f5f5;
         }
+        .multi-bg {
+            width: 100%;
+            height: 100%;
+            background-image: url('assets/images/banner-human.png'), url('path_to_your_image2.jpg'), linear-gradient(to right, #4743c9, #edefff);
+            background-repeat: no-repeat, no-repeat, no-repeat;
+            background-position: bottom right, left, right, bottom left;
+            animation: myAnimation 5s infinite;
+        }
 
+        @keyframes myAnimation {
+            0% {
+                background-size: 100% auto, auto, 100% 100%;
+            }
+            50% {
+                background-size: 120% auto, auto, 120% 100%;
+            }
+            100% {
+                background-size: 100% auto, auto, 100% 100%;
+            }
+        }
+ 
       </style>
 </head>
 
 
-<body>
+<body class="multi-bg">
+    
     <!-- start preloader -->
     <!-- <div class="preloader" id="preloader"></div> -->
     <!-- end preloader -->
@@ -273,7 +296,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="money-exchange.html">
+                                <a href="{% url 'core:exchange' %}">
                                     <img src="{% static 'assets1/images/icon/exchange.png' %}" alt="Exchange"> <span>Exchange</span>
                                 </a>
                             </li>
@@ -310,7 +333,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="javascript:void(0)">
+                                <a href="{% url 'core:index' %}">
                                     <img src="{% static 'assets1/images/icon/quit.png' %}" alt="Quit"> <span>Quit</span>
                                 </a>
                             </li>
@@ -360,6 +383,7 @@
     <script src="{% static 'assets1/js/plugin/wow.min.js' %}"></script>
     <script src="{% static 'assets1/js/plugin/plugin.js' %}"></script>
     <script src="{% static 'assets1/js/main.js' %}"></script>
+    
 </body>
 
 </html>
