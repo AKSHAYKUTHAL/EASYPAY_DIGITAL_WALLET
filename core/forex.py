@@ -5,12 +5,12 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 
 
-def exchange(request):
-    return render(request,'exchange/exchange.html')
+def forex_calculate(request):
+    return render(request,'forex/forex_calculate.html')
 
 
 
-def exchange_account_detail(request):
+def forex_account_detail_search(request):
     if request.method == 'POST':
         original_currency_amount = request.POST.get('original_currency_amount')
         exchange_rate_input = request.POST.get('exchange_rate_input')
@@ -34,4 +34,4 @@ def exchange_account_detail(request):
         }
 
 
-    return render(request,'exchange/exchange_account_detail.html',context)
+    return render(request,'forex/forex_account_detail_search.html',context)

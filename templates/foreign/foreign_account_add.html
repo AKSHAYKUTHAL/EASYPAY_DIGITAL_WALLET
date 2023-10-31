@@ -1,0 +1,76 @@
+{% extends "partials/dashboard_base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block styles %}
+<style>
+    .center-content {
+        text-align: center;
+    }
+
+    .change-pass {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        width: 50%;
+    }
+
+    .single-input {
+        margin-bottom: 20px;
+    }
+
+    .btn-border {
+        text-align: center;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+    <!-- Dashboard Section start -->
+    <section class="dashboard-section body-collapse">
+        <div class="overlay pt-120">
+            <div class="container-fruid">
+                <div class="row center-content">
+                    <div class="change-pass mb-40">
+                        <div class="col-sm-6">
+                            <h5>Create Forex Account</h5>
+                            <hr>
+                        </div>
+                        <div class="col-sm-6">
+                            <form action="{% url 'account:foreign_account_create' %}" method="post">
+                                {% csrf_token %}
+                                <div class="row justify-content-center">
+                                    <div class="col-md-12">
+                                        <div class="single-input">
+                                            <label for="full_name">Full Name</label>
+                                            <input type="text" id="full_name" name="full_name" value="{{account.kyc.full_name}}" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-input">
+                                            <label for="account_currency">Currency</label>
+                                            {{form.account_currency}}
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="single-input">
+                                            <label for="pin_number">Pin number</label>
+                                            <input type="password" id="pin_number" name="pin_number" placeholder="Pin Number">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="btn-border w-100">
+                                            <button type="submit" class="cmn-btn w-100">Create</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock content %}

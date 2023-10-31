@@ -12,6 +12,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- ... (your existing code) ... -->
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 
 
     <link rel="shortcut icon" href="{% static 'assets1/images/easypay_icon.png' %}" type="image/x-icon">
@@ -36,11 +39,8 @@
         .multi-bg {
             width: 100%;
             height: 100%;
-            background-image: url('assets/images/banner-human.png'), url('path_to_your_image2.jpg'), linear-gradient(to right, #4743c9, #edefff);
-            background-repeat: no-repeat, no-repeat, no-repeat;
-            background-position: bottom right, left, right, bottom left;
-            animation: myAnimation 5s infinite;
-        }
+            /* background-image: linear-gradient(to top, #4743c9, #006ee0, #008cdf, #00a4d1, #1db9c1, #57c3c4, #7accc9, #98d5cf, #9dd8db, #a5dae5, #b0dcec, #bcdef2);            background-position: bottom right, left, right, bottom left; */
+            background-image: linear-gradient(to top, #4743c9, #7c70d9, #a99ee7, #d4cef4, #ffffff);        }
 
         @keyframes myAnimation {
             0% {
@@ -54,7 +54,11 @@
             }
         }
 
+
       </style>
+      {% block styles %}
+      {% endblock %}
+
 </head>
 
 
@@ -73,7 +77,7 @@
         <div class="overlay">
             <div class="container-fruid">
                 <div class="row d-flex header-area">
-                    <div class="navbar-area d-flex align-items-center justify-content-between">
+                    <div class="navbar-area d-flex align-items-center justify-content-between" style="background-image: linear-gradient(to bottom, #4743c9, #7c70d9, #a99ee7, #d4cef4, #ffffff);">
                         <div class="sidebar-icon">
                             <img src="{% static 'assets1/images/icon/menu.png' %}" alt="icon">
                         </div>
@@ -267,7 +271,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sidebar-wrapper">
+                    <div class="sidebar-wrapper" style="background-image: linear-gradient(to top, #8986e7, #7c70d9, #a99ee7, #d4cef4, #ffffff);">
                         <div class="close-btn">
                             <i class="fa-solid fa-xmark"></i>
                         </div>
@@ -296,8 +300,8 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{% url 'core:exchange' %}">
-                                    <img src="{% static 'assets1/images/icon/exchange.png' %}" alt="Exchange"> <span>Exchange</span>
+                                <a href="{% url 'core:forex_calculate' %}">
+                                    <img src="{% static 'assets1/images/icon/exchange.png' %}" alt="forex"> <span>Forex</span>
                                 </a>
                             </li>
                             <li>
@@ -322,8 +326,8 @@
                             </li>
                         </ul>
                         <ul class="bottom-item">
-                            <li class="active">
-                                <a href="{% url 'account:account' %}">
+                            <li>
+                                <a href="{% url 'account:account' %}" >
                                     <img src="{% static 'assets1/images/icon/account.png' %}" alt="Account"> <span>Account</span>
                                 </a>
                             </li>
@@ -371,6 +375,26 @@
 
                 document.body.innerHTML = originalContents;
             }
+
+
+            window.addEventListener('load', function() {
+                let pageHeight = document.body.scrollHeight;
+                let viewportHeight = window.innerHeight;
+
+                if (pageHeight < viewportHeight) {
+                    document.querySelector('.multi-bg').style.height = '100vh';
+                } else {
+                    document.querySelector('.multi-bg').style.height = '100%';
+                }
+            });
+
+
+            $(document).ready(function() {
+                $(".sidebar-wrapper ul li").click(function() {
+                    $(".sidebar-wrapper ul li.active").removeClass("active");
+                    $(this).addClass("active");
+                });
+            });
         </script>
         
         <!-- alert end -->

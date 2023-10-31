@@ -1,11 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
 from core.models import Notification,History,DebitCard
 from account.models import Account
 import datetime
-from decimal import Decimal
-from account.models import KYC
 from core.forms import DebitCardForm
 
 
@@ -49,12 +46,15 @@ def add_debit_card(request):
                 account.debit_card_count += 1
                 account.save()
                 messages.success(request,'Debit Card Added Successfully.')
-                return redirect('account:dashboard')
+                return redirect('account:dashboard', request.user.account.account_currency)
         else:
             messages.error(request,'You can only have 1 debit cards at a time')
-            return redirect('account:dashboard')
+            return redirect('account:dashboard', request.user.account.account_currency)
     else:
         form = DebitCardForm()
+
+
+
 
 def debit_card_detail(request,debit_card_id):
     account = Account.objects.get(user=request.user)
@@ -154,7 +154,7 @@ def delete_debit_card(request, debit_card_id):
                 card_tier = debit_card.card_tier
             )
             messages.success(request, "Debit Card Deleted Successfull")
-            return redirect("account:dashboard")
+            return redirect("account:dashboard", request.user.account.account_currency)
     else:
         messages.error(request, "Incorrect Pin")
         return redirect("core:debit_card_detail", debit_card.debit_card_id)

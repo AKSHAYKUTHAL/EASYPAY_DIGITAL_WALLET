@@ -1,5 +1,5 @@
 from django import forms
-from account.models import KYC
+from account.models import KYC,AccountForeign
 from django.forms import ImageField,FileInput,DateInput
 
 
@@ -25,3 +25,10 @@ class KYCForm(forms.ModelForm):
             'date_of_birth':DateInput(),  
         }
 
+
+
+class AccountForeignForm(forms.ModelForm):
+
+    class Meta:
+        model = AccountForeign
+        fields = ['account_currency']

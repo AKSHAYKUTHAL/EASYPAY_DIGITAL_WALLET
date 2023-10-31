@@ -19,7 +19,7 @@
                                 <div class="top-area">
                                     <div class="left-side">
                                         <h5>Hi, {{kyc.full_name|title}}!</h5>
-                                        <h2 style="font-size: 50px;">₹{{account.account_balance|intcomma }} </h2>
+                                        <h2 style="font-size: 50px;">$ {{account_foreign.account_balance|intcomma }} </h2>
                                         
                                         {% for recent_recieved_transfer in recent_recieved_transfer %}
                                         <h5 class="receive">Last Received <span>₹{{recent_recieved_transfer.amount|intcomma }}</span></h5>
@@ -29,7 +29,7 @@
                                     </div>
                                     <div class="-side">
                                             <div class="-top">
-                                                <h2>{{account.account_currency |upper}}</h2>
+                                                <h2>{{account_foreign.account_currency |upper}}</h2>
                                                 <!-- <div class="dropdown-area">
                                                     <button type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                         <img src="{% static 'assets1/images/icon/option.png' %}" alt="icon">
@@ -52,15 +52,9 @@
                                 </div>
                                 <div class="bottom-area">
                                     <div class="left-side">
-                                        <a href="{% url 'core:search_account' %}" class="cmn-btn">Transfer Money</a>
-                                        <a href="{% url  'core:request_payment_search_account' %}" class="cmn-btn">Request Money</a>
+                                        <a href="{% url 'account:foreign_deposit_check_rate' %}" class="cmn-btn">Deposit</a>
+                                        <a href="{% url 'core:request_payment_search_account' %}" class="cmn-btn">Withdraw</a>
                                         <a href="{% url 'core:all_credit_cards' %}" class="cmn-btn">All Cards</a>
-                                        
-                                        {% if user.accountforeign  %}
-                                            <a href="{% url 'account:foreign_dashboard' %}" class="cmn-btn">Foreign</a>
-                                        {% else %}
-                                            <a href="{% url 'account:foreign_account_add' %}" class="cmn-btn">Add Foreign</a>
-                                        {% endif %}
                                     </div>
                                     <div class="right-side">
                                         <div class="dropdown-area">

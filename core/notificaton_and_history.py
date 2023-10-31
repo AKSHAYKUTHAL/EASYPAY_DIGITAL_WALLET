@@ -15,7 +15,7 @@ def notification_detail(request,nid):
         notification.delete()
     except Notification.DoesNotExist:
         messages.error(request, 'Your Notification is removed,For more information check the History')
-        return redirect('account:dashboard')
+        return redirect('account:dashboard', request.user.account.account_currency)
 
     if notification.transaction_id:
         transaction = Transaction.objects.get(transaction_id=notification.transaction_id)
@@ -44,7 +44,7 @@ def history_detail(request,nid):
         history.save()       
     except:
         messages.error(request, 'An Error Occured')
-        return redirect('account:dashboard')
+        return redirect('account:dashboard', request.user.account.account_currency)
 
     try:
         transaction = Transaction.objects.get(transaction_id=history.transaction_id)

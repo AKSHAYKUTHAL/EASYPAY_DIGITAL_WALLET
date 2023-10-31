@@ -92,7 +92,7 @@ def amount_transfer_process(request, account_number):
             return redirect('core:amount_transfer',account.account_number)
     else:
         messages.error(request,'Error Occured.Try again later!!!')
-        return redirect('account:dashboard')
+        return redirect('account:dashboard', request.user.account.account_currency)
 
 
 
@@ -103,7 +103,7 @@ def transfer_confirmation(request,account_number,transaction_id):
         transaction = Transaction.objects.get(transaction_id=transaction_id)
     except:
         messages.error(request,'Transaction does not Exist!!!')
-        return redirect('account:dashboard')
+        return redirect('account:dashboard', request.user.account.account_currency)
 
 
     context = {
@@ -222,10 +222,10 @@ def cancel_transfer(request,account_number,transaction_id):
         transaction.transaction_status = 'cancelled'
         transaction.save()
         messages.success(request,'Transaction cancelled successfully')
-        return redirect('account:dashboard')
+        return redirect('account:dashboard', request.user.account.account_currency)
     except:
         messages.error(request,'Error occured when obtaining transaction, Try again later.')
-        return redirect('account:dashboard')
+        return redirect('account:dashboard', request.user.account.account_currency)
 
 
 

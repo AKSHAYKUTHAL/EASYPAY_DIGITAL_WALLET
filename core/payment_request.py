@@ -81,7 +81,7 @@ def amount_request_process(request, account_number):
         return redirect("core:amount_request_confirmation", account.account_number, transaction_id)
     else:
         messages.warning(request, "Error Occured, try again later.")
-        return redirect("account:dashboard")
+        return redirect("account:dashboard", request.user.account.account_currency)
 
 
 
@@ -166,11 +166,11 @@ def amount_request_final_process(request, account_number,transaction_id):
                 return redirect('core:request_payment_search_account')
         except Transaction.DoesNotExist:
             messages.error(request,'An Error Occured, Try again')
-            return redirect('account:dashboard')   
+            return redirect('account:dashboard', request.user.account.account_currency)   
             
     else:
         messages.error(request,'An Error Occured!,Try Again Later.')
-        return redirect('account:dashboard')
+        return redirect('account:dashboard', request.user.account.account_currency)
 
     
 
@@ -319,10 +319,10 @@ def request_settlement_processing(request,account_number,transaction_id):
                 return redirect('core:request_settlement_confirmation', account.account_number, transaction.transaction_id)
         else:
             messages.error(request,'You already settled this request')
-            return redirect('account:dashboard')
+            return redirect('account:dashboard', request.user.account.account_currency)
     else:
             messages.error(request,'Error Ocuured')
-            return redirect('account:dashboard')
+            return redirect('account:dashboard', request.user.account.account_currency)
 
             
 

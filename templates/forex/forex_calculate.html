@@ -6,7 +6,7 @@
 </style>
 {% block content %}
     <!-- Dashboard Section start -->
-    <section class="dashboard-section body-collapse" id="exchange_download_id">
+    <section class="dashboard-section body-collapse" id="forex_download_id">
         <div class="overlay pt-120">
             <div class="container-fruid">
                 <div class="row">
@@ -26,7 +26,7 @@
                                 </div>
                                 <div class="col-xxl-4 col-xl-5 col-md-6" style="box-shadow: 0 0 10px rgba(27, 24, 228, 0.657); border-radius: 15px; padding: 20px; background-color: white;" >
                                     <div class="">
-                                        <form action="{% url 'core:exchange_account_detail' %}" method="post">
+                                        <form action="{% url 'core:forex_account_detail_search' %}" method="post">
                                             {% csrf_token %}
                                             <div class="" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background-color: #edefff; padding: 25px; border-radius: 15px;">
                                                 <div class="" style="flex-basis: 60%;">
@@ -131,6 +131,9 @@
         var easypay_rate = document.getElementById("easypay_rate");
         var recipient_gets_amount = document.getElementById("recipient_gets");
 
+        var exchange_button = document.getElementById("exchange_button");
+        var getting_started_button = document.getElementById("getting_started");
+
         var exchange_rate_input = document.getElementById("exchange_rate_input");
         var conversion_fee_input = document.getElementById("conversion_fee_input");
         var money_after_fee_input = document.getElementById("money_after_fee_input");
@@ -210,20 +213,29 @@
             })
             .catch(err => console.log('Error fetching data:', err));
     }
+        document.getElementById("getting_started").disabled = true;
 
-        document.getElementById("exchange_button").addEventListener("click", (e) => {
+        exchange_button.addEventListener("click", (e) => {
         e.preventDefault();
-            if (input_amount.value === "") {
-                alert("Please enter an amount before converting.");
-            } else if (parseInt(input_amount.value) < 5000) {
-                document.getElementById("getting_started").disabled = true;
-                alert('Please Enter an amount greater than 5000 to proceed!'); // Modified alert message
+        if (input_amount.value === "") {
+            alert("Please enter an amount before converting.");
+        } else {
+            var minimum_amount = 0;
+            if (from_currency.value === 'INR') {
+                minimum_amount = 5000;
+            } else if (from_currency.value === 'USD') {
+                minimum_amount = 100;
+            }
+
+            if (parseInt(input_amount.value) < minimum_amount) {
+                getting_started_button.disabled = true;
+                alert(`Please Enter an amount greater than ${minimum_amount} to proceed!`);
             } else {
                 calculate();
-                document.getElementById("getting_started").disabled = false;
+                getting_started_button.disabled = false;
             }
-            // You can add additional logic here if needed
-        });
+        }
+    });
 
 
     // Form validation

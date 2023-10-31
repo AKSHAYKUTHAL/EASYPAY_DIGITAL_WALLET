@@ -53,19 +53,23 @@ NOTIFICATION_TYPE = (
     ("Credit Alert", "Credit Alert"),
     ("Debit Alert", "Debit Alert"),
     ("Sent Payment Request", "Sent Payment Request"),
+
     ("Recieved Payment Request", "Recieved Payment Request"),
     ("Settled Payment Request To", "Settled Payment Request To"),
     ("Settled Payment Request From", "Settled Payment Request From"),
+
     ("Funded Credit Card", "Funded Credit Card"),
     ("Withdrew Credit Card Funds", "Withdrew Credit Card Funds"),
     ("Deleted Credit Card", "Deleted Credit Card"),
     ("Added Credit Card", "Added Credit Card"),
     ("Activated Credit Card", "Activated Credit Card"),
+
     ("De-Activated Credit Card", "De-Activated Credit Card"),
     ("Deleted Debit Card", "Deleted Debit Card"),
     ("Added Debit Card", "Added Debit Card"),
     ("Activated Debit Card", "Activated Debit Card"),
     ("De-Activated Debit Card", "De-Activated Debit Card"),
+    
 
 )
 
@@ -92,6 +96,11 @@ HISTORY_TYPE = (
 
 )
 
+ACCOUNT_COUNTRY_CURRENCY = (
+    ("INR", "INR"),
+    ("USD", "USD"),
+)
+
 
 class Transaction(models.Model):
     transaction_id = ShortUUIDField(unique=True, length=15, max_length=20, prefix='TRN')
@@ -105,6 +114,9 @@ class Transaction(models.Model):
 
     reciever_account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, related_name='reciever_account')
     sender_account = models.ForeignKey(Account, on_delete=models.SET_NULL, null=True, related_name='sender_account')
+
+    reciever_account_currency = models.CharField(max_length=10,choices=ACCOUNT_COUNTRY_CURRENCY,default='INR')
+    sender_account_currency = models.CharField(max_length=10,choices=ACCOUNT_COUNTRY_CURRENCY,default='INR')
 
     transaction_status = models.CharField(choices=TRANSACTION_STATUS, max_length=100, default='None')    
     transaction_type = models.CharField(choices=TRANSACTION_TYPE,max_length=100, default='None')
@@ -254,4 +266,6 @@ class DebitCard(models.Model):
 
     def __str__(self):
         return f"{self.user}"
+    
+
     

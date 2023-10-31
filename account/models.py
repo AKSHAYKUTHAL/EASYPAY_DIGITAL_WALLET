@@ -130,7 +130,7 @@ class AccountForeign(models.Model):
     account_number = ShortUUIDField(unique=True,length=10, max_length=25, prefix='USD',alphabet='1234567890')
     account_id = ShortUUIDField(unique=True,length=7, max_length=25, prefix='DEX',alphabet='1234567890')
     pin_number = ShortUUIDField(unique=True,length=4, max_length=7,alphabet='1234567890')
-    account_status = models.CharField(max_length=100, choices=ACCOUNT_STATUS, default='in-active')
+    account_status = models.CharField(max_length=100, choices=ACCOUNT_STATUS, default='active')
     date = models.DateTimeField(auto_now_add=True)
     deleted_account = models.BooleanField(default=False )
     debit_card_count = models.IntegerField(default=0, blank=True, null=True)

@@ -1,5 +1,5 @@
 from django.urls import path
-from core import notificaton_and_history, views,transfer,transaction,payment_request,credit_card,crypto,debit_card,exchange
+from core import notificaton_and_history, views,transfer,transaction,payment_request,credit_card,crypto,debit_card,forex
 
 
 app_name = "core"
@@ -72,9 +72,9 @@ urlpatterns = [
     path('delete_debit_card/<debit_card_id>/',debit_card.delete_debit_card,name='delete_debit_card'),
 
 
-    # exchange
-    path('exchange',exchange.exchange,name='exchange'),
-    path('exchange_account_detail',exchange.exchange_account_detail,name='exchange_account_detail'),
+    # forex
+    path('forex_calculate',forex.forex_calculate,name='forex_calculate'),
+    path('forex_account_detail_search',forex.forex_account_detail_search,name='forex_account_detail_search'),
 
 
 
