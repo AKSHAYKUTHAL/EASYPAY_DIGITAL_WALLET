@@ -182,6 +182,8 @@ class CreditCard(models.Model):
     card_status = models.BooleanField(default=True)
 
     date = models.DateTimeField(auto_now_add=True)
+    card_currency = models.CharField(choices=ACCOUNT_COUNTRY_CURRENCY, max_length=20, default="INR")
+
     
 
     def format_card_number(self):
@@ -265,6 +267,8 @@ class DebitCard(models.Model):
     card_status = models.BooleanField(default=True)
 
     date = models.DateTimeField(auto_now_add=True)
+    card_currency = models.CharField(choices=ACCOUNT_COUNTRY_CURRENCY, max_length=20, default="INR")
+
     
 
     def format_card_number(self):
@@ -330,3 +334,35 @@ class TransactionForeign(models.Model):
 
         
 
+class ForexDebitCard(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    debit_card_id = ShortUUIDField(unique=True, length=5, max_length=20, prefix="CARD", alphabet="1234567890")
+    card_pin_number = ShortUUIDField(length=4, max_length=4, alphabet="1234567890")
+
+
+    name = models.CharField(max_length=100)
+    number = ShortUUIDField(length=14, max_length=16,prefix="47", alphabet="1234567890")
+    month = models.IntegerField(default=datetime.datetime.now().month)
+    year = models.IntegerField(default=datetime.datetime.now().year + 5)
+    cvv = ShortUUIDField(length=3, max_length=3, alphabet="1234567890")
+
+    amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+
+    card_type = models.CharField(choices=CARD_TYPE, max_length=20, default="master")
+    card_tier = models.CharField(choices=CARD_TIER, max_length=20, default="classic")
+    card_status = models.BooleanField(default=True)
+    card_currency = models.CharField(choices=ACCOUNT_COUNTRY_CURRENCY, max_length=20, default="USD")
+
+    date = models.DateTimeField(auto_now_add=True)
+    
+
+    def format_card_number(self):
+        formatted_number  = ' '.join([self.number[i:i + 4] for i in range(0, len(self.number), 4)])
+        return formatted_number 
+
+    def year_in_two_digits(self):
+        year_in_two_digits = self.year % 100
+        return year_in_two_digits
+
+    def __str__(self):
+        return f"{self.user}"

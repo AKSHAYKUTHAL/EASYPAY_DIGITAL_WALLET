@@ -3,7 +3,7 @@ from account.models import KYC, Account,AccountForeign
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from core.forms import CreditCardForm
-from core.models import CreditCard,Notification,History,DebitCard,TransactionForeign
+from core.models import CreditCard,Notification,History,DebitCard,TransactionForeign,ForexDebitCard
 from account.forms import AccountForeignForm
 import datetime
 from django.contrib.auth import logout
@@ -82,6 +82,16 @@ def foreign_withdraw_confirm_process(request,transaction_id):
     sender_account = transaction_foreign.sender_account
     receiver_account = transaction_foreign.receiver_account
 
+    try:
+        sender_debit_card = ForexDebitCard.objects.get(user=request.user)
+    except:
+        sender_debit_card = None
+    
+    try:
+        receiver_debit_card = DebitCard.objects.get(user=request.user)
+    except:
+        receiver_debit_card = None
+
     if request.method == 'POST':
         if transaction_foreign.transaction_status != 'Withdraw Completed':
 
@@ -95,6 +105,10 @@ def foreign_withdraw_confirm_process(request,transaction_id):
                 receiver_account.account_balance -= transaction_foreign.original_currency_amount
                 receiver_account.save()
 
+                if sender_debit_card is not None:
+                    sender_debit_card.amount -= transaction_foreign.original_currency_amount
+                    sender_debit_card.save()
+
                 # if sender_debit_card is not None:
                 #     sender_debit_card.amount -= transaction.amount
                 #     sender_debit_card.save()
@@ -102,6 +116,10 @@ def foreign_withdraw_confirm_process(request,transaction_id):
                 # add the monney to the reciever after the fee
                 sender_account.account_balance +=  Decimal(transaction_foreign.recipient_gets)
                 sender_account.save()
+
+                if receiver_debit_card is not None:
+                    receiver_debit_card.amount += Decimal(transaction_foreign.recipient_gets)
+                    receiver_debit_card.save()
 
                 # if receiver_debit_card is not None:
                 #     receiver_debit_card.amount += transaction.receiving_amount()

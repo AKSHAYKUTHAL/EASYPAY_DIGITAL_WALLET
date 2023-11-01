@@ -1,5 +1,5 @@
 from django.urls import path
-from account import dashboard,account,recipients,foreign_account,foreign_account_deposit,foreign_account_withdraw
+from account import dashboard,account,recipients,foreign_account,foreign_account_deposit,foreign_account_withdraw,foreign_debit_card
 
 app_name = "account"
 
@@ -35,7 +35,14 @@ urlpatterns = [
     # foreign_account_deposit
     path('foreign_withdraw_check_rate',foreign_account_withdraw.foreign_withdraw_check_rate,name='foreign_withdraw_check_rate'),
     path('foreign_withdraw_confirm/<transaction_id>/',foreign_account_withdraw.foreign_withdraw_confirm,name='foreign_withdraw_confirm'),
-    path('foreign_withdraw_confirm_process/<transaction_id>/',foreign_account_withdraw.foreign_withdraw_confirm_process,name='foreign_withdraw_confirm_process')
+    path('foreign_withdraw_confirm_process/<transaction_id>/',foreign_account_withdraw.foreign_withdraw_confirm_process,name='foreign_withdraw_confirm_process'),
+
+
+    # foreign debit card 
+    path('foreign_debit_card_detail/<debit_card_id>/',foreign_debit_card.foreign_debit_card_detail,name='foreign_debit_card_detail'),
+    path('deactivate_debit_card/<debit_card_id>/',foreign_debit_card.deactivate_debit_card,name='deactivate_debit_card'),
+    path('delete_debit_card/<debit_card_id>/',foreign_debit_card.delete_debit_card,name='delete_debit_card'),
+
 
 ]
 

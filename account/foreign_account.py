@@ -2,11 +2,13 @@ from django.shortcuts import render, redirect
 from account.models import KYC, Account,AccountForeign
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from core.forms import CreditCardForm
-from core.models import CreditCard,Notification,History,DebitCard,TransactionForeign
+from core.forms import CreditCardForm,ForexDebitCardForm
+from core.models import CreditCard,Notification,History,DebitCard,TransactionForeign,ForexDebitCard
 from account.forms import AccountForeignForm
 from django.contrib.auth import logout
 from decimal import Decimal
+import datetime
+
 
 
 
@@ -66,22 +68,84 @@ def foreign_account_create(request):
 
 
 def foreign_dashboard(request):
+
+    # sent_transaction = TransactionForeign.objects.filter(sender=request.user,transaction_type='transfer').order_by('-id')
+    # recieved_transaction = Transaction.objects.filter(reciever=request.user,transaction_type='transfer').exclude(transaction_status='cancelled').order_by('-id')
+
+    # sent_transaction_count = sent_transaction.count()
+    # recieved_transaction_count = recieved_transaction.count()
+
+    # request_sent_transaction = Transaction.objects.filter(sender=request.user, transaction_type="request").order_by('-id')
+    # request_recieved_transaction = Transaction.objects.filter(reciever=request.user, transaction_type="request").exclude(transaction_status='request_processing').order_by('-id')
+
+    # request_sent_transaction_count = request_sent_transaction.count()
+    # request_recieved_transaction_count = request_recieved_transaction.count()
+
+
+
     user = request.user
     kyc = KYC.objects.get(user=user)
+    month = datetime.datetime.now().month
+    year = datetime.datetime.now().year + 5
+    forex_debit_card = ForexDebitCard.objects.filter(user=request.user).order_by('-id')
+    form = ForexDebitCardForm(request.POST)
+
+
     try:
         account_foreign = AccountForeign.objects.get(user=user)
-
-
-
     except AccountForeign.DoesNotExist:
         messages.error(request,'You dont have a Forex account,Please create one, then proceed')
         return redirect('account:foreign_account_add')
     
 
+    if request.method == 'POST':
+        if account_foreign.debit_card_count < 1:
+            form = ForexDebitCardForm(request.POST)
+            if form.is_valid():
+                new_form = form.save(commit=False)
+                new_form.user = request.user
+                new_form.name = request.user.kyc.full_name
+                new_form.amount = account_foreign.account_balance
+                # new_form.amount = request.user.account.account_balance
+                new_form.card_currency = account_foreign.account_currency
+                new_form.save()
+
+                debit_card_id = new_form.debit_card_id
+
+                Notification.objects.create(
+                    user=request.user,
+                    notification_type="Added Debit Card",
+                    card_number = new_form.format_card_number(),
+                    card_type = new_form.card_type,
+                    card_tier = new_form.card_tier
+                )
+                History.objects.create(
+                    user=request.user,
+                    history_type="Added Debit Card",
+                    card_number = new_form.format_card_number(),
+                    card_type = new_form.card_type,
+                    card_tier = new_form.card_tier
+                )
+                account_foreign.debit_card_count += 1
+                account_foreign.save()
+                messages.success(request,'Forex Debit Card Added Successfully.')
+                return redirect('account:foreign_dashboard')
+        else:
+            messages.error(request,'You can only have 1 debit cards at a time')
+            return redirect('account:foreign_dashboard')
+    else:
+        form = ForexDebitCardForm()
+
+    
+
     context = {
         'account_foreign':account_foreign,
         'user':user,
-        'kyc':kyc
+        'kyc':kyc,
+        'year':year,
+        'month':month,
+        'form':form,
+        'forex_debit_card':forex_debit_card
     }
 
     return render(request,'foreign/foreign_dashboard.html',context)

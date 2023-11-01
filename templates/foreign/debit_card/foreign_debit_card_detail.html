@@ -16,7 +16,7 @@
                             <div class="transactions-popup">
                                 <div class="container-fruid">
                                     <div class="row">
-                                        <div class="col-lg-12">
+                                        <div class="col-lg-12" >
                                             <div>
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content">
@@ -106,6 +106,10 @@
                                                                                 <span>{{debit_card.card_type|upper}}</span>
                                                                             </li>
                                                                             <li>
+                                                                                <span>Currency</span>
+                                                                                <span>{{debit_card.card_currency|upper}}</span>
+                                                                            </li>
+                                                                            <li>
                                                                                 <span>Card Number</span>
                                                                                 <span>{{debit_card.format_card_number}}</span>
                                                                             </li>
@@ -181,7 +185,7 @@
                                 <h6>De-activate Debit card</h6>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                             </div>
-                            <form action="{% url 'core:deactivate_debit_card' debit_card.debit_card_id %}" method="POST">
+                            <form action="{% url 'account:deactivate_debit_card' debit_card.debit_card_id %}" method="POST">
                                 {% csrf_token %}
                                 <div class="row justify-content-center">
                                     <div class="col-md-12">
@@ -230,7 +234,7 @@
                                 <h6>De-activate Debit card</h6>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
                             </div>
-                            <form action="{% url 'core:delete_debit_card' debit_card.debit_card_id %}" method="POST">
+                            <form action="{% url 'account:delete_debit_card' debit_card.debit_card_id %}" method="POST">
                                 {% csrf_token %}
                                 <div class="row justify-content-center">
                                     <div class="col-md-12">

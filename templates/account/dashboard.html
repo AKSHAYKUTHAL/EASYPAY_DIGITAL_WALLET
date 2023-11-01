@@ -400,7 +400,7 @@
                                                         <span class="visa">{{d.card_type|upper}}  <small style="font-weight: lighter; font-size:11px" class="{% if d.card_tier == 'classic' %}classic_card{% endif %}    {% if d.card_type == 'gold' %}gold_card{% endif %}    {% if d.card_type == 'platinum' %}platinum_card{% endif %}   {% if d.card_type == 'signature' %}signature_card{% endif %}  {% if d.card_type == 'infinite' %}infinite_card{% endif %}">{{d.card_tier|upper}}</small> </span>  
                                                         <div class="logo">
                                                             <img src="{% static 'assets1/images/easypay_blue_logo.png' %}" alt="logo">
-                                                            <small class="expire_year" style="font-size: 12px; margin-left:75px;">Debit card</small>
+                                                            <small class="expire_year" style="font-size: 12px; margin-left:40px;">{{d.card_currency}} Debit card</small>
                                                             <div class="image-container" style="display: flex;">
                                                                 <img src="{% static 'assets1/images/icon/chip.png' %}"  alt="" style="width: 40px; height: 35px; margin-left: 75px; margin-top: 12px;">  
                                                                 <img src="{% static 'assets1/images/icon/sigmal_icon.png' %}"  alt="" style="width: 18px; height: 28px; margin-left: 3px;  margin-top: 15px;">    
@@ -485,7 +485,7 @@
                                                         <span class="visa">{{c.card_type|upper}}  <small style="font-weight: lighter; font-size:11px" class="{% if c.card_tier == 'classic' %}classic_card{% endif %}    {% if c.card_type == 'gold' %}gold_card{% endif %}    {% if c.card_type == 'platinum' %}platinum_card{% endif %}   {% if c.card_type == 'signature' %}signature_card{% endif %}  {% if c.card_type == 'infinite' %}infinite_card{% endif %}">{{c.card_tier|upper}}</small> </span>  
                                                         <div class="logo">
                                                             <img src="{% static 'assets1/images/easypay_blue_logo.png' %}" alt="logo">
-                                                            <small class="expire_year" style="font-size: 12px; margin-left:75px;">Credit card</small>
+                                                            <small class="expire_year" style="font-size: 12px; margin-left:40px;">{{c.card_currency}} Credit card</small>
                                                             <div class="image-container" style="display: flex;">
                                                                 <img src="{% static 'assets1/images/icon/chip.png' %}"  alt="" style="width: 40px; height: 35px; margin-left: 75px; margin-top: 12px;">  
                                                                 <img src="{% static 'assets1/images/icon/sigmal_icon.png' %}"  alt="" style="width: 18px; height: 28px; margin-left: 3px;  margin-top: 15px;">    

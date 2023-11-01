@@ -1,5 +1,5 @@
 from django.contrib import admin
-from core.models import Transaction,CreditCard,Notification,History,DebitCard,TransactionForeign
+from core.models import Transaction,CreditCard,Notification,History,DebitCard,TransactionForeign,ForexDebitCard
 
 
 class TransactionAdmin(admin.ModelAdmin):
@@ -30,12 +30,18 @@ class TransactionForeignAdmin(admin.ModelAdmin):
     list_display = ['id','user', 'original_currency_amount','amount_after_fee','conversion_fee', 'recipient_gets','transaction_status', 'transaction_type', 'reciever','reciever_account_currency', 'sender','sender_account_currency','swift_code','ifsc_code']
 
 
+class ForexDebitCardAdmin(admin.ModelAdmin):
+    list_editable = ['amount', 'card_type','card_tier','card_status']
+    list_display = ['id','user', 'amount','format_card_number','name','month','year', 'card_type','card_tier','card_status','card_currency']
+
+
 admin.site.register(Transaction,TransactionAdmin)
 admin.site.register(CreditCard,CreditCardAdmin)
 admin.site.register(Notification, NotificationAdmin)
 admin.site.register(History, HistoryAdmin)  
 admin.site.register(DebitCard,DebitCardAdmin)
 admin.site.register(TransactionForeign,TransactionForeignAdmin)
+admin.site.register(ForexDebitCard,ForexDebitCardAdmin)
 
 
 
