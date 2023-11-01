@@ -46,8 +46,8 @@ urlpatterns = [
 
 
     # forex sent
-    path('forex_calculate',forex_sent.forex_calculate,name='forex_calculate'),
-    path('forex_account_detail_search',forex_sent.forex_account_detail_search,name='forex_account_detail_search'),
+    path('forex_sent_check_rate',forex_sent.forex_sent_check_rate,name='forex_sent_check_rate'),
+    path('forex_account_detail_input/<transaction_id>/',forex_sent.forex_account_detail_input,name='forex_account_detail_input'),
 
 
 

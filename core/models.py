@@ -36,6 +36,12 @@ TRANSACTION_STATUS = (
     ('Deposit Completed','Deposit Completed'),
     ('Withdraw Processing','Withdraw Processing'),
     ('Withdraw Completed','Withdraw Completed'),
+    
+    ('Forex Sent Processing','Forex Sent Processing'),
+    ('Forex Sent Completed','Forex Sent Completed'),
+    ('Forex Sent Failed','Forex Sent Failed'),
+
+
 
 
 
@@ -285,6 +291,8 @@ class DebitCard(models.Model):
 
 class TransactionForex(models.Model):
     transaction_id = ShortUUIDField(unique=True, length=15, max_length=20, prefix='TRN')
+    full_name = models.CharField(max_length=100,blank=True,null=True)
+    account_number = models.CharField(max_length=100,blank=True,null=True)
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True, related_name='user_forex')
     description = models.CharField(max_length=1000, null=True, blank=True)
@@ -292,10 +300,8 @@ class TransactionForex(models.Model):
     reciever = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='reciever_forex')
     sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='sender_forex')
 
-    receiver_account = models.ForeignKey(AccountForex, on_delete=models.CASCADE,null=True, related_name='receiver_account_forex')
-    
+    receiver_account = models.ForeignKey(AccountForex, on_delete=models.CASCADE,null=True, related_name='receiver_account_forex')  
     sender_account = models.ForeignKey(Account, on_delete=models.CASCADE,null=True, related_name='sender_account_forex')
-
     
     reciever_account_currency = models.CharField(max_length=10,choices=ACCOUNT_COUNTRY_CURRENCY,default='INR')
     sender_account_currency = models.CharField(max_length=10,choices=ACCOUNT_COUNTRY_CURRENCY,default='INR')

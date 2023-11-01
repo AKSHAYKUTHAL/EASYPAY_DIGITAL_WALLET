@@ -1,0 +1,112 @@
+{% extends "partials/dashboard_base.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+    <!-- Dashboard Section start -->
+    <section class="dashboard-section body-collapse account">
+        <div class="overlay pt-120">
+            <div class="container">
+                <div class="main-content">
+                    <div class="row justify-content-center">
+                        <!-- Left Side -->
+                        <div class="col-xxl-8 col-xl-7">
+                            <div class="tab-main">
+                                <div class="change-pass mb-40">
+                                    <div class="text-center">
+                                        <h5>Enter The Recipients Details</h5>
+                                        <p>It should be a {{transaction.reciever_account_currency}} account</p>
+                                    </div>
+                                    <form action="" method="post" class="mt-4">
+                                        {% csrf_token %}
+                                        <div class="row justify-content-center">
+                                            <div class="col-md-8">
+            
+                                                <div class="single-input">
+                                                    <label for="current-password">RECIPIENT NAME</label>
+                                                    <input type="text" id="full_name" name="full_name" placeholder="Recipient Full Name" class="form-control">
+                                                </div>
+                                                <div class="single-input">
+                                                    <label for="new-password">ACCOUNT NUMBER</label>
+                                                    <input type="text" id="account_number" name="account_number" placeholder="Account Number" class="form-control">
+                                                </div>
+                                                <div class="single-input">
+                                                    <label for="confirm-password">IFSC/SWIFT</label>
+                                                    <input type="text" id="ifsc_swift_code" name="ifsc_swift_code" placeholder="IFSC/SWIFT" class="form-control">
+                                                </div>
+                                                <div class="btn-border mt-4">
+                                                    <button type="submit" class="cmn-btn w-100">Confirm</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Right Side -->
+                        <div class="col-xxl-4 col-xl-5">
+                            <div class="tab-main">
+                                <div class="change-pass mb-40 text-center">
+                                    <h5>Rate and details</h5>
+                                </div>
+                                <div class="calculation-details" style="display: flex; flex-direction: column;">
+                                    <div class="single-area" style="display: flex;">
+                                        <div class="left-area" style="flex: 1;">
+                                            <i class="fa-solid fa-comments-dollar" style="color: #4743c9;"></i>
+                                            <span id="exchange_rate" class="mdr" style="color: #4743c9;">{{transaction.exchange_rate}}</span>
+                                        </div>
+                                        <div class="right-area" style="flex: 1;">
+                                            <span class="mdr" style="color: #4743c9; text-align: right;">Rate Today</span>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="single-area" style="display: flex;">
+                                        <div class="left-area" style="flex: 1;">
+                                            <i class="fa-solid fa-receipt" style="color: #4743c9;"></i>
+                                            <span id="conversion_fee" class="mdr" style="color: #4743c9;">{{transaction.conversion_fee}}</span>
+                                        </div>
+                                        <div class="right-area" style="flex: 1;">
+                                            <span class="mdr" style="color: #4743c9; text-align: right;">Our fee</span>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="single-area" style="display: flex;">
+                                        <div class="left-area" style="flex: 1;">
+                                            <i class="fas fa-money-bill-alt" style="color: #4743c9;"></i>
+                                            <span id="money_after_fee" class="mdr" style="color: #4743c9;">{{transaction.amount_after_fee}}</span>
+                                        </div>
+                                        <div class="right-area" style="flex: 1;">
+                                            <span class="mdr" style="color: #4743c9; text-align: right;">We’ll Convert</span>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="single-area" style="display: flex;">
+                                        <div class="left-area" style="flex: 1;">
+                                            <i class="fa-solid fa-scale-balanced" style="color: #4743c9;"></i>
+                                            <span id="easypay_rate" class="mdr" style="color: #4743c9;">{{transaction.easypay_rate}}</span>
+                                        </div>
+                                        <div class="right-area" style="flex: 1;">
+                                            <span class="mdr highlight" style="color: #4743c9; text-align: right;">Easypay Rate</span>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="single-area" style="display: flex;">
+                                        <div class="left-area" style="flex: 1;">
+                                            <i class=" fa fa-check-circle" style="color: #4743c9;"></i>
+                                            <span id="easypay_rate" class="mdr" style="color: #4743c9;">{{transaction.recipient_gets}}</span>
+                                        </div>
+                                        <div class="right-area" style="flex: 1;">
+                                            <span class="mdr highlight" style="color: #4743c9; text-align: right;">Recipient Gets</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Dashboard Section end -->
+{% endblock content %}
