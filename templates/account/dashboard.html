@@ -56,10 +56,10 @@
                                         <a href="{% url  'core:request_payment_search_account' %}" class="cmn-btn">Request Money</a>
                                         <a href="{% url 'core:all_credit_cards' %}" class="cmn-btn">All Cards</a>
                                         
-                                        {% if user.accountforeign  %}
-                                            <a href="{% url 'account:foreign_dashboard' %}" class="cmn-btn">Foreign</a>
+                                        {% if user.accountforex  %}
+                                            <a href="{% url 'account:foreign_dashboard' %}" class="cmn-btn">Forex</a>
                                         {% else %}
-                                            <a href="{% url 'account:foreign_account_add' %}" class="cmn-btn">Add Foreign</a>
+                                            <a href="{% url 'account:foreign_account_add' %}" class="cmn-btn">Add Forex</a>
                                         {% endif %}
                                     </div>
                                     <div class="right-side">

@@ -1,6 +1,6 @@
 from django.db import models
 from userauths.models import User
-from account.models import Account,AccountForeign
+from account.models import Account,AccountForex
 from shortuuid.django_fields import ShortUUIDField
 from decimal import Decimal,ROUND_HALF_UP
 import datetime
@@ -283,18 +283,18 @@ class DebitCard(models.Model):
         return f"{self.user}"
     
 
-class TransactionForeign(models.Model):
+class TransactionForex(models.Model):
     transaction_id = ShortUUIDField(unique=True, length=15, max_length=20, prefix='TRN')
 
-    user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True, related_name='user_foreign')
+    user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True, related_name='user_forex')
     description = models.CharField(max_length=1000, null=True, blank=True)
 
-    reciever = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='reciever_foreign')
-    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='sender_foreign')
+    reciever = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='reciever_forex')
+    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='sender_forex')
 
-    receiver_account = models.ForeignKey(AccountForeign, on_delete=models.CASCADE,null=True, related_name='receiver_account_foreign')
+    receiver_account = models.ForeignKey(AccountForex, on_delete=models.CASCADE,null=True, related_name='receiver_account_forex')
     
-    sender_account = models.ForeignKey(Account, on_delete=models.CASCADE,null=True, related_name='sender_account_foreign')
+    sender_account = models.ForeignKey(Account, on_delete=models.CASCADE,null=True, related_name='sender_account_forex')
 
     
     reciever_account_currency = models.CharField(max_length=10,choices=ACCOUNT_COUNTRY_CURRENCY,default='INR')
@@ -329,6 +329,10 @@ class TransactionForeign(models.Model):
             return f"{self.user}"
         except:
             return f"Transaction"
+        
+    class Meta:
+        verbose_name = "Transaction Forex"
+        verbose_name_plural = "Forex Transactions"
         
 
 

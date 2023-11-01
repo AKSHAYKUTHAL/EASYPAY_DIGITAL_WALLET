@@ -1,5 +1,5 @@
 from django import forms
-from account.models import KYC,AccountForeign
+from account.models import KYC,AccountForex
 from django.forms import ImageField,FileInput,DateInput
 
 
@@ -27,8 +27,8 @@ class KYCForm(forms.ModelForm):
 
 
 
-class AccountForeignForm(forms.ModelForm):
+class AccountForexForm(forms.ModelForm):
 
     class Meta:
-        model = AccountForeign
+        model = AccountForex
         fields = ['account_currency']

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from account.models import Account,KYC,AccountForeign
+from account.models import Account,KYC,AccountForex
 from userauths.models import User
 from import_export.admin import ImportExportModelAdmin
 
@@ -13,19 +13,16 @@ class KYCAdmin(ImportExportModelAdmin):
     list_display = ['user', 'full_name', 'gender', 'identity_type', 'date_of_birth'] 
 
 
-class AccountForeignAdminModel(ImportExportModelAdmin):
+class AccountForexAdminModel(ImportExportModelAdmin):
     list_editable = ['account_status', 'account_balance'] 
     list_display = ['id','user', 'account_number' ,'account_status', 'account_balance','account_currency','ifsc_code','swift_code'] 
     list_filter = ['account_currency']
 
-    class Meta:
-        verbose_name = "Account Foreign"
-        verbose_name_plural = "Account Foreign"
 
 
 
 
 admin.site.register(Account, AccountAdminModel)
 admin.site.register(KYC, KYCAdmin)
-admin.site.register(AccountForeign, AccountForeignAdminModel)
+admin.site.register(AccountForex, AccountForexAdminModel)
 

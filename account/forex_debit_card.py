@@ -1,14 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from core.models import Notification,History,DebitCard,ForexDebitCard
-from account.models import Account,AccountForeign
+from account.models import Account,AccountForex
 import datetime
 from core.forms import DebitCardForm
 
 
 
-def foreign_debit_card_detail(request,debit_card_id):
-    account = AccountForeign.objects.get(user=request.user)
+def forex_debit_card_detail(request,debit_card_id):
+    account = AccountForex.objects.get(user=request.user)
     debit_card = ForexDebitCard.objects.get(debit_card_id=debit_card_id,user=request.user)
 
     context = {
@@ -16,7 +16,7 @@ def foreign_debit_card_detail(request,debit_card_id):
         'debit_card':debit_card
     }
 
-    return render(request,'foreign/debit_card/foreign_debit_card_detail.html',context)
+    return render(request,'forex/debit_card/forex_debit_card_detail.html',context)
 
 
 
@@ -49,7 +49,7 @@ def deactivate_debit_card(request,debit_card_id):
                     card_tier = debit_card.card_tier
                 )
                 messages.success(request,'Debit Card De-Activated ')
-                return redirect("account:foreign_debit_card_detail", debit_card.debit_card_id)
+                return redirect("account:forex_debit_card_detail", debit_card.debit_card_id)
 
             else:
                 debit_card.card_status = True
@@ -71,7 +71,7 @@ def deactivate_debit_card(request,debit_card_id):
                 )
 
                 messages.success(request,'Forex Debit Card Activated ')
-                return redirect("account:foreign_debit_card_detail", debit_card.debit_card_id)
+                return redirect("account:forex_debit_card_detail", debit_card.debit_card_id)
         else:
             messages.error(request,'Incorrect Pin ')
             return redirect("core:debit_card_detail", debit_card.debit_card_id)
@@ -81,7 +81,7 @@ def deactivate_debit_card(request,debit_card_id):
 
 def delete_debit_card(request, debit_card_id):
     debit_card = ForexDebitCard.objects.get(debit_card_id=debit_card_id, user=request.user)
-    user_account = AccountForeign.objects.get(user=request.user)
+    user_account = AccountForex.objects.get(user=request.user)
     account = request.user.account
     
     if request.method == 'POST':
@@ -107,7 +107,7 @@ def delete_debit_card(request, debit_card_id):
                 card_tier = debit_card.card_tier
             )
             messages.success(request, "Debit Card Deleted Successfull")
-            return redirect("account:foreign_dashboard")
+            return redirect("account:forex_dashboard")
     else:
         messages.error(request, "Incorrect Pin")
-        return redirect("account:foreign_debit_card_detail", debit_card.debit_card_id)
+        return redirect("account:forex_debit_card_detail", debit_card.debit_card_id)

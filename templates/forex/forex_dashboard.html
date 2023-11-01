@@ -19,7 +19,7 @@
                                 <div class="top-area">
                                     <div class="left-side">
                                         <h5>Hi, {{kyc.full_name|title}}!</h5>
-                                        <h2 style="font-size: 50px;">$ {{account_foreign.account_balance|intcomma }} </h2>
+                                        <h2 style="font-size: 50px;">$ {{account_forex.account_balance|intcomma }} </h2>
                                         
                                         {% for recent_recieved_transfer in recent_recieved_transfer %}
                                         <h5 class="receive">Last Received <span>₹{{recent_recieved_transfer.amount|intcomma }}</span></h5>
@@ -29,7 +29,7 @@
                                     </div>
                                     <div class="-side">
                                             <div class="-top">
-                                                <h2>{{account_foreign.account_currency |upper}}</h2>
+                                                <h2>{{account_forex.account_currency |upper}}</h2>
                                                 <!-- <div class="dropdown-area">
                                                     <button type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                         <img src="{% static 'assets1/images/icon/option.png' %}" alt="icon">
@@ -52,8 +52,8 @@
                                 </div>
                                 <div class="bottom-area">
                                     <div class="left-side">
-                                        <a href="{% url 'account:foreign_deposit_check_rate' %}" class="cmn-btn">Deposit</a>
-                                        <a href="{% url 'account:foreign_withdraw_check_rate' %}" class="cmn-btn">Withdraw</a>
+                                        <a href="{% url 'account:forex_deposit_check_rate' %}" class="cmn-btn">Deposit</a>
+                                        <a href="{% url 'account:forex_withdraw_check_rate' %}" class="cmn-btn">Withdraw</a>
                                         <a href="{% url 'core:all_credit_cards' %}" class="cmn-btn">All Cards</a>
                                     </div>
                                     <div class="right-side">
@@ -386,7 +386,7 @@
                                 </div>
                                 <div class="row">               
                                     {% for d in forex_debit_card %}
-                                        <a href="{% url 'account:foreign_debit_card_detail' d.debit_card_id %}">
+                                        <a href="{% url 'account:forex_debit_card_detail' d.debit_card_id %}">
                                             <div class="col-12">
                                                 <div class="card__main" style="height: 230px; width: 400px;">
                                                     <div class="{% if d.card_type == 'rupay' %}Front_card{% endif %}    {% if d.card_type == 'master' %}masterCard{% endif %}    {% if d.card_type == 'visa' %}visaCard{% endif %}">

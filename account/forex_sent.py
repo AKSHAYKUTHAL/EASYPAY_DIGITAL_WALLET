@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 
 
 def forex_calculate(request):
-    return render(request,'forex/forex_calculate.html')
+    return render(request,'forex/sent/forex_calculate.html')
 
 
 
@@ -34,4 +34,4 @@ def forex_account_detail_search(request):
         }
 
 
-    return render(request,'forex/forex_account_detail_search.html',context)
+    return render(request,'forex/sent/forex_account_detail_search.html',context)

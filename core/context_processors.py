@@ -16,6 +16,8 @@ def default(request):
     except Exception as e:
         user_profile_pic = None
 
+        
+
 
 
     return {

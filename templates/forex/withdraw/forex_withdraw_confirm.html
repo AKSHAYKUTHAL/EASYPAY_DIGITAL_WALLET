@@ -22,13 +22,13 @@
                                 <div class="left d-flex align-items-center">
                                     <div class="img-area">
                                         <!-- <img src="{{ a.user.kyc.image.url }}" alt="image"> -->
-                                        <img src="{{ transaction_foreign.receiver_account.user.kyc.image.url }}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;"  alt="image">
+                                        <img src="{{ transaction_forex.receiver_account.user.kyc.image.url }}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;"  alt="image">
     
                                     </div>
                                     <div class="text-area">
-                                        <p>{{ transaction_foreign.receiver_account.user.kyc.full_name|title }}</p>
-                                        <span class="mdr"><b>{{ transaction_foreign.receiver_account.account_number }}</b></span> <br>
-                                        <span class="mdr">{{ transaction_foreign.receiver_account.user.email }}</span>
+                                        <p>{{ transaction_forex.sender_account.user.kyc.full_name|title }}</p>
+                                        <span class="mdr"><b>{{ transaction_forex.sender_account.account_number }}</b></span> <br>
+                                        <span class="mdr">{{ transaction_forex.sender_account.user.email }}</span>
                                     </div>
                                 </div>
                                 
@@ -49,37 +49,37 @@
                             <div class="col-xl-6">
                                 <ul class="details-list">
                                     <li>
-                                        <span>Deposit Amount </span>
-                                        <b>{{transaction_foreign.original_currency_amount}} {{transaction_foreign.sender_account_currency}}</b>
+                                        <span>Withdarw Amount </span>
+                                        <b>{{transaction_forex.original_currency_amount}} {{transaction_forex.sender_account_currency}}</b>
                                     </li>
                                    
                                     <li>
                                         <span>From</span>
-                                        <b>{{transaction_foreign.sender_account.kyc.full_name|title}} ({{transaction_foreign.sender_account.account_number}})</b>
+                                        <b>{{transaction_forex.sender_account.kyc.full_name|title}} ({{transaction_forex.receiver_account.account_number}})</b>
                                     </li>
                                     <li>
                                         <span>Fees (Including the conversion)</span>
-                                        <b>{{transaction_foreign.conversion_fee}}  {{transaction_foreign.sender_account_currency}}</b>
+                                        <b>{{transaction_forex.conversion_fee}} {{transaction_forex.sender_account_currency}}</b>
                                     </li>
                                     <li>
                                         <span>Description</span>
-                                        <b>{{transaction_foreign.transaction_type | upper }}</b>
+                                        <b>{{transaction_forex.transaction_type | upper }}</b>
                                     </li>
                                     <li>
                                         <span>Converted Amount</span>
-                                        <b>{{transaction_foreign.amount_after_fee}}  {{transaction_foreign.sender_account_currency}}</b>
+                                        <b>{{transaction_forex.amount_after_fee}} {{transaction_forex.sender_account_currency}}</b>
                                     </li>
                                     <li>
                                         <span>Easypay rate</span>
-                                        <b>{{transaction_foreign.easypay_rate}}</b>
+                                        <b>{{transaction_forex.easypay_rate}}</b>
                                     </li>
                                     <li>
                                         <span>You get</span>
-                                        <b>{{transaction_foreign.recipient_gets}} {{transaction_foreign.reciever_account_currency}} </b>
+                                        <b>{{transaction_forex.recipient_gets}} {{transaction_forex.reciever_account_currency}}</b>
                                     </li>
                                     <li>
                                         <span>Deposit was initiated on </span>
-                                        <b>{{transaction_foreign.date}} </b>
+                                        <b>{{transaction_forex.date}} </b>
                                     </li>
                                 </ul>
                             </div>
@@ -93,7 +93,7 @@
                         </div>
                         <div class="footer-area mt-40">
                             <a href="" onclick="location.href = document.referrer; return false;">Previous Step</a>
-                            <a href="javascript:void(0)" class="transferMod active" data-bs-toggle="modal" data-bs-target="#transferMod" id="pay_button" style="display: none;"> Deposit</a>
+                            <a href="javascript:void(0)" class="transferMod active" data-bs-toggle="modal" data-bs-target="#transferMod" id="pay_button" style="display: none;">Withdraw</a>
                         </div>
                     </form>
                 </div>
@@ -144,7 +144,7 @@
                                         <div class="main-content">
                                             <h4>Confirm Deposit</h4>
                                             <p>Enter your pin number below</p>
-                                            <form action="{% url 'account:foreign_deposit_confirm_process' transaction_foreign.transaction_id %}" method="POST">
+                                            <form action="{% url 'account:forex_withdraw_confirm_process' transaction_forex.transaction_id %}" method="POST">
                                                 {% csrf_token %}
                                                 <div class="userInput">
                                                     <input minlength="4" maxlength="4" name="pin_number" type="text">
