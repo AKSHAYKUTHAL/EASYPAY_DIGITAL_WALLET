@@ -38,3 +38,5 @@ urlpatterns = [
     path('foreign_withdraw_confirm_process/<transaction_id>/',foreign_account_withdraw.foreign_withdraw_confirm_process,name='foreign_withdraw_confirm_process')
 
 ]
+
+
