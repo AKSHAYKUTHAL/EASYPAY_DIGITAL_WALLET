@@ -1,5 +1,5 @@
 from django.urls import path
-from account import dashboard,account,recipients,foreign_account
+from account import dashboard,account,recipients,foreign_account,foreign_account_deposit
 
 app_name = "account"
 
@@ -26,7 +26,11 @@ urlpatterns = [
     path('foreign_account_add',foreign_account.foreign_account_add,name='foreign_account_add'),
     path('foreign_account_create',foreign_account.foreign_account_create,name='foreign_account_create'),
     path('foreign_dashboard/',foreign_account.foreign_dashboard,name='foreign_dashboard'),
-    path('foreign_deposit_check_rate',foreign_account.foreign_deposit_check_rate,name='foreign_deposit_check_rate')
+
+    # foreign_account_deposit
+    path('foreign_deposit_check_rate',foreign_account_deposit.foreign_deposit_check_rate,name='foreign_deposit_check_rate'),
+    path('foreign_deposit_confirm/<transaction_id>/',foreign_account_deposit.foreign_deposit_confirm,name='foreign_deposit_confirm'),
+    path('foreign_deposit_confirm_process/<transaction_id>/',foreign_account_deposit.foreign_deposit_confirm_process,name='foreign_deposit_confirm_process')
 
 
 

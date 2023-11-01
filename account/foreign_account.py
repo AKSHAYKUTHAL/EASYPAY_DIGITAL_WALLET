@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
 from account.models import KYC, Account,AccountForeign
-from account.forms import KYCForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from core.forms import CreditCardForm
-from core.models import CreditCard,Notification,History,DebitCard
+from core.models import CreditCard,Notification,History,DebitCard,TransactionForeign
 from account.forms import AccountForeignForm
-import datetime
 from django.contrib.auth import logout
+from decimal import Decimal
 
 
 
@@ -42,15 +41,24 @@ def foreign_account_create(request):
 
             if pin_number == user.account.pin_number:
                 if form.is_valid():
-                    new_form = form.save(commit=False)
-                    new_form.user = request.user
-                    new_form.save()
-                messages.success(request,'You created a Forex Account')
-                return redirect('account:foreign_dashboard',)
+                    account_currency = form.cleaned_data['account_currency']
+
+                    # print(f"account_currency = {account_currency}")
+                    # print(f"account.account_currency = {account.account_currency}")
+
+                    if account_currency == (account.account_currency).upper():
+                        messages.error(request,'You already have this currency account.')
+                        return redirect('account:foreign_account_add')
+                    else:
+                        new_form = form.save(commit=False)
+                        new_form.user = request.user
+                        new_form.save()
+                        messages.success(request,'You created a Forex Account')
+                        return redirect('account:foreign_dashboard')
+                       
             else:
                 messages.error(request,'Incorrect Pin')
                 return redirect('account:foreign_account_add')
-        
     else:
         form = AccountForeignForm()
 
@@ -79,5 +87,3 @@ def foreign_dashboard(request):
     return render(request,'foreign/foreign_dashboard.html',context)
 
 
-def foreign_deposit_check_rate(request):
-    return render(request,'foreign/deposit/foreign_deposit_check_rate.html')

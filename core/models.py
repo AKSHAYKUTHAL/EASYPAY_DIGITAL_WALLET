@@ -1,9 +1,11 @@
 from django.db import models
 from userauths.models import User
-from account.models import Account
+from account.models import Account,AccountForeign
 from shortuuid.django_fields import ShortUUIDField
 from decimal import Decimal,ROUND_HALF_UP
 import datetime
+
+
 
 
 TRANSACTION_TYPE = (
@@ -13,6 +15,7 @@ TRANSACTION_TYPE = (
     ('withdraw','Withdraw'),
     ('refund','Refund'),
     ('request','Payment Request'),
+    ('forex_deposit','Forex Deposit'),
     
 )
 
@@ -23,10 +26,15 @@ TRANSACTION_STATUS = (
     ('pending','Pending'),
     ('cancelled','Cancelled'),
     ('processing','Processing'),
+
     ('request_sent' ,'Request Sent'),
     ('request_processing' ,'Request Processing'),
     ('request_settled' ,'Request Settled' ),
     ('request_declined' ,'Request Declined' ),
+
+    ('deposit_processing','Deposit Processing'),
+    ('deposit_completed','Deposit Completed'),
+
 
 )
 
@@ -268,4 +276,51 @@ class DebitCard(models.Model):
         return f"{self.user}"
     
 
+class TransactionForeign(models.Model):
+    transaction_id = ShortUUIDField(unique=True, length=15, max_length=20, prefix='TRN')
+
+    user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True, related_name='user_foreign')
+    description = models.CharField(max_length=1000, null=True, blank=True)
+
+    reciever = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='reciever_foreign')
+    sender = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='sender_foreign')
+
+    receiver_account = models.ForeignKey(AccountForeign, on_delete=models.CASCADE,null=True, related_name='receiver_account_foreign')
     
+    sender_account = models.ForeignKey(Account, on_delete=models.CASCADE,null=True, related_name='sender_account_foreign')
+
+    
+    reciever_account_currency = models.CharField(max_length=10,choices=ACCOUNT_COUNTRY_CURRENCY,default='INR')
+    sender_account_currency = models.CharField(max_length=10,choices=ACCOUNT_COUNTRY_CURRENCY,default='INR')
+
+    transaction_status = models.CharField(choices=TRANSACTION_STATUS, max_length=100, default='None')    
+    transaction_type = models.CharField(choices=TRANSACTION_TYPE,max_length=100, default='None')
+
+    date = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now_add=False,null=True, blank=True)
+
+    ifsc_code = models.CharField( max_length=100, default='None')    
+    swift_code = models.CharField( max_length=100, default='None')    
+
+    original_currency_amount = models.DecimalField(max_digits=12, decimal_places=2, default=0.00)
+    conversion_fee = models.CharField(max_length=15,default=0.00,blank=True,null=True)
+    exchange_rate = models.CharField(max_length=15,default=0.0000,blank=True,null=True)
+    amount_after_fee = models.CharField(max_length=15,default=0.0000,blank=True,null=True)
+    easypay_rate = models.CharField(max_length=15,default=0.0000,blank=True,null=True)
+    recipient_gets = models.CharField(max_length=15,default=0.0000,blank=True,null=True)
+     
+
+
+    def transaction_year(self):
+        return self.date.year
+    
+    def transaction_month(self):
+        return self.date.month
+
+    def __str__(self):
+        try:
+            return f"{self.user}"
+        except:
+            return f"Transaction"
+        
+
