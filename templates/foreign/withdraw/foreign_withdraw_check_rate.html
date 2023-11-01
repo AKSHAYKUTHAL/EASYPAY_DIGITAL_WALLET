@@ -17,19 +17,19 @@
                             <div class="row justify-content-between align-items-center">
                                 <div class="col-xxl-4 col-xl-5 col-md-6" style="box-shadow: 0 0 10px rgba(27, 24, 228, 0.657); border-radius: 15px; padding: 20px; background-color: white;" >
                                     <div class="">
-                                        <form action="{% url 'account:foreign_deposit_check_rate' %}" method="post">
+                                        <form action="{% url 'account:foreign_withdraw_check_rate' %}" method="post">
                                             {% csrf_token %}
                                             <div class="" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background-color: #edefff; padding: 25px; border-radius: 15px;">
                                                 <div class="" style="flex-basis: 60%;">
-                                                    <span class="mdr" style="color: #4743c9; font-size: 20px;"><b>You deposit</b></span>
+                                                    <span class="mdr" style="color: #4743c9; font-size: 20px;"><b>You Withdraw</b></span>
                                                     <input type="number" id="original_currency_amount" placeholder="1000" name="original_currency_amount" style="border: 1px solid #4743c9; border-radius: 10px; padding: 8px; margin-top: 5px; width: 220px;">
                                                     <br><br>
-                                                    <h6>Your Balance {{sender_account.account_balance}} {{sender_account.account_currency | upper}}</h6>
+                                                    <h6>Your Balance {{sender_account.account_balance | intcomma}} {{sender_account.account_currency | upper}}</h6>
                                                 </div>
                                                 <div class="" style="flex-basis: 40%; border-radius: 20px ; margin-top: px; margin-left: 25px;">
                                                     <select id="from_currency" name="from_currency"  style="border: 1px solid #4743c9; padding: 10px; color: #4743c9;">
-                                                        <option value="INR" style="color: #4743c9;" selected>INR</option>
-                                                        <option value="USD" style="color: #4743c9;">USD</option>
+                                                        <option value="INR" style="color: #4743c9;" >INR</option>
+                                                        <option value="USD" style="color: #4743c9;" selected>USD</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -95,8 +95,8 @@
                                                 </div>
                                                 <div class="" style="flex-basis: 40%; border-radius: 20px ; margin-top: 30px; margin-left: 25px;">
                                                     <select id="to_currency" name="to_currency"  style="border: 1px solid #4743c9; padding: 10px; color: #4743c9;">
-                                                        <option value="INR" style="color: #4743c9;">INR</option>
-                                                        <option value="USD" style="color: #4743c9;" selected>USD</option>
+                                                        <option value="INR" style="color: #4743c9;" selected>INR</option>
+                                                        <option value="USD" style="color: #4743c9;">USD</option>
                                                     </select>
                                                 </div>
                                             </div>

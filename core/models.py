@@ -15,7 +15,7 @@ TRANSACTION_TYPE = (
     ('withdraw','Withdraw'),
     ('refund','Refund'),
     ('request','Payment Request'),
-    ('forex_deposit','Forex Deposit'),
+    ('forex','Forex'),
     
 )
 
@@ -32,8 +32,11 @@ TRANSACTION_STATUS = (
     ('request_settled' ,'Request Settled' ),
     ('request_declined' ,'Request Declined' ),
 
-    ('deposit_processing','Deposit Processing'),
-    ('deposit_completed','Deposit Completed'),
+    ('Deposit Processing','Deposit Processing'),
+    ('Deposit Completed','Deposit Completed'),
+    ('Withdraw Processing','Withdraw Processing'),
+    ('Withdraw Completed','Withdraw Completed'),
+
 
 
 )
@@ -322,5 +325,8 @@ class TransactionForeign(models.Model):
             return f"{self.user}"
         except:
             return f"Transaction"
+        
+
+
         
 

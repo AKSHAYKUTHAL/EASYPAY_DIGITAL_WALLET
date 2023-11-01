@@ -11,7 +11,7 @@ from decimal import Decimal
 
 
 
-def foreign_deposit_check_rate(request):
+def foreign_withdraw_check_rate(request):
     user = request.user
     
     account_foreign = AccountForeign.objects.get(user=user)
@@ -29,7 +29,7 @@ def foreign_deposit_check_rate(request):
         to_currency = request.POST.get('to_currency')
         from_currency = request.POST.get('from_currency')
 
-        if sender_account.account_balance >= Decimal(original_currency_amount):
+        if account_foreign.account_balance >= Decimal(original_currency_amount) :
             new_transaction = TransactionForeign.objects.create(
                 user = user,
                 reciever = user,
@@ -38,7 +38,7 @@ def foreign_deposit_check_rate(request):
                 receiver_account = account_foreign,
                 reciever_account_currency = to_currency,
                 sender_account_currency = from_currency,
-                transaction_status = 'Deposit Processing',
+                transaction_status = 'Withdraw Processing',
                 transaction_type = 'forex',
 
                 original_currency_amount = original_currency_amount,
@@ -51,57 +51,57 @@ def foreign_deposit_check_rate(request):
             new_transaction.save()
 
             transaction_id = new_transaction.transaction_id
-            return redirect('account:foreign_deposit_confirm',transaction_id)
+            return redirect('account:foreign_withdraw_confirm',transaction_id)
         else:
             messages.error(request,'Insufficient balance')
-            return redirect('account:foreign_deposit_check_rate')
+            return redirect('account:foreign_withdraw_check_rate')
     
     context = {
-        'sender_account':sender_account
+        'sender_account':account_foreign
     }
     
-    return render(request,'foreign/deposit/foreign_deposit_check_rate.html',context)
+    return render(request,'foreign/withdraw/foreign_withdraw_check_rate.html',context)
 
 
 
 
-def foreign_deposit_confirm(request,transaction_id):
+def foreign_withdraw_confirm(request,transaction_id):
     transaction_foreign = TransactionForeign.objects.get(transaction_id=transaction_id)
 
     context = {
         'transaction_foreign':transaction_foreign,
     }
 
-    return render(request,'foreign/deposit/foreign_deposit_confirm.html',context)
+    return render(request,'foreign/withdraw/foreign_withdraw_confirm.html',context)
 
 
 
 
-def foreign_deposit_confirm_process(request,transaction_id):
+def foreign_withdraw_confirm_process(request,transaction_id):
     transaction_foreign = TransactionForeign.objects.get(transaction_id=transaction_id)
     sender_account = transaction_foreign.sender_account
     receiver_account = transaction_foreign.receiver_account
 
     if request.method == 'POST':
-        if transaction_foreign.transaction_status != 'Deposit Completed':
+        if transaction_foreign.transaction_status != 'Withdraw Completed':
 
             pin_number = request.POST.get('pin_number')
 
             if pin_number == sender_account.pin_number:
-                transaction_foreign.transaction_status = "Deposit Completed"
+                transaction_foreign.transaction_status = "Withdraw Completed"
                 transaction_foreign.save()
 
                 # remove the money
-                sender_account.account_balance -= transaction_foreign.original_currency_amount
-                sender_account.save()
+                receiver_account.account_balance -= transaction_foreign.original_currency_amount
+                receiver_account.save()
 
                 # if sender_debit_card is not None:
                 #     sender_debit_card.amount -= transaction.amount
                 #     sender_debit_card.save()
 
                 # add the monney to the reciever after the fee
-                receiver_account.account_balance +=  Decimal(transaction_foreign.recipient_gets)
-                receiver_account.save()
+                sender_account.account_balance +=  Decimal(transaction_foreign.recipient_gets)
+                sender_account.save()
 
                 # if receiver_debit_card is not None:
                 #     receiver_debit_card.amount += transaction.receiving_amount()
@@ -142,7 +142,7 @@ def foreign_deposit_confirm_process(request,transaction_id):
                 # )
 
 
-                messages.success(request,'Deposit Successful')
+                messages.success(request,'Withdarw Successful')
                 return redirect('account:foreign_dashboard')
             else:
                 messages.error(request,'Incorrect Pin.')

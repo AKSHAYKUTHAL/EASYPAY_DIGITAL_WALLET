@@ -59,7 +59,7 @@
                                     </li>
                                     <li>
                                         <span>Fees (Including the conversion)</span>
-                                        <b>{{transaction_foreign.conversion_fee}}</b>
+                                        <b>{{transaction_foreign.conversion_fee}}  {{transaction_foreign.sender_account_currency}}</b>
                                     </li>
                                     <li>
                                         <span>Description</span>
@@ -67,7 +67,7 @@
                                     </li>
                                     <li>
                                         <span>Converted Amount</span>
-                                        <b>{{transaction_foreign.amount_after_fee}}</b>
+                                        <b>{{transaction_foreign.amount_after_fee}}  {{transaction_foreign.sender_account_currency}}</b>
                                     </li>
                                     <li>
                                         <span>Easypay rate</span>
@@ -75,7 +75,7 @@
                                     </li>
                                     <li>
                                         <span>You get</span>
-                                        <b>{{transaction_foreign.recipient_gets}} {{transaction_foreign.reciever_account_currency}}</b>
+                                        <b>{{transaction_foreign.recipient_gets}} {{transaction_foreign.reciever_account_currency}} </b>
                                     </li>
                                     <li>
                                         <span>Deposit was initiated on </span>

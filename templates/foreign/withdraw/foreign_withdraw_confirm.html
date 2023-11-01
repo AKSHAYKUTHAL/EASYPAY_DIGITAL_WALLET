@@ -26,9 +26,9 @@
     
                                     </div>
                                     <div class="text-area">
-                                        <p>{{ transaction_foreign.receiver_account.user.kyc.full_name|title }}</p>
-                                        <span class="mdr"><b>{{ transaction_foreign.receiver_account.account_number }}</b></span> <br>
-                                        <span class="mdr">{{ transaction_foreign.receiver_account.user.email }}</span>
+                                        <p>{{ transaction_foreign.sender_account.user.kyc.full_name|title }}</p>
+                                        <span class="mdr"><b>{{ transaction_foreign.sender_account.account_number }}</b></span> <br>
+                                        <span class="mdr">{{ transaction_foreign.sender_account.user.email }}</span>
                                     </div>
                                 </div>
                                 
@@ -49,17 +49,17 @@
                             <div class="col-xl-6">
                                 <ul class="details-list">
                                     <li>
-                                        <span>Deposit Amount </span>
+                                        <span>Withdarw Amount </span>
                                         <b>{{transaction_foreign.original_currency_amount}} {{transaction_foreign.sender_account_currency}}</b>
                                     </li>
                                    
                                     <li>
                                         <span>From</span>
-                                        <b>{{transaction_foreign.sender_account.kyc.full_name|title}} ({{transaction_foreign.sender_account.account_number}})</b>
+                                        <b>{{transaction_foreign.sender_account.kyc.full_name|title}} ({{transaction_foreign.receiver_account.account_number}})</b>
                                     </li>
                                     <li>
                                         <span>Fees (Including the conversion)</span>
-                                        <b>{{transaction_foreign.conversion_fee}}</b>
+                                        <b>{{transaction_foreign.conversion_fee}} {{transaction_foreign.sender_account_currency}}</b>
                                     </li>
                                     <li>
                                         <span>Description</span>
@@ -67,7 +67,7 @@
                                     </li>
                                     <li>
                                         <span>Converted Amount</span>
-                                        <b>{{transaction_foreign.amount_after_fee}}</b>
+                                        <b>{{transaction_foreign.amount_after_fee}} {{transaction_foreign.sender_account_currency}}</b>
                                     </li>
                                     <li>
                                         <span>Easypay rate</span>
@@ -144,7 +144,7 @@
                                         <div class="main-content">
                                             <h4>Confirm Deposit</h4>
                                             <p>Enter your pin number below</p>
-                                            <form action="{% url 'account:foreign_deposit_confirm_process' transaction_foreign.transaction_id %}" method="POST">
+                                            <form action="{% url 'account:foreign_withdraw_confirm_process' transaction_foreign.transaction_id %}" method="POST">
                                                 {% csrf_token %}
                                                 <div class="userInput">
                                                     <input minlength="4" maxlength="4" name="pin_number" type="text">
