@@ -110,6 +110,9 @@ def forex_dashboard(request):
                 new_form.card_currency = account_forex.account_currency
                 new_form.save()
 
+                account_forex.debit_card_count += 1
+                account_forex.save()
+
                 debit_card_id = new_form.debit_card_id
 
                 Notification.objects.create(
@@ -126,8 +129,6 @@ def forex_dashboard(request):
                     card_type = new_form.card_type,
                     card_tier = new_form.card_tier
                 )
-                account_forex.debit_card_count += 1
-                account_forex.save()
                 messages.success(request,'Forex Debit Card Added Successfully.')
                 return redirect('account:forex_dashboard')
         else:

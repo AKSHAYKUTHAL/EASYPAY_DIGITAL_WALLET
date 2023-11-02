@@ -192,9 +192,25 @@ def forex_sent_confirm_loader(request,transaction_id):
             except:
                 sender_debit_card = None 
 
+    if transaction.reciever_account_currency == 'INR':
+        reciever_account = Account.objects.get(account_number=transaction.account_number)
+        if reciever_account.debit_card_count > 0:
+            try:
+                reciever_debit_card = DebitCard.objects.get(user=reciever_account.user)
+            except:
+                reciever_debit_card = None
+    if transaction.reciever_account_currency == 'USD':
+        reciever_account = AccountForex.objects.get(account_number=transaction.account_number)
+        if reciever_account.debit_card_count > 0:
+            try:
+                reciever_debit_card = ForexDebitCard.objects.get(user=reciever_account.user)
+            except:
+                reciever_debit_card = None 
 
-    reciever_debit_card = None
-    
+    print(f"reciever_debit_card = {reciever_debit_card}")
+
+
+
     
     if transaction.reciever_account_currency == 'INR':
         recipient_account_number = transaction.account_number
@@ -202,11 +218,6 @@ def forex_sent_confirm_loader(request,transaction_id):
         print(f"recipient_account = {recipient_account}")
 
         if recipient_account is not None:
-            if recipient_account.debit_card_count > 0:
-                    try:
-                        reciever_debit_card = DebitCard.objects.get(user=user)
-                    except:
-                        reciever_debit_card = None
 
             if transaction.ifsc_code != 'None':
                 if transaction.ifsc_code == recipient_account.ifsc_code :
@@ -222,7 +233,7 @@ def forex_sent_confirm_loader(request,transaction_id):
                     
                     
                     messages.success(request,'The Money is Sent')
-                    return redirect('account:forex_dashboard')
+                    return redirect('account:forex_sent_completed',transaction_id)
                 
                 else:
                     transaction.transaction_status = 'Forex Sent Failed'
@@ -249,20 +260,20 @@ def forex_sent_confirm_loader(request,transaction_id):
                     recipient_account.save()
 
                     if reciever_debit_card is not None:
-                        reciever_debit_card.amount += transaction.recipient_gets
+                        reciever_debit_card.amount += Decimal(transaction.recipient_gets)
                         reciever_debit_card.save()
 
                     messages.success(request,'The Money is Sent')
-                    return redirect('account:forex_dashboard')
+                    return redirect('account:forex_sent_completed',transaction_id)
                 
                 else:
                     transaction.transaction_status = 'Forex Sent Failed'
                     transaction.save()
 
-                    sender_account.account_balance += transaction.original_currency_amount
+                    sender_account.account_balance += Decimal(transaction.original_currency_amount)
                     sender_account.save()
 
-                    sender_debit_card.amount += transaction.original_currency_amount
+                    sender_debit_card.amount += Decimal(transaction.original_currency_amount)
                     sender_debit_card.save()
     
                     messages.error(request,'Not a valid Swift code. Transaction Failed. Your Money is Returned.')
@@ -272,10 +283,10 @@ def forex_sent_confirm_loader(request,transaction_id):
             transaction.transaction_status = 'Forex Sent Failed'
             transaction.save()
 
-            sender_account.account_balance += transaction.original_currency_amount
+            sender_account.account_balance += Decimal(transaction.original_currency_amount)
             sender_account.save()
 
-            sender_debit_card.amount += transaction.original_currency_amount
+            sender_debit_card.amount += Decimal(transaction.original_currency_amount)
             sender_debit_card.save()
 
             messages.error(request,'Not a valid Account Number. Transaction Failed. Your Money is Returned.')
@@ -286,35 +297,30 @@ def forex_sent_confirm_loader(request,transaction_id):
             recipient_account = AccountForex.objects.get(account_number = recipient_account_number)
 
             if recipient_account is not None:
-                if recipient_account.debit_card_count > 0:
-                    try:
-                        reciever_debit_card = ForexDebitCard.objects.get(user=user)
-                    except:
-                        reciever_debit_card = None
-
+                
                 if transaction.ifsc_code != 'None':
                     if transaction.ifsc_code == recipient_account.ifsc_code :
                         transaction.transaction_status = 'Forex Sent Completed'
                         transaction.save()
 
-                        recipient_account.account_balance += transaction.recipient_gets
+                        recipient_account.account_balance += Decimal(transaction.recipient_gets)
                         recipient_account.save()
 
                         if reciever_debit_card is not None:
-                            reciever_debit_card.amount += transaction.recipient_gets
+                            reciever_debit_card.amount += Decimal(transaction.recipient_gets)
                             reciever_debit_card.save()
                         
                         messages.success(request,'The Money is Sent')
-                        return redirect('account:forex_dashboard')
+                        return redirect('account:forex_sent_completed',transaction_id)
                     
                     else:
                         transaction.transaction_status = 'Forex Sent Failed'
                         transaction.save()
 
-                        sender_account.account_balance += transaction.original_currency_amount
+                        sender_account.account_balance += Decimal(transaction.original_currency_amount)
                         sender_account.save()
 
-                        sender_debit_card.amount += transaction.original_currency_amount
+                        sender_debit_card.amount += Decimal(transaction.original_currency_amount)
                         sender_debit_card.save()
 
                         messages.error(request,'Not a valid IFSC code. Transaction Failed. Your Money is Returned')
@@ -331,20 +337,20 @@ def forex_sent_confirm_loader(request,transaction_id):
                         recipient_account.save()
 
                         if reciever_debit_card is not None:
-                            reciever_debit_card.amount += transaction.recipient_gets
+                            reciever_debit_card.amount += Decimal(transaction.recipient_gets)
                             reciever_debit_card.save()
 
                         messages.success(request,'The Money is Sent')
-                        return redirect('account:forex_dashboard')
+                        return redirect('account:forex_sent_completed',transaction_id)
                     
                     else:
                         transaction.transaction_status = 'Forex Sent Failed'
                         transaction.save()
 
-                        sender_account.account_balance += transaction.original_currency_amount
+                        sender_account.account_balance += Decimal(transaction.original_currency_amount)
                         sender_account.save()
 
-                        sender_debit_card.amount += transaction.original_currency_amount
+                        sender_debit_card.amount += Decimal(transaction.original_currency_amount)
                         sender_debit_card.save()
 
                         messages.error(request,'Not a valid Swift code. Transaction Failed. Your Money is Returned.')
@@ -354,10 +360,10 @@ def forex_sent_confirm_loader(request,transaction_id):
                 transaction.transaction_status = 'Forex Sent Failed'
                 transaction.save()
 
-                sender_account.account_balance += transaction.original_currency_amount
+                sender_account.account_balance += Decimal(transaction.original_currency_amount)
                 sender_account.save()
 
-                sender_debit_card.amount += transaction.original_currency_amount
+                sender_debit_card.amount += Decimal(transaction.original_currency_amount)
                 sender_debit_card.save()
                 
 
@@ -365,3 +371,27 @@ def forex_sent_confirm_loader(request,transaction_id):
                 return redirect('account:forex_dashboard')
             
     
+
+
+def forex_sent_completed(request,transaction_id):
+    user = request.user
+    transaction = TransactionForex.objects.get(transaction_id=transaction_id)
+
+    if transaction.sender_account_currency == 'INR':
+        from_account = Account.objects.get(user=user)
+    if transaction.sender_account_currency == 'USD':
+        from_account = AccountForex.objects.get(user=user)
+    
+
+    if transaction.reciever_account_currency == 'INR':
+        to_account = Account.objects.get(user=user)
+    if transaction.reciever_account_currency == 'USD':
+        to_account = AccountForex.objects.get(user=user)
+
+
+    context = {
+        'transaction':transaction,
+        'from_account':from_account,
+        'to_account':to_account
+    }
+    return render(request,'forex/sent/forex_sent_completed.html',context)

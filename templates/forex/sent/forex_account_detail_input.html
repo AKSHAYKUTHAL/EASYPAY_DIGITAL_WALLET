@@ -57,7 +57,7 @@
                                     <div class="single-area" style="display: flex;">
                                         <div class="left-area" style="flex: 1;">
                                             <i class="fa-solid fa-comments-dollar" style="color: #4743c9;"></i>
-                                            <span id="exchange_rate" class="mdr" style="color: #4743c9;">{{transaction.exchange_rate}}</span>
+                                            <span id="exchange_rate" class="mdr" style="color: #4743c9;">{{transaction.exchange_rate}} {{transaction.sender_account_currency}}</span>
                                         </div>
                                         <div class="right-area" style="flex: 1;">
                                             <span class="mdr" style="color: #4743c9; text-align: right;">Rate Today</span>
@@ -67,7 +67,7 @@
                                     <div class="single-area" style="display: flex;">
                                         <div class="left-area" style="flex: 1;">
                                             <i class="fa-solid fa-receipt" style="color: #4743c9;"></i>
-                                            <span id="conversion_fee" class="mdr" style="color: #4743c9;">{{transaction.conversion_fee}}</span>
+                                            <span id="conversion_fee" class="mdr" style="color: #4743c9;">{{transaction.conversion_fee}} {{transaction.sender_account_currency}}</span>
                                         </div>
                                         <div class="right-area" style="flex: 1;">
                                             <span class="mdr" style="color: #4743c9; text-align: right;">Our fee</span>
@@ -77,7 +77,7 @@
                                     <div class="single-area" style="display: flex;">
                                         <div class="left-area" style="flex: 1;">
                                             <i class="fas fa-money-bill-alt" style="color: #4743c9;"></i>
-                                            <span id="money_after_fee" class="mdr" style="color: #4743c9;">{{transaction.amount_after_fee}}</span>
+                                            <span id="money_after_fee" class="mdr" style="color: #4743c9;">{{transaction.amount_after_fee}} {{transaction.sender_account_currency}}</span>
                                         </div>
                                         <div class="right-area" style="flex: 1;">
                                             <span class="mdr" style="color: #4743c9; text-align: right;">We’ll Convert</span>
@@ -87,7 +87,7 @@
                                     <div class="single-area" style="display: flex;">
                                         <div class="left-area" style="flex: 1;">
                                             <i class="fa-solid fa-scale-balanced" style="color: #4743c9;"></i>
-                                            <span id="easypay_rate" class="mdr" style="color: #4743c9;">{{transaction.easypay_rate}}</span>
+                                            <span id="easypay_rate" class="mdr" style="color: #4743c9;">{{transaction.easypay_rate}} {{transaction.sender_account_currency}}</span>
                                         </div>
                                         <div class="right-area" style="flex: 1;">
                                             <span class="mdr highlight" style="color: #4743c9; text-align: right;">Easypay Rate</span>
@@ -97,7 +97,7 @@
                                     <div class="single-area" style="display: flex;">
                                         <div class="left-area" style="flex: 1;">
                                             <i class=" fa fa-check-circle" style="color: #4743c9;"></i>
-                                            <span id="easypay_rate" class="mdr" style="color: #4743c9;">{{transaction.recipient_gets}}</span>
+                                            <span id="easypay_rate" class="mdr" style="color: #4743c9;">{{transaction.recipient_gets}} {{transaction.reciever_account_currency}}</span>
                                         </div>
                                         <div class="right-area" style="flex: 1;">
                                             <span class="mdr highlight" style="color: #4743c9; text-align: right;">Recipient Gets</span>
