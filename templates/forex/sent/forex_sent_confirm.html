@@ -1,0 +1,248 @@
+{% extends "partials/dashboard_base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <!-- Dashboard Section start -->
+    <section class="dashboard-section body-collapse pay step step-2 step-3">
+        <div class="overlay pt-120">
+            <div class="container-fruid">
+                <div class="main-content">
+                    <div class="head-area d-flex align-items-center justify-content-between">
+                        <h4>Forex Transfer </h4>
+                        <div class="icon-area">
+                            <img src="{{user_profile_pic.url}}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" alt="icon">
+                        </div>
+                    </div>
+                    <div class="payment-details" id="recipient_detail">
+                        <div class="top-area">
+                            <h6>Confirm Details</h6>
+                            <div class="right">
+                                <a href="" onclick="location.href = document.referrer; return false;">
+                                    <i class=""></i>
+                                    Edit
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <ul class="details-list">
+                                    <li>
+                                        <span>Recipient Name </span>
+                                        <b>{{transaction.full_name}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Account Number </span>
+                                        <b>{{transaction.account_number}}</b>
+                                    </li>
+                                    {% if transaction.ifsc_code != 'None' %}
+                                        <li>
+                                            <span>IFSC Code </span>
+                                            <b>{{transaction.ifsc_code}}</b>
+                                        </li>
+                                    {% elif transaction.swift_code != 'None' %}
+                                        <li>
+                                            <span>SWIFT Code </span>
+                                            <b>{{transaction.swift_code}}</b>
+                                        </li>
+                                    {% endif %}
+                                    <li>
+                                        <span>Description</span>
+                                        <b>{{transaction.description}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Full Amount</span>
+                                        <b>{{transaction.original_currency_amount | intcomma}}  {{transaction.sender_account_currency}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Fees (Including the conversion)</span>
+                                        <b>{{transaction.conversion_fee}}  {{transaction.sender_account_currency}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Sending Amount</span>
+                                        <b>{{transaction.amount_after_fee | intcomma}}  {{transaction.sender_account_currency}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Easypay rate</span>
+                                        <b>{{transaction.easypay_rate}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Recipient get</span>
+                                        <b>{{transaction.recipient_gets | intcomma}} {{transaction.reciever_account_currency}} </b>
+                                    </li>
+                                    <li>
+                                        <span>Transaction was initiated on </span>
+                                        <b>{{transaction.date}} </b>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="checkbox" style="display: flex; align-items: center; justify-content: center; margin-top: 20px;">
+                        <input type="checkbox" id="recipient_detail_confirm" onclick="toggleDetails()" style="margin-right: 5px;">
+                        <label for="confirm" style="margin: 0;">I confirm the payment details above</label>
+                    </div>
+                    
+
+                    <div class="payment-details" id="your_detail" style="display: none;">
+                        <div class="top-area">
+                            <h6>Your Account Details</h6>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <ul class="details-list">
+                                    <li>
+                                        <span>Your Name </span>
+                                        <b>{{user.kyc.full_name}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Sending From  </span>
+                                        {% if transaction.reciever_account_currency == 'USD' %}
+                                            <b>{{account_forex.account_number}} ({{account_forex.account_currency}})</b>
+                                        {% else %}
+                                            <b>{{account.account_number}} ({{account.account_currency}})</b>
+                                        {% endif %}
+                                    </li>
+                                    
+                                    <li>
+                                        <span>Full Amount</span>
+                                        <b>{{transaction.original_currency_amount | intcomma}}  {{transaction.sender_account_currency}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Fees (Including the conversion)</span>
+                                        <b>{{transaction.conversion_fee}}  {{transaction.sender_account_currency}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Sending Amount</span>
+                                        <b>{{transaction.amount_after_fee | intcomma}}  {{transaction.sender_account_currency}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Easypay rate</span>
+                                        <b>{{transaction.easypay_rate}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Recipient get</span>
+                                        <b>{{transaction.recipient_gets | intcomma}} {{transaction.reciever_account_currency}} </b>
+                                    </li>
+                                    <li>
+                                        <span>Transaction was initiated on </span>
+                                        <b>{{transaction.date}} </b>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form action="" method="post" id="paymentForm" style="display: none;">
+                        {% csrf_token %}
+                        <div class="checkbox" style="display: flex; align-items: center; justify-content: center; margin-top: 20px;">
+                            <input type="checkbox" id="your_detail_confirm" onclick="confirmDetails()" style="margin-right: 5px;">
+                            <label for="confirm" style="margin: 0;">I confirm the payment details above</label>
+                        </div>
+                        
+                        <div class="footer-area mt-40" >
+                            <a href="" onclick="location.href = document.referrer; return false;">Previous Step</a>
+                            <a href="javascript:void(0)" class="transferMod active" data-bs-toggle="modal" data-bs-target="#transferMod" id="pay_button" style="display: none;"> Transfer </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        function toggleDetails() {
+            var recipientDetail = document.getElementById('recipient_detail');
+            var recipientDetailConfirm = document.getElementById('recipient_detail_confirm');
+            var yourDetail = document.getElementById('your_detail');
+            var yourDetailConfirm = document.getElementById('your_detail_confirm');
+            var payButton = document.getElementById('pay_button');
+            var paymentForm = document.getElementById('paymentForm')
+
+            if (recipientDetailConfirm.checked) {
+                recipientDetail.style.display = 'none';
+                yourDetail.style.display = 'block';
+                yourDetailConfirm.style.display = 'block';
+                paymentForm.style.display = 'block';
+            } else {
+                recipientDetail.style.display = 'block';
+                recipientDetailConfirm.style.display = 'block';
+                yourDetail.style.display = 'none';
+                yourDetailConfirm.style.display = 'none';
+                payButton.style.display = 'none';
+            }
+        }
+
+        function confirmDetails(){
+            var checkbox = document.getElementById('your_detail_confirm');
+            var pay_button = document.getElementById('pay_button');
+            if (checkbox.checked == true){
+                pay_button.style.display = 'block';
+            }
+            else {
+                pay_button.style.display = 'none';
+            }
+        }
+    </script>
+    <!-- Dashboard Section end -->
+    
+    <!-- Transfer Popup start -->
+    <div class="transfer-popup">
+        <div class="container-fruid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="modal fade" id="transferMod" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <ul class="nav nav-tabs d-none" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="transfer-tab" data-bs-toggle="tab"
+                                        data-bs-target="#transfer" type="button" role="tab" aria-controls="transfer"
+                                        aria-selected="true">Sent</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="success-tab" data-bs-toggle="tab"
+                                        data-bs-target="#success" type="button" role="tab" aria-controls="success"
+                                        aria-selected="false">Confirm</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" style="width: 400px;">
+                                <div class="tab-pane fade show active" id="transfer" role="tabpanel" aria-labelledby="transfer-tab">
+                                    <div class="modal-content">
+                                        <div class="modal-header mb-60 justify-content-between">
+                                            <a href="#" onclick="location.href = document.referrer; return false;"><i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i></a>
+
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                        <form action="{% url 'account:forex_sent_confirm_process' transaction.transaction_id %}" method="POST">
+                                            {% csrf_token %}
+                                            <div class="main-content">
+                                                <h4>Confirm Transaction</h4>
+                                                <p>Enter your pin number below</p>
+                                            
+                                                <div class="userInput">
+                                                    <input minlength="4" maxlength="4" name="pin_number" type="text">
+                                                </div>
+                                                <a href="javascript:void(0)">Reset Pin Number?</a>
+                                                <button type="submit" class="mt-60 confirm">Confirm</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="success" role="tabpanel" aria-labelledby="success-tab">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="btn-close d-md-none d-block" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+                                        </div>
+                                        <div class="main-content text-center pt-120 pb-120">
+                                            <h3>Success</h3>
+                                            <p>Transfer was completed.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Transfer Popup start -->
+{% endblock content %}

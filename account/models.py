@@ -71,6 +71,8 @@ class Account(models.Model):
     credit_card_count = models.IntegerField(default=0, blank=True, null=True)
     debit_card_count = models.IntegerField(default=0, blank=True, null=True)
     account_currency = models.CharField(max_length=10,choices=ACCOUNT_COUNTRY_CURRENCY,default='INR')
+    ifsc_code = models.CharField(max_length=11,choices=ACCOUNT_IFSC,default='EPDWIN00902')
+    swift_code = models.CharField(max_length=11,choices=ACCOUNT_SWIFT,default='EPDWINKL902')
 
     class Meta:
         ordering = ['-date']

@@ -37,7 +37,8 @@ TRANSACTION_STATUS = (
     ('Withdraw Processing','Withdraw Processing'),
     ('Withdraw Completed','Withdraw Completed'),
     
-    ('Forex Sent Processing','Forex Sent Processing'),
+    ('Forex_Sent Processing','Forex Sent Processing'),
+    ('Forex Sent Waiting','Forex Sent Waiting'),
     ('Forex Sent Completed','Forex Sent Completed'),
     ('Forex Sent Failed','Forex Sent Failed'),
 

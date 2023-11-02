@@ -48,6 +48,11 @@ urlpatterns = [
     # forex sent
     path('forex_sent_check_rate',forex_sent.forex_sent_check_rate,name='forex_sent_check_rate'),
     path('forex_account_detail_input/<transaction_id>/',forex_sent.forex_account_detail_input,name='forex_account_detail_input'),
+    path('forex_sent_confirm/<transaction_id>/',forex_sent.forex_sent_confirm,name='forex_sent_confirm'),
+    path('forex_sent_confirm_process/<transaction_id>/',forex_sent.forex_sent_confirm_process,name='forex_sent_confirm_process'),
+    path('forex_sent_confirm_loader/<transaction_id>/',forex_sent.forex_sent_confirm_loader,name='forex_sent_confirm_loader'),
+
+
 
 
 

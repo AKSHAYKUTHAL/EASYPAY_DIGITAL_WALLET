@@ -15,7 +15,7 @@ class KYCAdmin(ImportExportModelAdmin):
 
 class AccountForexAdminModel(ImportExportModelAdmin):
     list_editable = ['account_status', 'account_balance'] 
-    list_display = ['id','user', 'account_number' ,'account_status', 'account_balance','account_currency','ifsc_code','swift_code'] 
+    list_display = ['user', 'account_number' ,'account_status', 'account_balance','account_currency','swift_code','ifsc_code'] 
     list_filter = ['account_currency']
 
 
