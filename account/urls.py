@@ -54,6 +54,7 @@ urlpatterns = [
     path('forex_sent_confirm_loader/<transaction_id>/',forex_sent.forex_sent_confirm_loader,name='forex_sent_confirm_loader'),
     path('forex_sent_completed/<transaction_id>/',forex_sent.forex_sent_completed,name='forex_sent_completed'),
     path('forex_sent_detail/<transaction_id>/',forex_sent.forex_sent_detail,name='forex_sent_detail'),
+    path('delete_forex_transaction/<transaction_id>/',forex_sent.delete_forex_transaction,name='delete_forex_transaction'),
 
 
 ]

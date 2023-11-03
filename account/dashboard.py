@@ -11,15 +11,52 @@ from itertools import chain
 
 
 def dashboard(request,currency):
-    sent_transaction = chain(
-        Transaction.objects.filter(sender=request.user, transaction_type='transfer').order_by('-id'),
-        TransactionForex.objects.filter(user=request.user, transaction_type='Forex')
-    )
-    sent_transaction_list = list(sent_transaction)
-    recieved_transaction = Transaction.objects.filter(reciever=request.user,transaction_type='transfer').exclude(transaction_status='cancelled').order_by('-id')
+    ######### sent transactions ###########
 
-    sent_transaction_count = len(list(sent_transaction))
+    sent_transaction_all = chain(
+        Transaction.objects.filter(sender=request.user, transaction_type='transfer').order_by('-id'),
+        TransactionForex.objects.filter(user=request.user, transaction_type='forex')
+    )
+    sent_transaction_all_list = list(sent_transaction_all)
+    # sent_transaction_all_list_count = len(sent_transaction_all_list)
+
+    sent_transaction = Transaction.objects.filter(sender=request.user,transaction_type='transfer').order_by('-id')
+    sent_transaction_count = sent_transaction.count()
+
+    sent_forex_transaction = TransactionForex.objects.filter(user=request.user, transaction_type='forex').order_by('-id')
+    sent_forex_transaction_count = sent_forex_transaction.count()
+
+    ######### recieved ###############
+
+    recieved_transaction_all =chain(
+        Transaction.objects.filter(reciever=request.user,transaction_type='transfer').exclude(transaction_status='cancelled').order_by('-id'),
+        TransactionForex.objects.filter(account_number=request.user.account.account_number),
+        TransactionForex.objects.filter(account_number=request.user.accountforex.account_number)
+    )
+    recieved_transaction_all_list = list(recieved_transaction_all)
+    # recieved_transaction_all_list_count = len(recieved_transaction_all_list)
+
+    recieved_transaction = Transaction.objects.filter(reciever=request.user,transaction_type='transfer').exclude(transaction_status='cancelled').order_by('-id')
     recieved_transaction_count = recieved_transaction.count()
+
+    recieved_forex_transaction = chain (
+        TransactionForex.objects.filter(account_number=request.user.account.account_number).exclude(
+                                                                    Q(transaction_status='Forex Sent Waiting') | 
+                                                                    Q(transaction_status='None') | 
+                                                                    Q(transaction_status='Forex Sent Processing') | 
+                                                                    Q(transaction_status='Forex Sent Failed')
+                                                                ),
+        TransactionForex.objects.filter(account_number=request.user.accountforex.account_number).exclude(
+                                                                    Q(transaction_status='Forex Sent Waiting') | 
+                                                                    Q(transaction_status='None') | 
+                                                                    Q(transaction_status='Forex Sent Processing') | 
+                                                                    Q(transaction_status='Forex Sent Failed')
+                                                                ),
+    )
+    recieved_forex_transaction_list = list(recieved_forex_transaction)
+    recieved_forex_transaction_list_count = len(recieved_forex_transaction_list)
+
+    #################
 
     request_sent_transaction = Transaction.objects.filter(sender=request.user, transaction_type="request").order_by('-id')
     request_recieved_transaction = Transaction.objects.filter(reciever=request.user, transaction_type="request").exclude(transaction_status='request_processing').order_by('-id')
@@ -90,13 +127,19 @@ def dashboard(request,currency):
         'month':month,
         'year':year,
         'credit_card':credit_card,
-        "sent_transaction_list":sent_transaction_list,
-        "recieved_transaction":recieved_transaction,
+
+        "sent_transaction_all_list":sent_transaction_all_list,
+        'sent_transaction_count':sent_transaction_count,
+        'sent_forex_transaction_count':sent_forex_transaction_count,
+
+        'recieved_transaction_all_list':recieved_transaction_all_list,
+        'recieved_transaction_count':recieved_transaction_count,
+        'recieved_forex_transaction_count':recieved_forex_transaction_list_count,
+
+
         'request_sent_transaction':request_sent_transaction,
         'request_recieved_transaction':request_recieved_transaction,
 
-        'sent_transaction_count':sent_transaction_count,
-        'recieved_transaction_count':recieved_transaction_count,
         'request_sent_transaction_count':request_sent_transaction_count,
         'request_recieved_transaction_count':request_recieved_transaction_count,
         'debit_card':debit_card,
@@ -140,22 +183,7 @@ def search_user_transactions(request):
     # adding debit card from account and dashboard
 
 def add_debit_card(request):
-    sent_transaction = Transaction.objects.filter(sender=request.user,transaction_type='transfer').order_by('-id')
-    recieved_transaction = Transaction.objects.filter(reciever=request.user,transaction_type='transfer').exclude(transaction_status='cancelled').order_by('-id')
-
-    sent_transaction_count = sent_transaction.count()
-    recieved_transaction_count = recieved_transaction.count()
-
-    request_sent_transaction = Transaction.objects.filter(sender=request.user, transaction_type="request").order_by('-id')
-    request_recieved_transaction = Transaction.objects.filter(reciever=request.user, transaction_type="request").exclude(transaction_status='request_processing').order_by('-id')
-
-    request_sent_transaction_count = request_sent_transaction.count()
-    request_recieved_transaction_count = request_recieved_transaction.count()
-
-    month = datetime.datetime.now().month
-    year = datetime.datetime.now().year + 5
     
-
     if request.user.is_authenticated:
         try:
             kyc = KYC.objects.get(user=request.user)
@@ -208,23 +236,3 @@ def add_debit_card(request):
         messages.error(request,'You need to login to access the dashboard', request.user.account.account_currency)
         return redirect('userauths:sign_in')
     
-    context = {
-        'kyc':kyc,
-        'account':account,
-        'form':form,
-        'month':month,
-        'year':year,
-        'credit_card':credit_card,
-        "sent_transaction":sent_transaction,
-        "recieved_transaction":recieved_transaction,
-        'request_sent_transaction':request_sent_transaction,
-        'request_recieved_transaction':request_recieved_transaction,
-
-        'sent_transaction_count':sent_transaction_count,
-        'recieved_transaction_count':recieved_transaction_count,
-        'request_sent_transaction_count':request_sent_transaction_count,
-        'request_recieved_transaction_count':request_recieved_transaction_count
-
-
-    }
-    return render(request,'account/dashboard.html',context)

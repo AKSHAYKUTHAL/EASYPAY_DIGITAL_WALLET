@@ -8,11 +8,11 @@ from decimal import Decimal
 
 
 def forex_sent_check_rate(request):
-    user = request.user
-    account = Account.objects.get(user=user)
-    account_forex = AccountForex.objects.get(user=user)
-
     try:
+        user = request.user
+        account = Account.objects.get(user=user)
+        account_forex = AccountForex.objects.get(user=user)
+
         if request.method == 'POST':
             original_currency_amount = request.POST.get('original_currency_amount')
             exchange_rate_input = request.POST.get('exchange_rate_input')
@@ -24,73 +24,101 @@ def forex_sent_check_rate(request):
             from_currency = request.POST.get('from_currency')
 
             if from_currency == to_currency:
-                messages.error(request,'Please choose different currencies')
-                return redirect('account:forex_sent_check_rate')
+                messages.error(request, 'Please choose different currencies')
+            elif from_currency == 'INR':
+                if account.account_balance > Decimal(original_currency_amount):
+                    new_transaction = TransactionForex.objects.create(
+                        user=user,
+                        sender_account_currency=from_currency,
+                        reciever_account_currency=to_currency,
+                        transaction_status='None',
+                        transaction_type='forex',
+                        original_currency_amount=original_currency_amount,
+                        exchange_rate=exchange_rate_input,
+                        conversion_fee=conversion_fee_input,
+                        amount_after_fee=amount_after_fee_input,
+                        easypay_rate=easypay_rate_input,
+                        recipient_gets=recipient_gets_amount_input,
+                    )
+                    new_transaction.save()
+                    transaction_id = new_transaction.transaction_id
 
-            if from_currency == 'INR':
-                sender_account = account,
+                    return redirect('account:forex_account_detail_input', transaction_id)
+                else:
+                    messages.error(request, 'Insufficient Balance In your Selected Currency Account')
             elif from_currency == 'USD':
-                sender_account = account_forex
+                if account_forex.account_balance > Decimal(original_currency_amount):
+                    new_transaction = TransactionForex.objects.create(
+                        user=user,
+                        sender_account_currency=from_currency,
+                        reciever_account_currency=to_currency,
+                        transaction_status='None',
+                        transaction_type='forex',
+                        original_currency_amount=original_currency_amount,
+                        exchange_rate=exchange_rate_input,
+                        conversion_fee=conversion_fee_input,
+                        amount_after_fee=amount_after_fee_input,
+                        easypay_rate=easypay_rate_input,
+                        recipient_gets=recipient_gets_amount_input,
+                    )
+                    new_transaction.save()
+                    transaction_id = new_transaction.transaction_id
 
-            new_transaction = TransactionForex.objects.create(
-                user = user,
-                sender_account_currency = from_currency,
-                reciever_account_currency = to_currency,
-                transaction_status = 'Forex Sent Processing',
-                transaction_type = 'forex',
+                    return redirect('account:forex_account_detail_input', transaction_id)
+                else:
+                    messages.error(request, 'Insufficient Balance In your Selected Currency Account')
+            else:
+                messages.error(request, 'Invalid Currency Type')
+        
 
-                original_currency_amount = original_currency_amount,
-                exchange_rate = exchange_rate_input,
-                conversion_fee = conversion_fee_input,
-                amount_after_fee = amount_after_fee_input,
-                easypay_rate = easypay_rate_input,
-                recipient_gets = recipient_gets_amount_input,
+    except Account.DoesNotExist:
+        messages.error(request, 'Account does not exist for the user')
+    except AccountForex.DoesNotExist:
+        messages.error(request, 'Forex account does not exist for the user')
+    except Exception as e:
+        messages.error(request, f'An Error Occurred: {str(e)}')
 
-            )
-            new_transaction.save()
-            transaction_id = new_transaction.transaction_id
-
-            return redirect('account:forex_account_detail_input',transaction_id)
-    except:
-        messages.error(request,'An Error Occured. Try Again')
-        return redirect('account:forex_sent_check_rate')
-    
-
-    return render(request,'forex/sent/forex_sent_check_rate.html')
+    return render(request, 'forex/sent/forex_sent_check_rate.html')
 
 
 
 
 def forex_account_detail_input(request,transaction_id):
+    try:
+        transaction = TransactionForex.objects.get(transaction_id = transaction_id)
 
-    transaction = TransactionForex.objects.get(transaction_id = transaction_id)
 
-    if request.method == 'POST':
-        full_name = request.POST.get('full_name')
-        account_number = request.POST.get('account_number')
-        ifsc_swift_code = request.POST.get('ifsc_swift_code')
-        description = request.POST.get('description')
+        if request.method == 'POST':
+            full_name = request.POST.get('full_name')
+            account_number = request.POST.get('account_number')
+            ifsc_swift_code = request.POST.get('ifsc_swift_code')
+            description = request.POST.get('description')
 
-        if len(ifsc_swift_code) == 9:
-            ifsc_code = ifsc_swift_code
-            transaction.ifsc_code = ifsc_code
+            if len(ifsc_swift_code) == 9:
+                ifsc_code = ifsc_swift_code
+                transaction.ifsc_code = ifsc_code
+                transaction.save()
+
+            elif len(ifsc_swift_code) == 11:
+                swift_code = ifsc_swift_code
+                transaction.swift_code = swift_code
+                transaction.save()
+
+            else:
+                messages.error(request,'Please enter a valid IFSC/SWIFT code')
+                return redirect('account:forex_account_detail_input')
+
+            transaction.full_name = full_name
+            transaction.account_number = account_number
+            transaction.description = description
+            transaction.transaction_status = 'Forex Sent Processing'
             transaction.save()
+            
+            return redirect('account:forex_sent_confirm',transaction_id)
+    except TransactionForex.DoesNotExist:
+        messages.error(request,'Some Error Occured, Please Try Again')
+        return redirect('account:forex_sent_check_rate')
 
-        elif len(ifsc_swift_code) == 11:
-            swift_code = ifsc_swift_code
-            transaction.swift_code = swift_code
-            transaction.save()
-
-        else:
-            messages.error(request,'Please enter a valid IFSC/SWIFT code')
-            return redirect('account:forex_account_detail_input')
-
-        transaction.full_name = full_name
-        transaction.account_number = account_number
-        transaction.description = description
-        transaction.save()
-        
-        return redirect('account:forex_sent_confirm',transaction_id)
     
     context = {
         'transaction':transaction
@@ -100,11 +128,19 @@ def forex_account_detail_input(request,transaction_id):
 
 
 def forex_sent_confirm(request,transaction_id):
-    user = request.user
-    account_forex = AccountForex.objects.get(user=user)
-    account = Account.objects.get(user=user)
-    transaction = TransactionForex.objects.get(transaction_id=transaction_id)
+    try:
+        user = request.user
+        account_forex = AccountForex.objects.get(user=user)
+        account = Account.objects.get(user=user)
+        transaction = TransactionForex.objects.get(transaction_id=transaction_id)
 
+        transaction.transaction_status = 'Forex Sent Processing'
+
+        transaction.save()
+
+    except TransactionForex.DoesNotExist:
+        messages.error(request,'Some Error Occured, Please Try Again')
+        return redirect('account:forex_sent_check_rate')
     context = {
         'transaction':transaction,
         'user':user,
@@ -153,18 +189,22 @@ def forex_sent_confirm_process (request,transaction_id):
    
 
             if pin_number == user_pin_number:
-                transaction.transaction_status = 'Forex Sent Waiting'
-                transaction.save()
+                if sender_account.account_balance > Decimal(transaction.original_currency_amount):
+                    transaction.transaction_status = 'Forex Sent Waiting'
+                    transaction.save()
 
-                sender_account.account_balance -= transaction.original_currency_amount
-                sender_account.save()
+                    sender_account.account_balance -= transaction.original_currency_amount
+                    sender_account.save()
 
-                if sender_debit_card is not None:
-                    sender_debit_card.amount -= transaction.original_currency_amount
-                    sender_debit_card.save()
+                    if sender_debit_card is not None:
+                        sender_debit_card.amount -= transaction.original_currency_amount
+                        sender_debit_card.save()
 
-                messages.success(request,'Transfer Initiated')
-                return redirect('account:forex_sent_confirmation',transaction.transaction_id)
+                    messages.success(request,'Transfer Initiated')
+                    return redirect('account:forex_sent_confirmation',transaction.transaction_id)
+                else:
+                    messages.error(request,'Insufficient Balance')
+                    return redirect('account:forex_sent_check_rate')
             else:
                 messages.error(request,'Incorrect Pin.')
                 return redirect('account:forex_sent_confirm',transaction.transaction_id)
@@ -202,29 +242,36 @@ def forex_sent_confirmation(request,transaction_id):
                 sender_debit_card = None 
 
     if transaction.reciever_account_currency == 'INR':
-        reciever_account = Account.objects.get(account_number=transaction.account_number)
-        if reciever_account.debit_card_count > 0:
-            try:
-                reciever_debit_card = DebitCard.objects.get(user=reciever_account.user)
-            except:
-                reciever_debit_card = None
+        try:
+            reciever_account = Account.objects.get(account_number=transaction.account_number)
+            if reciever_account.debit_card_count > 0:
+                try:
+                    reciever_debit_card = DebitCard.objects.get(user=reciever_account.user)
+                except:
+                    reciever_debit_card = None
+        except Account.DoesNotExist:
+            reciever_account = None
     if transaction.reciever_account_currency == 'USD':
-        reciever_account = AccountForex.objects.get(account_number=transaction.account_number)
-        if reciever_account.debit_card_count > 0:
-            try:
-                reciever_debit_card = ForexDebitCard.objects.get(user=reciever_account.user)
-            except:
-                reciever_debit_card = None 
+        try:
+            reciever_account = AccountForex.objects.get(account_number=transaction.account_number)
+            if reciever_account.debit_card_count > 0:
+                try:
+                    reciever_debit_card = ForexDebitCard.objects.get(user=reciever_account.user)
+                except:
+                    reciever_debit_card = None 
+        except AccountForex.DoesNotExist:
+            reciever_account = None
 
-    print(f"reciever_debit_card = {reciever_debit_card}")
 
 
 
     
     if transaction.reciever_account_currency == 'INR':
         recipient_account_number = transaction.account_number
-        recipient_account = Account.objects.get(account_number = recipient_account_number)
-        print(f"recipient_account = {recipient_account}")
+        try:
+            recipient_account = Account.objects.get(account_number = recipient_account_number)
+        except Account.DoesNotExist:
+            recipient_account = None
 
         if recipient_account is not None:
             print(f"transaction.ifsc_code = {transaction.ifsc_code}")
@@ -303,7 +350,10 @@ def forex_sent_confirmation(request,transaction_id):
     else:
         if transaction.reciever_account_currency == 'USD':
             recipient_account_number = transaction.account_number
-            recipient_account = AccountForex.objects.get(account_number = recipient_account_number)
+            try:
+                recipient_account = AccountForex.objects.get(account_number = recipient_account_number)
+            except:
+                recipient_account = None
 
             if recipient_account is not None:
                 
@@ -395,8 +445,9 @@ def forex_sent_completed(request,transaction_id):
     user = request.user
     transaction = TransactionForex.objects.get(transaction_id=transaction_id)
 
-    if transaction.transaction_status == 'Forex Sent Completed':
-        messages.success(request,'Your Money has been Sent')
+    if transaction.transaction_status == 'Forex Sent Completed' and request.META.get('HTTP_REFERER') != 'http://127.0.0.1:8000/account/dashboard/inr/':
+        messages.success(request, 'Your Money has been Sent')
+
 
     if transaction.sender_account_currency == 'INR':
         from_account = Account.objects.get(user=user)
@@ -442,3 +493,15 @@ def forex_sent_detail(request,transaction_id):
         'to_account':to_account
     }
     return render(request,'forex/sent/forex_sent_detail.html',context)
+
+
+
+
+
+
+def delete_forex_transaction(request,transaction_id):
+    transaction = TransactionForex.objects.get(transaction_id=transaction_id)
+    transaction.delete()
+
+    messages.success(request,'The Forex Transaction deleted succesfully.')
+    return redirect('account:forex_dashboard')

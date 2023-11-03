@@ -31,7 +31,7 @@
                                         </li>
                                     </ul>
                                     <div class="view-all d-flex align-items-center">
-                                        <a href="{% url 'core:all_transactions' %}">View All</a>
+                                        <a href="{% url 'core:transactions' %}">View All</a>
                                         <img src="{% static 'assets1/images/icon/right-arrow.png' %}" alt="icon">
                                     </div>
                                 </div>
@@ -41,7 +41,7 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">Name/ Business</th>
+                                                        <th scope="col" style="width: 250px;">Name/ Business</th>
                                                         <th scope="col">Date</th>
                                                         <th scope="col">Status</th>
                                                         <th scope="col">Amount</th>
@@ -50,47 +50,105 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in sent_transaction %}
+                                                    {% for s in sent_transaction_all_list|slice:"10" %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactions_details_sent">
-                                                            <th scope="row">
-                                                                <p>{{s.reciever.kyc.full_name|title}}</p>
-                                                                <p class="mdr">{{s.transaction_type|title}}</p>
-                                                            </th>
-                                                            <td>
-                                                                <p><small>{{s.date|date:"H:i"}}</small></p>
-                                                                <p class="mdr">{{s.date|date:"d M, Y"}}</p>
-                                                            </td>
-                                                            <td>
-                                                                {% if s.transaction_status == 'completed' %}
-                                                                    <p class="text-success">{{s.transaction_status|title}}</p>
+                                                            {% if s.transaction_type != 'forex' %}
+                                                                <th scope="row">
+                                                                    <p>{{s.reciever.kyc.full_name|title}}</p>
+                                                                    <p class="mdr">{{s.transaction_type|title}}</p>
+                                                                </th>
+                                                                <td>
+                                                                    <p><small>{{s.date|date:"H:i"}}</small></p>
+                                                                    <p class="mdr">{{s.date|date:"d M, Y"}}</p>
+                                                                </td>
+                                                                <td>
+                                                                    {% if s.transaction_status == 'completed' %}
+                                                                        <p class="text-success">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'pending' %}
+                                                                        <p class="inprogress">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'failed' %}
+                                                                        <p class="danger">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'processing' %}
+                                                                        <p class="inprogress">Waiting Cofirmation</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'cancelled' %}
+                                                                        <p class="text-danger">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    <p>–₹{{s.amount|intcomma}}</p>
+                                                                </td>
+                                                                <td>
+                                                                    {% if s.transaction_status == 'completed' or s.transaction_status == 'failed' or   s.transaction_status == 'cancelled' %}
+                                                                        <a href="{% url 'core:transaction_detail_sent' s.transaction_id %}" class="btn btn-success"><i class="fas fa-eye"></i></a>
+                                                                    {% else %}
+                                                                        <a href="{% url 'core:transaction_detail_sent' s.transaction_id %}" class="btn btn-primary"><i class="fas fa-eye"></i></a>
+                                                                        <a href="{% url 'core:transfer_confirmation' s.reciever.account.account_number s.transaction_id %}" class=" btn btn-success "> <i class="fas fa-arrow-circle-right"></i> Continue</a>
+                                                                        <a href="{% url 'core:cancel_transfer' s.sender.account.account_number s.transaction_id %}" class=" btn btn-danger "> <i class="fas fa-x"></i> Cancel</a>
+                                                                    {% endif %}
+                                                                </td>
+
+                                                            {% elif s.transaction_type == 'forex' %}
+                                                                <th scope="row">
+                                                                    <p>{{s.full_name |title}}</p>
+                                                                    <p class="mdr">{{s.transaction_type|title}}</p>
+                                                                </th>
+                                                                <td>
+                                                                    <p><small>{{s.date|date:"H:i"}}</small></p>
+                                                                    <p class="mdr">{{s.date|date:"d M, Y"}}</p>
+                                                                </td>
+                                                                <td>
+                                                                    {% if s.transaction_status == 'Forex Sent Processing' %}
+                                                                        <p class="inprogress">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'Forex Sent Waiting' %}
+                                                                        <p class="inprogress">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'Forex Sent Completed' %}
+                                                                        <p class="text-success">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'Forex Sent Failed' %}
+                                                                        <p class="text-danger">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'None' %}
+                                                                        <p class="text-danger"> INTERRUPTED</p>
+                                                                    {% endif %}
+
+                                                                </td>
+                                                                <td>
+                                                                    {% if s.transaction_status == 'Forex Sent Failed' %}
+                                                                        <p>{{s.original_currency_amount|intcomma}} {{s.sender_account_currency}} </p>
+                                                                        <p>Returned</p>
+                                                                    {% else %}
+                                                                        <p>– {{s.original_currency_amount|intcomma}} {{s.sender_account_currency}}</p>
+                                                                    {% endif %}
+                                                                        
+                                                                   
+                                                                </td>
+                                                                <td>
+                                                                    {% if s.transaction_status == 'None' %}
+                                                                        <a href="{% url 'account:forex_sent_check_rate' %}" class="btn btn-success"><i class="fas fa-arrow-circle-right"></i></a>
+                                                                        <a href="{% url 'account:delete_forex_transaction'  s.transaction_id %}" class=" btn btn-danger "> <i class="fas fa-x"></i> Delete</a>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'Forex Sent Processing' %}
+                                                                        <a href="{% url 'account:forex_sent_confirm' s.transaction_id %}" class="btn btn-success"><i class="fas fa-arrow-circle-right"></i></a>
+                                                                        <a href="{% url 'account:delete_forex_transaction'  s.transaction_id %}" class=" btn btn-danger "> <i class="fas fa-x"></i> Delete</a>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'Forex Sent Completed' %}
+                                                                        <a href="{% url 'account:forex_sent_detail' s.transaction_id %}" class="btn btn-success"><i class="fas fa-arrow-circle-right"></i></a>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'Forex Sent Failed' %}
+                                                                    <a href="{% url 'account:forex_sent_completed' s.transaction_id %}" class="btn btn-primary"><i class="fas fa-arrow-circle-right"></i></a>
                                                                 {% endif %}
-                                                                {% if s.transaction_status == 'pending' %}
-                                                                    <p class="inprogress">{{s.transaction_status|title}}</p>
-                                                                {% endif %}
-                                                                {% if s.transaction_status == 'failed' %}
-                                                                    <p class="danger">{{s.transaction_status|title}}</p>
-                                                                {% endif %}
-                                                                {% if s.transaction_status == 'processing' %}
-                                                                    <p class="inprogress">Waiting Cofirmation</p>
-                                                                {% endif %}
-                                                                {% if s.transaction_status == 'cancelled' %}
-                                                                    <p class="text-danger">{{s.transaction_status|title}}</p>
-                                                                {% endif %}
-                                                            </td>
-                                                            <td>
-                                                                <p>–₹{{s.amount|intcomma}}</p>
-                                                            </td>
-                                                            <td>
-                                                                {% if s.transaction_status == 'completed' or s.transaction_status == 'failed' or   s.transaction_status == 'cancelled' %}
-                                                                    <a href="{% url 'core:transaction_detail_sent' s.transaction_id %}" class="btn btn-success"><i class="fas fa-eye"></i></a>
-                                                                {% else %}
-                                                                    <a href="{% url 'core:transaction_detail_sent' s.transaction_id %}" class="btn btn-primary"><i class="fas fa-eye"></i></a>
-                                                                    <a href="{% url 'core:transfer_confirmation' s.reciever.account.account_number s.transaction_id %}" class=" btn btn-success "> <i class="fas fa-arrow-circle-right"></i> Continue</a>
-                                                                    <a href="{% url 'core:cancel_transfer' s.sender.account.account_number s.transaction_id %}" class=" btn btn-danger "> <i class="fas fa-x"></i> Cancel</a>
-                                                                {% endif %}
-                                                            </td>
+                                                                    
+                                                                </td>
+                                                            {% endif %}
                                                         </tr>
                                                     {% endfor %}
+                                                    
                                                 </tbody>
                                             </table>
                                         </div>
@@ -109,39 +167,79 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for r in recieved_transaction %}
-                                                        {% if r.transaction_status != 'cancelled' %}
-                                                        <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
-                                                            <th scope="row">
-                                                                <p>{{r.sender.kyc.full_name|title}}</p>
-                                                                <p class="mdr">{{s.transaction_type|title}}</p>
-                                                            </th>
-                                                            <td>
-                                                                <p><small>{{r.date|date:"H:i"}}</small></p>
-                                                                <p class="mdr">{{r.date|date:"d M, Y"}}</p>
-                                                            </td>
-                                                            <td>
-                                                                {% if r.transaction_status == 'completed' %}
-                                                                    <p class="text-success">{{r.transaction_status|title}}</p>
-                                                                {% endif %}
-                                                                {% if r.transaction_status == 'pending' %}
-                                                                    <p class="inprogress">{{r.transaction_status|title}}</p>
-                                                                {% endif %}
-                                                                {% if r.transaction_status == 'failed' %}
-                                                                    <p class="danger">{{r.transaction_status|title}}</p>
-                                                                {% endif %}
-                                                                {% if r.transaction_status == 'processing' %}
-                                                                    <p class="inprogress">Waiting Confirmation</p>
-                                                                {% endif %}
-                                                            </td>
-                                                            <td>
-                                                                <p>+₹{{r.receiving_amount|intcomma}}</p>
-                                                            </td>
-                                                            <td>
-                                                                <a href="{% url 'core:transaction_detail_received' r.transaction_id %}" class=""><i class="fas fa-eye"></i></a>
-                                                            </td>
+                                                    {% for s in recieved_transaction_all_list|slice:"10" %}
+                                                        <tr data-bs-toggle="modal" data-bs-target="#transactions_details_sent">
+                                                            {% if s.transaction_type != 'forex'  %}
+                                                                <th scope="row">
+                                                                    <p>{{s.reciever.kyc.full_name|title}}</p>
+                                                                    <p class="mdr">{{s.transaction_type|title}}</p>
+                                                                </th>
+                                                                <td>
+                                                                    <p><small>{{s.date|date:"H:i"}}</small></p>
+                                                                    <p class="mdr">{{s.date|date:"d M, Y"}}</p>
+                                                                </td>
+                                                                <td>
+                                                                    {% if s.transaction_status == 'completed' %}
+                                                                        <p class="text-success">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'pending' %}
+                                                                        <p class="inprogress">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'failed' %}
+                                                                        <p class="danger">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'processing' %}
+                                                                        <p class="inprogress">Waiting Cofirmation</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'cancelled' %}
+                                                                        <p class="text-danger">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    <p>–₹{{s.amount|intcomma}}</p>
+                                                                </td>
+                                                                <td>
+                                                                    {% if s.transaction_status == 'completed' or s.transaction_status == 'failed' or   s.transaction_status == 'cancelled' %}
+                                                                        <a href="{% url 'core:transaction_detail_sent' s.transaction_id %}" class="btn btn-success"><i class="fas fa-eye"></i></a>
+                                                                    {% else %}
+                                                                        <a href="{% url 'core:transaction_detail_sent' s.transaction_id %}" class="btn btn-primary"><i class="fas fa-eye"></i></a>
+                                                                        <a href="{% url 'core:transfer_confirmation' s.reciever.account.account_number s.transaction_id %}" class=" btn btn-success "> <i class="fas fa-arrow-circle-right"></i> Continue</a>
+                                                                        <a href="{% url 'core:cancel_transfer' s.sender.account.account_number s.transaction_id %}" class=" btn btn-danger "> <i class="fas fa-x"></i> Cancel</a>
+                                                                    {% endif %}
+                                                                </td>
+
+                                                            {% elif s.transaction_type == 'forex' and s.transaction_status != 'Forex Sent Waiting' and s.transaction_status != 'None' and s.transaction_status != 'Forex Sent Processing' and s.transaction_status != 'Forex Sent Failed' %}
+                                                                <th scope="row">
+                                                                    <p>{{s.full_name |title}}</p>
+                                                                    <p class="mdr">{{s.transaction_type|title}}</p>
+                                                                </th>
+                                                                <td>
+                                                                    <p><small>{{s.date|date:"H:i"}}</small></p>
+                                                                    <p class="mdr">{{s.date|date:"d M, Y"}}</p>
+                                                                </td>
+                                                                <td>
+                                                                    
+                                                                    {% if s.transaction_status == 'Forex Sent Completed' %}
+                                                                        <p class="text-success">Forex Received</p>
+                                                                    {% endif %}
+                                                                    {% if s.transaction_status == 'Forex Sent Failed' %}
+                                                                        <p class="text-danger">{{s.transaction_status|title}}</p>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    {% if s.transaction_status == 'Forex Sent Failed' %}
+                                                                        
+                                                                    {% else %}
+                                                                        <p>+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
+                                                                    {% endif %}
+                                                                </td>
+                                                                <td>
+                                                                    {% if s.transaction_status == 'Forex Sent Completed' %}
+                                                                        <a href="{% url 'account:forex_sent_detail' s.transaction_id %}" class="btn btn-success"><i class="fas fa-arrow-circle-right"></i></a>
+                                                                    {% endif %}
+                                                                </td>
+                                                            {% endif %}
                                                         </tr>
-                                                        {% endif %}
                                                     {% endfor %}
                                                     
                                                 </tbody>
@@ -153,7 +251,7 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">Name/ Business</th>
+                                                        <th scope="col" style="width:270px">Name/ Business</th>
                                                         <th scope="col">Date</th>
                                                         <th scope="col">Status</th>
                                                         <th scope="col">Amount</th>
@@ -162,7 +260,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in request_sent_transaction %}
+                                                    {% for s in request_sent_transaction|slice:"10" %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
                                                             <th scope="row">
                                                                 <p>{{s.reciever.kyc.full_name|title}}</p>
@@ -233,7 +331,7 @@
                                             <table class="table">
                                                 <thead>
                                                     <tr>
-                                                        <th scope="col">Name/ Business</th>
+                                                        <th scope="col" style="width: 270px;">Name/ Business</th>
                                                         <th scope="col">Date</th>
                                                         <th scope="col">Status</th>
                                                         <th scope="col">Amount</th>
@@ -242,7 +340,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for r in request_recieved_transaction %}
+                                                    {% for r in request_recieved_transaction|slice:"10" %}
                                                         {% if r.transaction_status != 'request_processing' %}   
                                                             <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
                                                                 <th scope="row">

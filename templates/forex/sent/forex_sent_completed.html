@@ -18,68 +18,139 @@
                             <div class="icon-area">
                                 <img src="{% static 'assets1/images/icon/submitted-icon.png' %}" alt="icon">
                             </div>
-                            <h3>Money Sent</h3>
-                            <p>Transaction ID :<b> {{transaction.transaction_id}}</b></p>
-                            <p>{{transaction.sender_account_currency}} to {{transaction.reciever_account_currency}}</p>
-                            <p>Payment of <b>₹ {{transaction.original_currency_amount}} </b> was send from your account <b> {{from_account.account_number}}</b></p>
-                            <div class="payment-details" id="your_detail">
-                                <div class="row">
-                                    <div class="col-xl-6">
-                                        <ul class="details-list">
-                                            <li>
-                                                <span>Recipient Name </span>
-                                                <b>{{transaction.full_name}}</b>
-                                            </li>
-                                            <li>
-                                                <span>Account Number </span>
-                                                <b>{{transaction.account_number}}</b>
-                                            </li>
-                                            {% if transaction.ifsc_code != 'None' %}
+                            
+                            {% if transaction.transaction_status == 'Forex Sent Completed' %}
+            
+                                    <h3>Money Sent</h3>
+                                    <p>Transaction ID :<b> {{transaction.transaction_id}}</b></p>
+                                    <p>{{transaction.sender_account_currency}} to {{transaction.reciever_account_currency}}</p>
+                                    <p>Payment of <b>₹ {{transaction.original_currency_amount}} </b> was send from your account <b> {{from_account.account_number}}</b></p>
+                                    <div class="payment-details" id="your_detail">
+                                        <div class="row">
+                                            <div class="col-xl-6">
+                                                <ul class="details-list">
+                                                    <li>
+                                                        <span>Recipient Name </span>
+                                                        <b>{{transaction.full_name}}</b>
+                                                    </li>
+                                                    <li>
+                                                        <span>Account Number </span>
+                                                        <b>{{transaction.account_number}}</b>
+                                                    </li>
+                                                    {% if transaction.ifsc_code != 'None' %}
+                                                        <li>
+                                                            <span>IFSC Code </span>
+                                                            <b>{{transaction.ifsc_code}}</b>
+                                                        </li>
+                                                    {% elif transaction.swift_code != 'None' %}
+                                                        <li>
+                                                            <span>SWIFT Code </span>
+                                                            <b>{{transaction.swift_code}}</b>
+                                                        </li>
+                                                    {% endif %}
+                                                    <li>
+                                                        <span>Description</span>
+                                                        <b>{{transaction.description}}</b>
+                                                    </li>
+                                                    <li>
+                                                        <span>Full Amount</span>
+                                                        <b>{{transaction.original_currency_amount | intcomma}}  {{transaction.sender_account_currency}}</b>
+                                                    </li>
+                                                    <li>
+                                                        <span>Fees (Including the conversion)</span>
+                                                        <b>{{transaction.conversion_fee}}  {{transaction.sender_account_currency}}</b>
+                                                    </li>
+                                                    <li>
+                                                        <span>Sending Amount</span>
+                                                        <b>{{transaction.amount_after_fee | intcomma}}  {{transaction.sender_account_currency}}</b>
+                                                    </li>
+                                                    <li>
+                                                        <span>Easypay rate</span>
+                                                        <b>{{transaction.easypay_rate}}</b>
+                                                    </li>
+                                                    <li>
+                                                        <span>Recipient get</span>
+                                                        <b>{{transaction.recipient_gets | intcomma}} {{transaction.reciever_account_currency}} </b>
+                                                    </li>
+                                                    <li>
+                                                        <span>Date</span>
+                                                        <b>{{transaction.date}} </b>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h5><a href="{% url 'account:forex_sent_detail' transaction.transaction_id %}"><b>View Detail</b></a> | <a href="{% url 'account:forex_sent_check_rate' %}"><b>Send Another Payment</b></a>  </h5>
+                                </div>
+                            {% endif %}
+                            {% if transaction.transaction_status == 'Forex Sent Failed' %}
+        
+                                <h3>Money Returned</h3>
+                                <p>Transaction ID :<b> {{transaction.transaction_id}}</b></p>
+                                <p>{{transaction.sender_account_currency}} to {{transaction.reciever_account_currency}}</p>
+                                <p>Payment of <b>₹ {{transaction.original_currency_amount}} </b> was deduucted   from your account <b> {{from_account.account_number}}</b></p>
+                                <p>Payment of <b>₹ {{transaction.original_currency_amount}} </b> was send returned to your account <b> {{from_account.account_number}}</b></p>
+
+                                <div class="payment-details" id="your_detail">
+                                    <div class="row">
+                                        <div class="col-xl-6">
+                                            <ul class="details-list">
                                                 <li>
-                                                    <span>IFSC Code </span>
-                                                    <b>{{transaction.ifsc_code}}</b>
+                                                    <span>Recipient Name </span>
+                                                    <b>{{transaction.full_name}}</b>
                                                 </li>
-                                            {% elif transaction.swift_code != 'None' %}
                                                 <li>
-                                                    <span>SWIFT Code </span>
-                                                    <b>{{transaction.swift_code}}</b>
+                                                    <span>Account Number </span>
+                                                    <b>{{transaction.account_number}}</b>
                                                 </li>
-                                            {% endif %}
-                                            <li>
-                                                <span>Description</span>
-                                                <b>{{transaction.description}}</b>
-                                            </li>
-                                            <li>
-                                                <span>Full Amount</span>
-                                                <b>{{transaction.original_currency_amount | intcomma}}  {{transaction.sender_account_currency}}</b>
-                                            </li>
-                                            <li>
-                                                <span>Fees (Including the conversion)</span>
-                                                <b>{{transaction.conversion_fee}}  {{transaction.sender_account_currency}}</b>
-                                            </li>
-                                            <li>
-                                                <span>Sending Amount</span>
-                                                <b>{{transaction.amount_after_fee | intcomma}}  {{transaction.sender_account_currency}}</b>
-                                            </li>
-                                            <li>
-                                                <span>Easypay rate</span>
-                                                <b>{{transaction.easypay_rate}}</b>
-                                            </li>
-                                            <li>
-                                                <span>Recipient get</span>
-                                                <b>{{transaction.recipient_gets | intcomma}} {{transaction.reciever_account_currency}} </b>
-                                            </li>
-                                            <li>
-                                                <span>Date</span>
-                                                <b>{{transaction.date}} </b>
-                                            </li>
-                                        </ul>
+                                                {% if transaction.ifsc_code != 'None' %}
+                                                    <li>
+                                                        <span>IFSC Code </span>
+                                                        <b>{{transaction.ifsc_code}}</b>
+                                                    </li>
+                                                {% elif transaction.swift_code != 'None' %}
+                                                    <li>
+                                                        <span>SWIFT Code </span>
+                                                        <b>{{transaction.swift_code}}</b>
+                                                    </li>
+                                                {% endif %}
+                                                <li>
+                                                    <span>Description</span>
+                                                    <b>{{transaction.description}}</b>
+                                                </li>
+                                                <li>
+                                                    <span>Full Amount</span>
+                                                    <b>{{transaction.original_currency_amount | intcomma}}  {{transaction.sender_account_currency}}</b>
+                                                </li>
+                                                <li>
+                                                    <span>Fees (Including the conversion)</span>
+                                                    <b>{{transaction.conversion_fee}}  {{transaction.sender_account_currency}}</b>
+                                                </li>
+                                                <li>
+                                                    <span>Sending Amount</span>
+                                                    <b>{{transaction.amount_after_fee | intcomma}}  {{transaction.sender_account_currency}}</b>
+                                                </li>
+                                                <li>
+                                                    <span>Easypay rate</span>
+                                                    <b>{{transaction.easypay_rate}}</b>
+                                                </li>
+                                                <li>
+                                                    <span>Recipient get</span>
+                                                    <b>{{transaction.recipient_gets | intcomma}} {{transaction.reciever_account_currency}} </b>
+                                                </li>
+                                                <li>
+                                                    <span>Date</span>
+                                                    <b>{{transaction.date}} </b>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
         
-                            <h5><a href="{% url 'account:forex_sent_detail' transaction.transaction_id %}"><b>View Detail</b></a> | <a href="{% url 'account:forex_sent_check_rate' %}"><b>Send Another Payment</b></a>  </h5>
-                        </div>
+                                <h5><a href="{% url 'account:forex_sent_detail' transaction.transaction_id %}"><b>View Detail</b></a> | <a href="{% url 'account:forex_sent_check_rate' %}"><b>Send Another Payment</b></a>  </h5>
+                            </div>
+                            {% endif %}
+                        
                         <div class="share-link">
                             <p>Share direct link with your  payer</p>
                             <ul class="d-flex align-items-center justify-content-center">
