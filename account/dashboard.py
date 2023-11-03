@@ -14,17 +14,43 @@ def dashboard(request,currency):
     ######### sent transactions ###########
 
     sent_transaction_all = chain(
-        Transaction.objects.filter(sender=request.user, transaction_type='transfer').order_by('-id'),
-        TransactionForex.objects.filter(user=request.user, transaction_type='forex')
+        Transaction.objects.filter(sender=request.user, transaction_type='transfer').exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_type='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id'),
+        TransactionForex.objects.filter(user=request.user, transaction_type='forex').exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_type='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id'),
     )
     sent_transaction_all_list = list(sent_transaction_all)
     # sent_transaction_all_list_count = len(sent_transaction_all_list)
 
-    sent_transaction = Transaction.objects.filter(sender=request.user,transaction_type='transfer').order_by('-id')
-    sent_transaction_count = sent_transaction.count()
+    sent_transaction = Transaction.objects.filter(sender=request.user,transaction_type='transfer').exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_type='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id')
+    sent_transaction_count = len(sent_transaction)
 
-    sent_forex_transaction = TransactionForex.objects.filter(user=request.user, transaction_type='forex').order_by('-id')
-    sent_forex_transaction_count = sent_forex_transaction.count()
+    sent_forex_transaction = TransactionForex.objects.filter(user=request.user, transaction_type='forex').exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_type='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id')
+    sent_forex_transaction_count = len(sent_forex_transaction)
+
+
 
     ######### recieved ###############
 
@@ -157,7 +183,6 @@ def search_user_transactions(request):
         my_account = request.user
 
         query = request.POST.get('search_user_transactions')
-        print(f"this is the query = {query}")
 
         related_users = User.objects.filter(
             Q(username__icontains=query) | Q(kyc__full_name__icontains=query)
@@ -168,7 +193,6 @@ def search_user_transactions(request):
         ).order_by('-id')
 
     transaction_results_count = transaction_results.count()
-    print(f"this is the transaction_results = {transaction_results}")
 
     context = {
         'transaction_results': transaction_results,

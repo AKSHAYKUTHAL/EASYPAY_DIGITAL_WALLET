@@ -79,7 +79,9 @@
                                                                     {% endif %}
                                                                 </td>
                                                                 <td>
-                                                                    <p>–₹{{s.amount|intcomma}}</p>
+                                                                    {% if s.transaction_status == 'completed' %}
+                                                                    <p style="color: #eb0a0a;">–{{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
+                                                                    {% endif %}
                                                                 </td>
                                                                 <td>
                                                                     {% if s.transaction_status == 'completed' or s.transaction_status == 'failed' or   s.transaction_status == 'cancelled' %}
@@ -120,12 +122,13 @@
                                                                 </td>
                                                                 <td>
                                                                     {% if s.transaction_status == 'Forex Sent Failed' %}
-                                                                        <p>{{s.original_currency_amount|intcomma}} {{s.sender_account_currency}} </p>
+                                                                        <p style="color: rgb(12, 184, 29);">{{s.original_currency_amount|intcomma}} {{s.sender_account_currency}} </p>
                                                                         <p>Returned</p>
+                                                                    {% elif s.transaction_status == 'None' %}
+                                                                        <p>{{s.original_currency_amount|intcomma}} {{s.sender_account_currency}}</p>
                                                                     {% else %}
-                                                                        <p>– {{s.original_currency_amount|intcomma}} {{s.sender_account_currency}}</p>
+                                                                        <p style="color: #eb0a0a;">– {{s.original_currency_amount|intcomma}} {{s.sender_account_currency}}</p>
                                                                     {% endif %}
-                                                                        
                                                                    
                                                                 </td>
                                                                 <td>
@@ -196,7 +199,7 @@
                                                                     {% endif %}
                                                                 </td>
                                                                 <td>
-                                                                    <p>–₹{{s.amount|intcomma}}</p>
+                                                                    <p style="color: rgb(12, 184, 29);"> + {{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
                                                                 </td>
                                                                 <td>
                                                                     {% if s.transaction_status == 'completed' or s.transaction_status == 'failed' or   s.transaction_status == 'cancelled' %}
@@ -222,16 +225,10 @@
                                                                     {% if s.transaction_status == 'Forex Sent Completed' %}
                                                                         <p class="text-success">Forex Received</p>
                                                                     {% endif %}
-                                                                    {% if s.transaction_status == 'Forex Sent Failed' %}
-                                                                        <p class="text-danger">{{s.transaction_status|title}}</p>
-                                                                    {% endif %}
+                                                                    
                                                                 </td>
                                                                 <td>
-                                                                    {% if s.transaction_status == 'Forex Sent Failed' %}
-                                                                        
-                                                                    {% else %}
-                                                                        <p>+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
-                                                                    {% endif %}
+                                                                    <p style="color: rgb(12, 184, 29);">+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
                                                                 </td>
                                                                 <td>
                                                                     {% if s.transaction_status == 'Forex Sent Completed' %}
@@ -297,7 +294,11 @@
                                                                 {% endif %}
                                                             </td>
                                                             <td>
-                                                                <p>+₹{{s.amount|intcomma}}</p>
+                                                                {% if s.transaction_status == 'request_settled' %}
+                                                                    <p style="color: rgb(12, 184, 29);">+{{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
+                                                                {% else %}
+                                                                    <p>{{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
+                                                                {% endif %}
                                                             </td>
                                                             <td>
                                                                 {% if s.transaction_status == "request_sent" %}
@@ -376,7 +377,11 @@
                                                 
                                                                 </td>
                                                                 <td>
-                                                                    <p>+₹{{r.amount|intcomma}}</p>
+                                                                    {% if r.transaction_status == 'request_settled' %}
+                                                                        <p style="color: #eb0a0a;"> - {{r.amount|intcomma}} {{r.user.account.account_currency | upper}}</p>
+                                                                    {% else %}
+                                                                        <p> {{r.amount|intcomma}} {{r.user.account.account_currency | upper}}</p>  
+                                                                    {% endif %}
                                                                 </td>
                                                                 <td>
                                                                     

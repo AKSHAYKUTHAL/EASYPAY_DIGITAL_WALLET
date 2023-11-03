@@ -31,9 +31,6 @@ def recipients(request):
         recipient_count = Transaction.objects.filter(Q(sender=request.user, reciever=recipient) | Q(sender=recipient, reciever=request.user)).count()
         recipient_counts[recipient] = recipient_count
 
-    print(f"recipients: {recipients}")
-    print(f"recipient_counts: {recipient_counts}")
-
     context = {
         'recipients': recipients,
         'recipient_counts': recipient_counts

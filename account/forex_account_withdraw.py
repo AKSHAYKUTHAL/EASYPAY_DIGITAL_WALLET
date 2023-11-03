@@ -17,7 +17,6 @@ def forex_withdraw_check_rate(request):
     account_forex = AccountForex.objects.get(user=user)
  
     sender_account = Account.objects.get(user=user)
-    print(f"account_forex = {account_forex}")
 
     if request.method == 'POST':
         original_currency_amount = request.POST.get('original_currency_amount')

@@ -239,13 +239,11 @@ def request_settlement_processing(request,account_number,transaction_id):
     transaction = Transaction.objects.get(transaction_id=transaction_id)
     try:
         receiver_debit_card = DebitCard.objects.get(user=request.user)
-        print(f" the reciever debit card is {request.user}")
     except:
         receiver_debit_card = None
 
     try:
         sender_debit_card = DebitCard.objects.get(user=transaction.sender)
-        print(f" the sender debit card is {transaction.sender}")
     except:
         sender_debit_card = None
 

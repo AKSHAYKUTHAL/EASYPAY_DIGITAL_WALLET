@@ -274,8 +274,7 @@ def forex_sent_confirmation(request,transaction_id):
             recipient_account = None
 
         if recipient_account is not None:
-            print(f"transaction.ifsc_code = {transaction.ifsc_code}")
-            print(f"recipient_account.ifsc_code = {recipient_account.ifsc_code}")
+          
 
             if transaction.ifsc_code != 'None':
                 if transaction.ifsc_code == recipient_account.ifsc_code :

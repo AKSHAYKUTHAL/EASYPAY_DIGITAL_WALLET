@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from itertools import chain
+from django.db.models import Q
+
 
 
 
@@ -16,6 +18,9 @@ def all_transactions(request):
 
     return render(request,'transaction/all_transactions.html',context)
 
+
+
+
 @login_required
 def transaction_list(request):
     try:
@@ -25,17 +30,41 @@ def transaction_list(request):
         return redirect('account:kyc_reg')
     
     sent_transaction_all = chain(
-            Transaction.objects.filter(sender=request.user, transaction_type='transfer').order_by('-id'),
-            TransactionForex.objects.filter(user=request.user, transaction_type='forex')
-        )
+        Transaction.objects.filter(sender=request.user, transaction_type='transfer').exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_type='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id'),
+        TransactionForex.objects.filter(user=request.user, transaction_type='forex').exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_type='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id'),
+    )
     sent_transaction_all_list = list(sent_transaction_all)
     # sent_transaction_all_list_count = len(sent_transaction_all_list)
 
-    sent_transaction = Transaction.objects.filter(sender=request.user,transaction_type='transfer').order_by('-id')
-    sent_transaction_count = sent_transaction.count()
+    sent_transaction = Transaction.objects.filter(sender=request.user,transaction_type='transfer').exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_type='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id')
+    sent_transaction_count = len(sent_transaction)
 
-    sent_forex_transaction = TransactionForex.objects.filter(user=request.user, transaction_type='forex').order_by('-id')
-    sent_forex_transaction_count = sent_forex_transaction.count()
+    sent_forex_transaction = TransactionForex.objects.filter(user=request.user, transaction_type='forex').exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_type='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id')
+    sent_forex_transaction_count = len(sent_forex_transaction)
 
     ######### recieved ###############
 

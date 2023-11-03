@@ -8,6 +8,8 @@ from account.forms import AccountForexForm
 from django.contrib.auth import logout
 from decimal import Decimal
 import datetime
+from itertools import chain
+from django.db.models import Q
 
 
 
@@ -45,8 +47,6 @@ def forex_account_create(request):
                 if form.is_valid():
                     account_currency = form.cleaned_data['account_currency']
 
-                    # print(f"account_currency = {account_currency}")
-                    # print(f"account.account_currency = {account.account_currency}")
 
                     if account_currency == (account.account_currency).upper():
                         messages.error(request,'You already have this currency account.')
@@ -69,17 +69,30 @@ def forex_account_create(request):
 
 def forex_dashboard(request):
 
-    # sent_transaction = TransactionForex.objects.filter(sender=request.user,transaction_type='transfer').order_by('-id')
-    # recieved_transaction = Transaction.objects.filter(reciever=request.user,transaction_type='transfer').exclude(transaction_status='cancelled').order_by('-id')
+    sent_forex_transaction = TransactionForex.objects.filter(user=request.user, transaction_type='forex').order_by('-id')
+    sent_forex_transaction_count = sent_forex_transaction.count()
 
-    # sent_transaction_count = sent_transaction.count()
-    # recieved_transaction_count = recieved_transaction.count()
+    recieved_forex_transaction = chain (
+        TransactionForex.objects.filter(account_number=request.user.account.account_number).exclude(
+                                                                    Q(transaction_status='Forex Sent Waiting') | 
+                                                                    Q(transaction_status='None') | 
+                                                                    Q(transaction_status='Forex Sent Processing') | 
+                                                                    Q(transaction_status='Forex Sent Failed')
+                                                                ),
+        TransactionForex.objects.filter(account_number=request.user.accountforex.account_number).exclude(
+                                                                    Q(transaction_status='Forex Sent Waiting') | 
+                                                                    Q(transaction_status='None') | 
+                                                                    Q(transaction_status='Forex Sent Processing') | 
+                                                                    Q(transaction_status='Forex Sent Failed')
+                                                                ),
+    )
+    recieved_forex_transaction_list = list(recieved_forex_transaction)
+    recieved_forex_transaction_list_count = len(recieved_forex_transaction_list)
 
-    # request_sent_transaction = Transaction.objects.filter(sender=request.user, transaction_type="request").order_by('-id')
-    # request_recieved_transaction = Transaction.objects.filter(reciever=request.user, transaction_type="request").exclude(transaction_status='request_processing').order_by('-id')
 
-    # request_sent_transaction_count = request_sent_transaction.count()
-    # request_recieved_transaction_count = request_recieved_transaction.count()
+    
+
+
 
 
 
@@ -146,7 +159,9 @@ def forex_dashboard(request):
         'year':year,
         'month':month,
         'form':form,
-        'forex_debit_card':forex_debit_card
+        'forex_debit_card':forex_debit_card,
+        'sent_forex_transaction':sent_forex_transaction,
+        'recieved_forex_transaction_list':recieved_forex_transaction_list,
     }
 
     return render(request,'forex/forex_dashboard.html',context)

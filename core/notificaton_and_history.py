@@ -51,7 +51,6 @@ def history_detail(request,nid):
     except Transaction.DoesNotExist:
         transaction = None
 
-    print(f"transaction = {transaction}")
     # if notification.card_number:
     #     credit_card = CreditCard.objects.get(number=notification.card_number)
     # else:

@@ -124,13 +124,11 @@ def transfer_process(request,account_number,transaction_id):
 
     try:
         sender_debit_card = DebitCard.objects.get(user=sender)
-        print(f" the sender debit card is {sender}")
     except:
         sender_debit_card = None
     
     try:
         receiver_debit_card = DebitCard.objects.get(user=reciever)
-        print(f" the reciever debit card is {reciever}")
     except:
         receiver_debit_card = None
 
