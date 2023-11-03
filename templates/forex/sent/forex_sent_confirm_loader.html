@@ -69,5 +69,11 @@
         <div class="loader"></div>
     </div>
 
-    
+    <script>
+        // Simulate a delay of 10 minutes
+        setTimeout(function () {
+            // Redirect to the next page after the delay
+            window.location.href = "{% url 'account:forex_sent_completed' transaction.transaction_id %}";
+        }, 6000); // 10 minutes in milliseconds
+    </script>
 {% endblock %}

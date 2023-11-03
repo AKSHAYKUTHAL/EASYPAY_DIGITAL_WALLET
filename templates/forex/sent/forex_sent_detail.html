@@ -1,0 +1,119 @@
+{% extends "partials/dashboard_base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <!-- Dashboard Section start -->
+    <section class="dashboard-section body-collapse pay step step-2 step-3">
+        <div class="overlay pt-120">
+            <div class="container-fruid">
+                <div class="main-content">
+                    <div class="head-area d-flex align-items-center justify-content-between">
+                        <h4>Forex Transfer Details</h4>
+                        <div class="icon-area">
+                            <img src="{{user_profile_pic.url}}" style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" alt="icon">
+                        </div>
+                    </div>
+                    <div class="payment-details" id="recipient_detail">
+                        <div class="top-area">
+                            <h6>Recipient Details</h6>
+                            <div class="right">
+                                <a href="" onclick="location.href = document.referrer; return false;">
+                                    <i class="fa fa-arrow-left"></i>
+                                    Back
+                                </a>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <ul class="details-list">
+                                    <li>
+                                        <span>Recipient Name </span>
+                                        <b>{{transaction.full_name}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Status </span>
+                                        <b>{{transaction.transaction_status}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Account Number </span>
+                                        <b>{{transaction.account_number}} {{to_account.account_currency | upper }}</b>
+                                    </li>
+                                    {% if transaction.ifsc_code != 'None' %}
+                                        <li>
+                                            <span>IFSC Code </span>
+                                            <b>{{transaction.ifsc_code}}</b>
+                                        </li>
+                                    {% elif transaction.swift_code != 'None' %}
+                                        <li>
+                                            <span>SWIFT Code </span>
+                                            <b>{{transaction.swift_code}}</b>
+                                        </li>
+                                    {% endif %}
+                                    <li>
+                                        <span>Description</span>
+                                        <b>{{transaction.description}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Full Amount</span>
+                                        <b>{{transaction.original_currency_amount | intcomma}}  {{transaction.sender_account_currency}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Fees (Including the conversion)</span>
+                                        <b>{{transaction.conversion_fee}}  {{transaction.sender_account_currency}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Sending Amount</span>
+                                        <b>{{transaction.amount_after_fee | intcomma}}  {{transaction.sender_account_currency}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Easypay rate</span>
+                                        <b>{{transaction.easypay_rate}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Recipient get</span>
+                                        <b>{{transaction.recipient_gets | intcomma}} {{transaction.reciever_account_currency}} </b>
+                                    </li>
+                                    <li>
+                                        <span>Transaction was initiated on </span>
+                                        <b>{{transaction.date}} </b>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                <br>
+                    
+
+                    <div class="payment-details" id="your_detail">
+                        <div class="top-area">
+                            <h6>Your Account Details</h6>
+                        </div>
+                        <div class="row">
+                            <div class="col-xl-6">
+                                <ul class="details-list">
+                                    <li>
+                                        <span>Your Name </span>
+                                        <b>{{user.kyc.full_name}}</b>
+                                    </li>
+                                    <li>
+                                        <span>Sending From  </span>
+                                            <b>{{transaction.from_account_number}} ({{from_account.account_currency | upper}})</b>
+                                    </li>
+                                    
+                                    
+                                    <li>
+                                        <span>Transaction was initiated on </span>
+                                        <b>{{transaction.date}} </b>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Dashboard Section end -->
+ 
+{% endblock content %}

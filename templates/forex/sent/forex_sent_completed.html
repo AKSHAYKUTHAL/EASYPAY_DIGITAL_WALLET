@@ -78,7 +78,7 @@
                                 </div>
                             </div>
         
-                            <h5><a href="{core:transaction_detail_sent' transaction.transaction_id %}"><b>View Detail</b></a> | <a href="{% url 'core:search_account' %}"><b>Send Another Payment</b></a>  </h5>
+                            <h5><a href="{% url 'account:forex_sent_detail' transaction.transaction_id %}"><b>View Detail</b></a> | <a href="{% url 'account:forex_sent_check_rate' %}"><b>Send Another Payment</b></a>  </h5>
                         </div>
                         <div class="share-link">
                             <p>Share direct link with your  payer</p>

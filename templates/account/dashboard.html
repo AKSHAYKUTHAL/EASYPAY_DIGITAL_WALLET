@@ -114,7 +114,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in sent_transaction|slice:"10" %}
+                                                    {% for s in sent_transaction_list|slice:"10" %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactions_details_sent">
                                                             <th scope="row">
                                                                 <p>{{s.reciever.kyc.full_name|title}}</p>

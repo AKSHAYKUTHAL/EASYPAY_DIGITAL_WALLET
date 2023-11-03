@@ -294,6 +294,7 @@ class TransactionForex(models.Model):
     transaction_id = ShortUUIDField(unique=True, length=15, max_length=20, prefix='TRN')
     full_name = models.CharField(max_length=100,blank=True,null=True)
     account_number = models.CharField(max_length=100,blank=True,null=True)
+    from_account_number = models.CharField(max_length=100,blank=True,null=True)
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True, related_name='user_forex')
     description = models.CharField(max_length=1000, null=True, blank=True)

@@ -5,8 +5,9 @@ from import_export.admin import ImportExportModelAdmin
 
 class AccountAdminModel(ImportExportModelAdmin):
     list_editable = ['account_status', 'account_balance', 'kyc_submitted', 'kyc_confirmed'] 
-    list_display = ['user', 'account_number' ,'account_status', 'account_balance', 'kyc_submitted', 'kyc_confirmed'] 
+    list_display = ['user', 'account_number' ,'account_status', 'account_balance', 'kyc_submitted', 'kyc_confirmed','ifsc_code','swift_code'] 
     list_filter = ['account_status']
+    search_fields = ['ifcs_code']
 
 class KYCAdmin(ImportExportModelAdmin):
     search_fields = ["full_name"]

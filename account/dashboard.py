@@ -2,17 +2,23 @@ from django.shortcuts import render, redirect
 from account.models import KYC, Account
 from django.contrib import messages
 from core.forms import CreditCardForm
-from core.models import CreditCard,Notification,History,Transaction,DebitCard
+from core.models import CreditCard,Notification,History,Transaction,DebitCard,TransactionForex
 import datetime
 from userauths.models import User
 from django.db.models import Q
+from itertools import chain
+
 
 
 def dashboard(request,currency):
-    sent_transaction = Transaction.objects.filter(sender=request.user,transaction_type='transfer').order_by('-id')
+    sent_transaction = chain(
+        Transaction.objects.filter(sender=request.user, transaction_type='transfer').order_by('-id'),
+        TransactionForex.objects.filter(user=request.user, transaction_type='Forex')
+    )
+    sent_transaction_list = list(sent_transaction)
     recieved_transaction = Transaction.objects.filter(reciever=request.user,transaction_type='transfer').exclude(transaction_status='cancelled').order_by('-id')
 
-    sent_transaction_count = sent_transaction.count()
+    sent_transaction_count = len(list(sent_transaction))
     recieved_transaction_count = recieved_transaction.count()
 
     request_sent_transaction = Transaction.objects.filter(sender=request.user, transaction_type="request").order_by('-id')
@@ -84,7 +90,7 @@ def dashboard(request,currency):
         'month':month,
         'year':year,
         'credit_card':credit_card,
-        "sent_transaction":sent_transaction,
+        "sent_transaction_list":sent_transaction_list,
         "recieved_transaction":recieved_transaction,
         'request_sent_transaction':request_sent_transaction,
         'request_recieved_transaction':request_recieved_transaction,
