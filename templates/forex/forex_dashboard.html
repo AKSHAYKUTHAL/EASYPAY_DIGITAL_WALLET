@@ -20,6 +20,8 @@
                                     <div class="left-side">
                                         <h5>Hi, {{kyc.full_name|title}}!</h5>
                                         <h2 style="font-size: 50px;">$ {{account_forex.account_balance|intcomma }} </h2>
+                                        <h5>{{account_forex.account_number }} </h5>
+
                                         
                                         {% for recent_recieved_transfer in recent_recieved_transfer %}
                                         <h5 class="receive">Last Received <span>₹{{recent_recieved_transfer.amount|intcomma }}</span></h5>
@@ -55,7 +57,7 @@
                                     <div class="left-side">
                                         <a href="{% url 'account:forex_deposit_check_rate' %}" class="cmn-btn">Deposit</a>
                                         <a href="{% url 'account:forex_withdraw_check_rate' %}" class="cmn-btn">Withdraw</a>
-                                        <a href="{% url 'core:all_credit_cards' %}" class="cmn-btn">All Cards</a>
+                                        <a href="{% url 'account:forex_account_details' %}" class="cmn-btn">Details</a>
                                     </div>
                                     <div class="right-side">
                                         <div class="dropdown-area">
@@ -109,7 +111,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in sent_forex_transaction|slice:"10" %}
+                                                    {% for s in sent_forex_transaction_list %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactions_details_sent">
                                                             
                                                                 <th scope="row">
@@ -166,7 +168,6 @@
                                                                 {% endif %}
                                                                     
                                                                 </td>
-                                                    
                                                         </tr>
                                                     {% endfor %}
                                                     
@@ -188,7 +189,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in recieved_forex_transaction_list|slice:"10" %}
+                                                    {% for s in recieved_forex_transaction_list %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactions_details_sent">
                                                             {% if s.transaction_type == 'forex' and s.transaction_status != 'Forex Sent Waiting' and s.transaction_status != 'None' and s.transaction_status != 'Forex Sent Processing' and s.transaction_status != 'Forex Sent Failed' %}
                                                                 <th scope="row">
@@ -236,10 +237,10 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in request_sent_transaction|slice:"10" %}
+                                                    {% for s in forex_deposit_list %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
                                                             <th scope="row">
-                                                                <p>{{s.reciever.kyc.full_name|title}}</p>
+                                                                <p style="font-weight: lighter;">{{s.sender_account_currency}} <i class="fa fa-arrow-circle-right"></i> {{s.reciever_account_currency}}</p>
                                                                 <p class="mdr">{{s.transaction_type|title}}</p>
                                                             </th>
                                                             <td>
@@ -247,57 +248,19 @@
                                                                 <p class="mdr">{{s.date|date:"d M, Y"}}</p>
                                                             </td>
                                                             <td>
-                                                                {% if s.transaction_status == 'completed' %}
-                                                                    <p class="text-success">{{s.transaction_status|title}}</p>
+                                                                
+                                                                {% if s.transaction_status == 'Deposit Completed' %}
+                                                                    <p class="text-success">Deposit Completed</p>
                                                                 {% endif %}
-                                                                {% if s.transaction_status == 'pending' %}
-                                                                    <p class="inprogress">{{s.transaction_status|title}}</p>
-                                                                {% endif %}
-                                                                {% if s.transaction_status == 'failed' %}
-                                                                    <p class="danger">{{s.transaction_status|title}}</p>
-                                                                {% endif %}
-                                                                {% if s.transaction_status == 'processing' %}
-                                                                    <p class="inprogress">{{s.transaction_status|title}}</p>
-                                                                {% endif %}
-                                                                {% if s.transaction_status == 'request_sent' %}
-                                                                    <p class="text-success">Request Sent</p>
-                                                                {% endif %}
-                                                                {% if s.transaction_status == 'request_settled' %}
-                                                                    <p class="text-success">Request Settled</p>
-                                                                {% endif %}
-                                                                {% if s.transaction_status == 'request_processing' %}
-                                                                    <p class="inprogress">Request Processing</p>
-                                                                {% endif %}
-                                                                {% if s.transaction_status == 'request_declined' %}
-                                                                        <p class="text-danger">Request Declined</p>
-                                                                {% endif %}
+                                                                
                                                             </td>
                                                             <td>
-                                                                {% if s.transaction_status == 'request_settled' %}
-                                                                    <p style="color: rgb(12, 184, 29);">+{{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
-                                                                {% else %}
-                                                                    <p>{{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
-                                                                {% endif %}
+                                                                <p style="color: rgb(12, 184, 29);">+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
                                                             </td>
                                                             <td>
-                                                                {% if s.transaction_status == "request_sent" %}
-                                                                <a href="{% url 'core:request_details_sent' s.transaction_id %}" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
-                                                                <a href="{% url 'core:delete_payment_request' s.sender.account.account_number s.transaction_id %}" class=" btn btn-danger"> <i class="fas fa-x"></i> Cancel</a>
+                                                                {% if s.transaction_status == 'Deposit Completed' %}
+                                                                    <a href="{% url 'account:forex_deposit_completed' s.transaction_id %}" class="btn btn-success"><i class="fas fa-arrow-circle-right"></i></a>
                                                                 {% endif %}
-
-                                                                {% if s.transaction_status == "request_processing" %}
-                                                                <a href="{% url 'core:request_details_sent' s.transaction_id %}" class="btn btn-primary"><i class="fas fa-eye"></i> View</a>
-                                                                <a href="{% url 'core:amount_request_confirmation' s.sender.account.account_number s.transaction_id %}" class=" btn btn-success"> <i class="fas fa-arrow-circle-right"></i> Complete</a>
-                                                                <a href="{% url 'core:delete_payment_request' s.sender.account.account_number s.transaction_id %}" class=" btn btn-danger"> <i class="fas fa-x"></i> Cancel</a>
-                                                                {% endif %}
-
-                                                                {% if s.transaction_status == "request_settled" %}
-                                                                <a href="{% url 'core:request_settlement_completed' s.sender.account.account_number s.transaction_id %}" class="btn btn-success"><i class="fas fa-check-circle"></i> Settled</a>
-                                                                {% endif %}
-                                                                {% if s.transaction_status == "request_declined" %}
-                                                                        <a href="{% url 'core:request_details_received' s.transaction_id %}" class=" btn btn-primary"> <i class="fas fa-eye"></i> View</a>
-                                                                {% endif %}
-
                                                             </td>
                                                         </tr>
                                                     {% endfor %}
@@ -320,69 +283,32 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for r in request_recieved_transaction|slice:"10" %}
-                                                        {% if r.transaction_status != 'request_processing' %}   
-                                                            <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
-                                                                <th scope="row">
-                                                                    <p>{{r.sender.kyc.full_name|title}}</p>
-                                                                    <p class="mdr">{{r.transaction_type|title}}</p>
-                                                                </th>
-                                                                <td>
-                                                                    <p><small>{{r.date|date:"H:i"}}</small></p>
-                                                                    <p class="mdr">{{r.date|date:"d M, Y"}}</p>
-                                                                </td>
-                                                                <td>
-                                                                    {% if r.transaction_status == 'completed' %}
-                                                                        <p class="text-success">{{r.transaction_status|title}}</p>
-                                                                    {% endif %}
-                                                                    {% if r.transaction_status == 'pending' %}
-                                                                        <p class="inprogress">{{r.transaction_status|title}}</p>
-                                                                    {% endif %}
-                                                                    {% if r.transaction_status == 'failed' %}
-                                                                        <p class="danger">{{r.transaction_status|title}}</p>
-                                                                    {% endif %}
-                                                                    {% if r.transaction_status == 'processing' %}
-                                                                        <p class="inprogress">{{r.transaction_status|title}}</p>
-                                                                    {% endif %}
-                                                                    {% if r.transaction_status == 'request_sent' %}
-                                                                    <p class="text-success">Request Recieved</p>
-                                                                    {% endif %}
-                                                                    {% if r.transaction_status == 'request_settled' %}
-                                                                        <p class="text-success">Request Settled</p>
-                                                                    {% endif %}
-                                                                    {% if r.transaction_status == 'request_declined' %}
-                                                                        <p class="text-danger">Request Declined</p>
-                                                                    {% endif %}
-                                                
-                                                                </td>
-                                                                <td>
-                                                                    {% if r.transaction_status == 'request_settled' %}
-                                                                        <p style="color: #eb0a0a;"> - {{r.amount|intcomma}} {{r.user.account.account_currency | upper}}</p>
-                                                                    {% else %}
-                                                                        <p> {{r.amount|intcomma}} {{r.user.account.account_currency | upper}}</p>  
-                                                                    {% endif %}
-                                                                </td>
-                                                                <td>
-                                                                    
-                                                                    {% if r.transaction_status == "request_sent" %}
-                                                                        <a href="{% url 'core:request_settlement_confirmation' r.sender.account.account_number r.transaction_id %}" class="btn btn-success"><i class="fas fa-check-circle"></i> Settle</a>
-                                                                        <a href="{% url 'core:request_details_received' r.transaction_id %}" class=" btn btn-primary"> <i class="fas fa-eye"></i> View</a>
-                                                                        <a href="{% url 'core:delete_payment_request' r.sender.account.account_number r.transaction_id %}" class=" btn btn-danger"> <i class="fas fa-x"></i> Cancel</a>
-                                                                    {% endif %}
-
-                                                                    {% if r.transaction_status == "request_settled" %}
-                                                                        <a href="{% url 'core:request_details_received' r.transaction_id %}" class="btn btn-success"><i class="fas fa-check-circle"></i> Settled</a>
-                                                                    {% endif %}
-                                                                    {% if r.transaction_status == "request_declined" %}
-                                                                        <a href="{% url 'core:request_details_received' r.transaction_id %}" class=" btn btn-primary"> <i class="fas fa-eye"></i> View</a>
-                                                                    {% endif %}
-                                                                        
-                                                                </td>
-                                                            </tr>
-                                                            {% endif %}
-
-                                                        {% empty %}
-                                                        <li>No Received Requests</li>
+                                                    {% for s in forex_withdraw_list %}
+                                                        <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
+                                                            <th scope="row">
+                                                                <p style="font-weight: lighter;">{{s.sender_account_currency}} <i class="fa fa-arrow-circle-right"></i> {{s.reciever_account_currency}}</p>
+                                                                <p class="mdr">{{s.transaction_type|title}}</p>
+                                                            </th>
+                                                            <td>
+                                                                <p><small>{{s.date|date:"H:i"}}</small></p>
+                                                                <p class="mdr">{{s.date|date:"d M, Y"}}</p>
+                                                            </td>
+                                                            <td>
+                                                                
+                                                                {% if s.transaction_status == 'Withdraw Completed' %}
+                                                                    <p class="text-success">Withdraw Completed</p>
+                                                                {% endif %}
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <p style="color: rgb(12, 184, 29);">+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
+                                                            </td>
+                                                            <td>
+                                                                {% if s.transaction_status == 'Withdraw Completed' %}
+                                                                    <a href="{% url 'account:forex_withdraw_completed' s.transaction_id %}" class="btn btn-success"><i class="fas fa-arrow-circle-right"></i></a>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
                                                     {% endfor %}
                                                     
                                                 </tbody>
@@ -393,6 +319,7 @@
                             </div>
                         </div>
                     </div>
+                    
                     <div class="col-xl-4 col-lg-5">
                         <div class="side-items">
                             <div class="single-item">
@@ -428,7 +355,7 @@
                                                     </div>
                                                     <div class="bottom_card">
                                                         <div class="card_info">
-                                                            <div class="card_holder_name">₹ {{d.amount|intcomma }} </div>                                  
+                                                            <div class="card_holder_name">$ {{d.amount|intcomma }} </div>                                  
                                                             <div class="card_number">{{d.format_card_number}}</div>
                                                             <div class="card_holder_name">{{d.name}}</div>
                                                             <div>
@@ -497,22 +424,22 @@
                                 <div id="pie_chart"></div>
                             </div>
                             <script>
-                                var sent_transaction = "{{ sent_transaction_count }}"; 
-                                var received_transaction = "{{ recieved_transaction_count }}"; 
-                                var request_sent_transaction = "{{ request_sent_transaction_count }}"; 
-                                var request_received_transaction = "{{ request_recieved_transaction_count }}";
+                                var sent_forex_transaction = "{{ sent_forex_transaction_list_count }}"; 
+                                var received_forex_transaction = "{{ recieved_forex_transaction_list_count }}"; 
+                                var forex_deposit = "{{ forex_deposit_list_count }}"; 
+                                var forex_withdraw = "{{ forex_withdraw_list_count }}";
                             
                                 // Convert the string values to integers
-                                sent_transaction = parseInt(sent_transaction);
-                                received_transaction = parseInt(received_transaction);
-                                request_sent_transaction = parseInt(request_sent_transaction);
-                                request_received_transaction = parseInt(request_received_transaction);
+                                sent_forex_transaction = parseInt(sent_forex_transaction);
+                                received_forex_transaction = parseInt(received_forex_transaction);
+                                forex_deposit = parseInt(forex_deposit);
+                                forex_withdraw = parseInt(forex_withdraw);
                             
-                                var total = sent_transaction + received_transaction + request_sent_transaction + request_received_transaction;
+                                var total = sent_forex_transaction + received_forex_transaction + forex_deposit + forex_withdraw;
                             
                                 var options = {
-                                    series: [sent_transaction, received_transaction, request_sent_transaction, request_received_transaction],
-                                    labels: ['Sent', 'Received', 'Request Sent', 'Request Received'],
+                                    series: [sent_forex_transaction, received_forex_transaction, forex_deposit, forex_withdraw],
+                                    labels: ['Forex Sent', 'Forex Received', 'Forex Deposit', 'Forex Withdraw'],
                                     chart: {
                                         type: 'donut',
                                         height: 350
@@ -554,108 +481,6 @@
                                 var chart = new ApexCharts(document.querySelector("#pie_chart"), options);
                                 chart.render();
                             </script>
-                            <div class="single-item">
-                                <div class="section-text d-flex align-items-center justify-content-between">
-                                    <h6>History ({{history.count}})</h6>
-                                    <div class="view-all d-flex align-items-center">
-                                        <a href="{% url 'core:all_history' %}">View All</a>
-                                        <img src="{% static 'assets1/images/icon/right-arrow.png' %}" alt="icon">
-                                    </div>
-                                </div>
-                                <ul class="recipients-item">
-                                    {% for h in history|slice:"5" %}
-                                    <li class="{% if h.is_read %}custom-bg-gray{% endif %}" style="padding: 15px; border-radius: 15px;">
-                                            
-                                            <a href="{% url 'core:history_detail' h.nid %}" class="d-flex ">
-                                                <div class="text-area" style="font-size: 15px;">
-                                                    {% if h.history_type == "Credit Alert"  %}
-                                                        <p class="mdr">You received a payment of <b>₹ {{h.amount}} </b> from <b> {{h.sender.kyc.full_name}} </b></p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-                                                    {% if h.history_type == "Debit Alert"  %}
-                                                        <p class="mdr">You sent a payment of <b>₹ {{h.amount}}</b> to <b>{{h.receiver.kyc.full_name}} </b></p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-                                                    {% if h.history_type == "Sent Payment Request"  %}
-                                                        <p class="mdr">You sent a <b>payment request</b> of <br> <b>₹ {{h.amount}} </b> to <b> {{h.receiver.kyc.full_name}}</b></p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-                                                    {% if h.history_type == "Recieved Payment Request" %}
-                                                        <p class="mdr">You received a <b>payment request</b> of <b>₹{{h.amount}}</b> from <b> {{h.sender.kyc.full_name}}</p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-                                                    {% if h.history_type == "Settled Payment Request From"  %}
-                                                        <p class="mdr">You settled a <b>payment(request)</b> of <b>₹ {{h.amount}} </b> to <b> {{h.receiver.kyc.full_name}}</b></p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-                                                    {% if h.history_type == "Settled Payment Request To"  %}
-                                                        <p class="mdr"><b>{{h.sender.kyc.full_name}} </b> settled a <b>payment(request) </b> of <b>₹{{h.amount}}</b> to <b>You</b></p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-                                                    {% if h.history_type == "Funded Credit Card"  %}
-                                                        <p class="mdr" style="font-size: 14px;">You funded your credit card with <b>₹ {{h.amount}}</b><br> Card Number : <b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b></p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-                                                    {% if h.history_type == "Withdrew Credit Card Funds"  %}
-                                                        <p class="mdr" style="font-size: 14px;">You withdrew <b>₹ {{h.amount}}</b> from your credit card. <br>Card Number : <b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b></p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                    {% endif %}
-                                                    {% if h.history_type == "Deleted Credit Card"  %}
-                                                        <p class="mdr" style="font-size: 14px;">You deleted your credit card.</p><br>Card Number : <b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </b>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>   
-                                                    {% endif %}
-                                                    {% if h.history_type == "Added Credit Card"  %}
-                                                        <p class="mdr" style="font-size: 14px;">You added a new  credit card.</p><br>Card Number : <b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>    
-                                                    {% endif %}
-                                                    {% if h.history_type == "De-Activated Credit Card"  %}
-                                                        <p class="mdr" style="font-size: 14px;">You de-activated your credit card.</p><br>Card Number :<b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-                                                    {% if h.history_type == "Activated Credit Card" %}
-                                                        <p class="mdr" style="font-size: 14px;">You activated your credit card.</p><br>Card Number :<b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p >
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-
-                                                    {% if h.history_type == "Deleted Debit Card"  %}
-                                                        <p class="mdr" style="font-size: 14px;">You deleted your debit card.</p><br>Card Number : <b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </b>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>   
-                                                    {% endif %}
-                                                    {% if h.history_type == "Added Debit Card"  %}
-                                                        <p class="mdr" style="font-size: 14px;">You added a new  debit card.</p><br>Card Number : <b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>    
-                                                    {% endif %}
-                                                    {% if h.history_type == "De-Activated Debit Card"  %}
-                                                        <p class="mdr" style="font-size: 14px;">You de-activated your debit card.</p><br>Card Number :<b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p>
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-                                                    {% if h.history_type == "Activated Debit Card" %}
-                                                        <p class="mdr" style="font-size: 14px;">You activated your debit card.</p><br>Card Number :<b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p >
-                                                        <p class="mdr time-area">{{h.date}}</p>
-                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
-                                                    {% endif %}
-                                                    
-                                                </div>
-                                            </a>
-                                        </li>
-                                    {% endfor %}
-
-
-                            </div>
                         </div>
                     </div>
                 </div>

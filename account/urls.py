@@ -13,6 +13,8 @@ urlpatterns = [
     path('kyc_reg/',account.kyc_registration,name='kyc_reg'),
     path('delete_account/<id>/',account.delete_account,name='delete_account'),
     path('is_2fa',account.is_2fa ,name='is_2fa'),
+    path('change_pin_number',account.change_pin_number,name='change_pin_number'),
+    path('pin_change_confirm_otp/<user_id>/',account.pin_change_confirm_otp,name='pin_change_confirm_otp'),
 
 
     # recipients
@@ -24,18 +26,25 @@ urlpatterns = [
     path('forex_account_add',forex_account.forex_account_add,name='forex_account_add'),
     path('forex_account_create',forex_account.forex_account_create,name='forex_account_create'),
     path('forex_dashboard/',forex_account.forex_dashboard,name='forex_dashboard'),
+    path('forex_account_details',forex_account.forex_account_details,name='forex_account_details'),
+    path('change_pin_number_forex',forex_account.change_pin_number_forex,name='change_pin_number_forex'),
+    path('forex_pin_change_confirm_otp/<user_id>/',forex_account.forex_pin_change_confirm_otp,name='forex_pin_change_confirm_otp'),
+
+
 
 
     # forex_account_deposit
     path('forex_deposit_check_rate',forex_account_deposit.forex_deposit_check_rate,name='forex_deposit_check_rate'),
     path('forex_deposit_confirm/<transaction_id>/',forex_account_deposit.forex_deposit_confirm,name='forex_deposit_confirm'),
     path('forex_deposit_confirm_process/<transaction_id>/',forex_account_deposit.forex_deposit_confirm_process,name='forex_deposit_confirm_process'),
+    path('forex_deposit_completed/<transaction_id>/',forex_account_deposit.forex_deposit_completed,name='forex_deposit_completed'),
 
 
     # forex_account_withdraw
     path('forex_withdraw_check_rate',forex_account_withdraw.forex_withdraw_check_rate,name='forex_withdraw_check_rate'),
     path('forex_withdraw_confirm/<transaction_id>/',forex_account_withdraw.forex_withdraw_confirm,name='forex_withdraw_confirm'),
     path('forex_withdraw_confirm_process/<transaction_id>/',forex_account_withdraw.forex_withdraw_confirm_process,name='forex_withdraw_confirm_process'),
+    path('forex_withdraw_completed/<transaction_id>/',forex_account_withdraw.forex_withdraw_completed,name='forex_withdraw_completed'),
 
 
     # forex debit card 
@@ -55,6 +64,8 @@ urlpatterns = [
     path('forex_sent_completed/<transaction_id>/',forex_sent.forex_sent_completed,name='forex_sent_completed'),
     path('forex_sent_detail/<transaction_id>/',forex_sent.forex_sent_detail,name='forex_sent_detail'),
     path('delete_forex_transaction/<transaction_id>/',forex_sent.delete_forex_transaction,name='delete_forex_transaction'),
+
+
 
 
 ]

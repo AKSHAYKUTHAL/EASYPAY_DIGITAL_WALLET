@@ -20,6 +20,8 @@
                                     <div class="left-side">
                                         <h5>Hi, {{kyc.full_name|title}}!</h5>
                                         <h2 style="font-size: 50px;">₹{{account.account_balance|intcomma }} </h2>
+                                        <h5 >{{account.account_number }} </h5>
+
                                         
                                         {% for recent_recieved_transfer in recent_recieved_transfer %}
                                         <h5 class="receive">Last Received <span>₹{{recent_recieved_transfer.amount|intcomma }}</span></h5>
@@ -54,7 +56,7 @@
                                     <div class="left-side">
                                         <a href="{% url 'core:search_account' %}" class="cmn-btn">Transfer Money</a>
                                         <a href="{% url  'core:request_payment_search_account' %}" class="cmn-btn">Request Money</a>
-                                        <a href="{% url 'core:all_credit_cards' %}" class="cmn-btn">All Cards</a>
+                                        <a href="{% url 'core:all_cards' %}" class="cmn-btn">All Cards</a>
                                         
                                         {% if user.accountforex  %}
                                             <a href="{% url 'account:forex_dashboard' %}" class="cmn-btn">Forex</a>

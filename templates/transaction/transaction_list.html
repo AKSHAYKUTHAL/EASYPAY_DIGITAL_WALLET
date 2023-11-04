@@ -29,11 +29,15 @@
                                         <li class="nav-item" role="presentation">
                                             <button class="nav-link" id="reciever_reques_tab" data-bs-toggle="tab" data-bs-target="#reciever_request" type="button" role="tab" aria-controls="upcoming" aria-selected="false">Received Requests</button>
                                         </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="sender_request_tab" data-bs-toggle="tab" data-bs-target="#deposit_forex" type="button" role="tab" aria-controls="upcoming" aria-selected="false">Deposit</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="reciever_reques_tab" data-bs-toggle="tab" data-bs-target="#withdraw_forex" type="button" role="tab" aria-controls="upcoming" aria-selected="false">Withdraw</button>
+                                        </li>
                                     </ul>
-                                    <div class="view-all d-flex align-items-center">
-                                        <a href="{% url 'core:transactions' %}">View All</a>
-                                        <img src="{% static 'assets1/images/icon/right-arrow.png' %}" alt="icon">
-                                    </div>
+                                    
                                 </div>
                                 <div class="tab-content mt-40">
                                     <div class="tab-pane fade show active" id="latest" role="tabpanel" aria-labelledby="latest-tab">
@@ -404,6 +408,98 @@
 
                                                         {% empty %}
                                                         <li>No Received Requests</li>
+                                                    {% endfor %}
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="deposit_forex" role="tabpanel" aria-labelledby="sender_request_tab">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col" style="width:270px">Name/ Business</th>
+                                                        <th scope="col">Date</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Amount</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {% for s in forex_deposit_list %}
+                                                        <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
+                                                            <th scope="row">
+                                                                <p style="font-weight: lighter;">{{s.sender_account_currency}} <i class="fa fa-arrow-circle-right"></i> {{s.reciever_account_currency}}</p>
+                                                                <p class="mdr">{{s.transaction_type|title}}</p>
+                                                            </th>
+                                                            <td>
+                                                                <p><small>{{s.date|date:"H:i"}}</small></p>
+                                                                <p class="mdr">{{s.date|date:"d M, Y"}}</p>
+                                                            </td>
+                                                            <td>
+                                                                
+                                                                {% if s.transaction_status == 'Deposit Completed' %}
+                                                                    <p class="text-success">Deposit Completed</p>
+                                                                {% endif %}
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <p style="color: rgb(12, 184, 29);">+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
+                                                            </td>
+                                                            <td>
+                                                                {% if s.transaction_status == 'Deposit Completed' %}
+                                                                    <a href="{% url 'account:forex_deposit_completed' s.transaction_id %}" class="btn btn-success"><i class="fas fa-arrow-circle-right"></i></a>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="withdraw_forex" role="tabpanel" aria-labelledby="reciever_request_tab">
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col" style="width: 270px;">Name/ Business</th>
+                                                        <th scope="col">Date</th>
+                                                        <th scope="col">Status</th>
+                                                        <th scope="col">Amount</th>
+                                                        <th scope="col">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                    {% for s in forex_withdraw_list %}
+                                                        <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
+                                                            <th scope="row">
+                                                                <p style="font-weight: lighter;">{{s.sender_account_currency}} <i class="fa fa-arrow-circle-right"></i> {{s.reciever_account_currency}}</p>
+                                                                <p class="mdr">{{s.transaction_type|title}}</p>
+                                                            </th>
+                                                            <td>
+                                                                <p><small>{{s.date|date:"H:i"}}</small></p>
+                                                                <p class="mdr">{{s.date|date:"d M, Y"}}</p>
+                                                            </td>
+                                                            <td>
+                                                                
+                                                                {% if s.transaction_status == 'Withdraw Completed' %}
+                                                                    <p class="text-success">Withdraw Completed</p>
+                                                                {% endif %}
+                                                                
+                                                            </td>
+                                                            <td>
+                                                                <p style="color: rgb(12, 184, 29);">+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
+                                                            </td>
+                                                            <td>
+                                                                {% if s.transaction_status == 'Withdraw Completed' %}
+                                                                    <a href="{% url 'account:forex_withdraw_completed' s.transaction_id %}" class="btn btn-success"><i class="fas fa-arrow-circle-right"></i></a>
+                                                                {% endif %}
+                                                            </td>
+                                                        </tr>
                                                     {% endfor %}
                                                     
                                                 </tbody>

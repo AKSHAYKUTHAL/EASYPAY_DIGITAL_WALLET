@@ -86,6 +86,59 @@ def transaction_list(request):
     request_sent_transaction = Transaction.objects.filter(sender=request.user, transaction_type="request").order_by('-id')
     request_recieved_transaction = Transaction.objects.filter(reciever=request.user, transaction_type="request").order_by('-id')
 
+
+
+    sent_forex_transaction = chain(
+        TransactionForex.objects.filter(user=request.user, transaction_type='forex').exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_status='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id')
+
+    ) 
+    sent_forex_transaction_list = list(sent_forex_transaction)                                              
+    sent_forex_transaction_list_count = len(sent_forex_transaction_list)
+
+    recieved_forex_transaction = chain (
+        TransactionForex.objects.filter(account_number=request.user.account.account_number).exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_status='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id'),
+        TransactionForex.objects.filter(account_number=request.user.accountforex.account_number).exclude(
+                                                                    Q(transaction_status='Deposit Processing') | 
+                                                                    Q(transaction_status='Deposit Completed') | 
+                                                                    Q(transaction_status='None') |
+                                                                    Q(transaction_status='Withdraw Processing') | 
+                                                                    Q(transaction_status='Withdraw Completed') 
+                                                                ).order_by('-id'),
+    )
+    recieved_forex_transaction_list = list(recieved_forex_transaction)
+    recieved_forex_transaction_list_count = len(recieved_forex_transaction_list)
+
+
+    forex_deposit = chain(
+        TransactionForex.objects.filter(user=request.user,transaction_status='Deposit Processing'),
+        TransactionForex.objects.filter(user=request.user,transaction_status='Deposit Completed')
+    )
+    forex_deposit_list = list(forex_deposit)
+    forex_deposit_list_count = len(forex_deposit_list)
+
+
+    forex_withdraw = chain(
+        TransactionForex.objects.filter(user=request.user,transaction_status='Withdraw Processing'),
+        TransactionForex.objects.filter(user=request.user,transaction_status='Withdraw Completed')
+    )
+    forex_withdraw_list = list(forex_withdraw)
+    forex_withdraw_list_count = len(forex_withdraw_list)
+
+
+
+
     context = {
         "sent_transaction_all_list":sent_transaction_all_list,
         'sent_transaction_count':sent_transaction_count,
@@ -97,6 +150,18 @@ def transaction_list(request):
 
         'request_sent_transaction':request_sent_transaction,
         'request_recieved_transaction':request_recieved_transaction,
+
+        'sent_forex_transaction_list':sent_forex_transaction_list,
+        'sent_forex_transaction_list_count':sent_forex_transaction_list_count,
+
+        'recieved_forex_transaction_list':recieved_forex_transaction_list,
+        'recieved_forex_transaction_list_count':recieved_forex_transaction_list_count,
+
+        'forex_deposit_list':forex_deposit_list,
+        'forex_deposit_list_count':forex_deposit_list_count,
+
+        'forex_withdraw_list':forex_withdraw_list,
+        'forex_withdraw_list_count':forex_withdraw_list_count
     }
 
 

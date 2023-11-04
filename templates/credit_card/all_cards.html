@@ -22,15 +22,19 @@
                                     </div>
                                 </div>
                                 <div class="row">               
-                                    {% for c in credit_card %}
-                                        <a href="{% url 'core:credit_card_detail' c.credit_card_id %}">
+                                    {% for c in all_card_list %}
+                                        {% if c.credit_card_id %}
+                                            <a href="{% url 'core:credit_card_detail' c.credit_card_id %}">
+                                        {% else %}
+                                            <a href="{% url 'core:credit_card_detail' c.debit_card_id %}">
+                                        {% endif %}
                                                 <div class="card__main" style="height: 230px; width: 400px;">
                                                     <div class="{% if c.card_type == 'rupay' %}Front_card{% endif %}    {% if c.card_type == 'master' %}masterCard{% endif %}    {% if c.card_type == 'visa' %}visaCard{% endif %}">
                                                     <div class="top_card"  style="padding: 15px;">
                                                         <span class="visa">{{c.card_type|upper}}  <small style="font-weight: lighter; font-size:11px" class="{% if c.card_tier == 'classic' %}classic_card{% endif %}    {% if c.card_type == 'gold' %}gold_card{% endif %}    {% if c.card_type == 'platinum' %}platinum_card{% endif %}   {% if c.card_type == 'signature' %}signature_card{% endif %}  {% if c.card_type == 'infinite' %}infinite_card{% endif %}">{{c.card_tier|upper}}</small> </span>  
                                                         <div class="logo">
                                                             <img src="{% static 'assets1/images/easypay_blue_logo.png' %}" alt="logo">
-                                                            <small class="expire_year" style="font-size: 12px; margin-left:75px;">Credit card</small>
+                                                            <small class="expire_year" style="font-size: 12px; margin-left:40px;">{{c.card_currency}} {% if c.credit_card_id %}Credit card{% else %}Debit Card{% endif %}</small>
                                                             <div class="image-container" style="display: flex;">
                                                                 <img src="{% static 'assets1/images/icon/chip.png' %}"  alt="" style="width: 40px; height: 35px; margin-left: 75px; margin-top: 12px;">  
                                                                 <img src="{% static 'assets1/images/icon/sigmal_icon.png' %}"  alt="" style="width: 18px; height: 28px; margin-left: 3px;  margin-top: 15px;">    

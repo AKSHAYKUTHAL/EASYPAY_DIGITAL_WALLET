@@ -46,7 +46,7 @@ urlpatterns = [
 
 
     # credit card
-    path('all_credit_cards',credit_card.all_credit_cards,name='all_credit_cards'),
+    path('all_cards',credit_card.all_cards,name='all_cards'),
     path('credit_card_detail/<credit_card_id>/',credit_card.credit_card_detail,name='credit_card_detail'),
     path('fund_credit_card/<credit_card_id>/',credit_card.fund_credit_card,name='fund_credit_card'),
     path('withdraw_fund_from_credit_card/<credit_card_id>/',credit_card.withdraw_fund_from_credit_card,name='withdraw_fund_from_credit_card'),

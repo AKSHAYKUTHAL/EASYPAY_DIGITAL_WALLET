@@ -14,7 +14,7 @@ class MessageHandler:
         client = Client(settings.ACCOUNT_SID, settings.AUTH_TOKEN)
 
         message = client.messages.create(
-                                body=f'Hi there, Your login otp for the easypay is {self.otp}',
+                                body=f'Hi there, Your  otp for the easypay is {self.otp}',
                                 from_='+12018841963',
                                 to=self.phone_number
                             )

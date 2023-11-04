@@ -1,0 +1,163 @@
+{% extends "partials/dashboard_base.html" %}
+{% load static %}
+{% load humanize %}
+{% block content %}
+    <!-- Dashboard Section start -->
+<section class="dashboard-section body-collapse account">
+    <div class="overlay pt-120">
+        <div class="container-fruid">
+            <div class="main-content">
+                <div class="row">
+                    <div class="col-xxl-3 col-xl-4 col-md-6">
+                        <div class="owner-details">
+                            <div class="profile-area">
+                                <div class="profile-img">
+                                    <img style="width: 100px; height: 100px; border-radius: 50%; object-fit: cover;" src="{{ user.kyc.image.url }}" alt="image">
+                                </div>
+                                <div class="name-area">
+                                    <h6>{{user.kyc.full_name|title}}</h6>
+                                    {% if account_forex.account_status == "in-active" %}
+                                        <p class="active-status text-danger">{{account_forex.account_status|title}}</p>
+                                    {% endif %}
+                                    {% if account_forex.account_status == "active" %}
+                                        <p class="active-status">{{account_forex.account_status|title}}</p>
+                                    {% endif %}
+                                    {% if account_forex.account_status == "pending" %}
+                                        <p class="actidve-status text-warning">{{account_forex.account_status|title}}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="owner-info">
+                                <ul>
+                                    <li>
+                                        <p>Account No:</p>
+                                        <span class="mdr">{{account_forex.account_number}}</span>
+                                    </li>
+                                    <li>
+                                        <p>Pin No:</p>
+                                        <span class="mdr">{{account_forex.pin_number}}</span>
+                                    </li>
+                                    <li>
+                                        <p>Joined:</p>
+                                        <span class="mdr"><small>{{account_forex.date|date:"d M, Y"}}</small></span>
+                                    </li>
+                                    
+                                </ul>
+                            </div>
+                            <div class="owner-action">
+                                
+                                {% if request.user.is_authenticated %}
+                                    
+                                
+                                    
+                                <a href="{% url 'userauths:sign_out' %}">
+                                    <img src="{% static 'assets1/images/icon/logout.png' %}" alt="image">
+                                    Logout
+                                </a>
+                                <a href="" class="delete" data-bs-toggle="modal" data-bs-target="#delete_account">
+                                    <img src="{% static 'assets1/images/icon/delete-2.png' %}" alt="image">
+                                    Delete Account
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xxl-9 col-xl-8">
+                        <div class="tab-main">
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item "  role="presentation">
+                                    <button class="nav-link active" id="security-tab" data-bs-toggle="tab" data-bs-target="#security" type="button"
+                                        role="tab" aria-controls="security" aria-selected="false" style="width: 300px;">Security</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content mt-40">
+                                <div class="tab-pane fade show active" id="security" role="tabpanel" aria-labelledby="security-tab">
+                                    <div class="change-pass mb-40">
+                                        <div class="row">
+                                            <div class="col-sm-6" style="background-color: #F7F7FF; padding: 35px; border-radius: 20px; margin: 35px;">
+                                                <h5>Change Pin Number</h5>
+                                                <p>You can always change your password for security reasons or reset your password in case you forgot it.</p>
+                                                <a href="{% url 'account:change_pin_number_forex' %}">Change Pin Number ?</a>
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                <div class="tab-pane pb-120 fade" id="payment" role="tabpanel" aria-labelledby="payment-tab">
+                                    <div class="row">
+                                          </div>
+                                            </div>
+                                        </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Dashboard Section end -->
+
+
+
+
+<!-- Delete account start -->
+    <div class="transfer-popup">
+        <div class="container-fruid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="modal fade" id="delete_account" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <ul class="nav nav-tabs d-none" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="transfer-tab" data-bs-toggle="tab"
+                                        data-bs-target="#transfer" type="button" role="tab" aria-controls="transfer"
+                                        aria-selected="true">Delete Account</button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="success-tab" data-bs-toggle="tab"
+                                        data-bs-target="#success" type="button" role="tab" aria-controls="success"
+                                        aria-selected="false">Confirm</button>
+                                </li>
+                            </ul>
+                            <div class="tab-content" style="width: 400px;">
+                                <div class="tab-pane fade show active" id="transfer" role="tabpanel" aria-labelledby="transfer-tab">
+                                    <div class="modal-content">
+                                        <div class="modal-header mb-60 justify-content-between">
+                                            <h4 style="display: inline-block;"><b>Delete Account</b></h4>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                                <i class="fa-solid fa-xmark" style="float: right;"></i>
+                                            </button>
+                                        </div>
+                                        <small class="" style="font-size: 15px;">When you delete the account will be in the system for one year, if there is any outstanding payment you will be contacted by the customer service, And if you want to recover the account kindly contact the customer service.</small>
+                                        <br><br><br>
+                                        <div class="main-content">
+                                            <p>Enter your pin number below</p>
+                                            <form action="{account:delete_account' account.id  %}" method="POST">
+                                                {% csrf_token %}
+                                                <div class="userInput">
+                                                    <input minlength="4" maxlength="4" name="pin_number" type="text">
+                                                </div>
+                                                <button type="submit" style="background-color: red;">Confirm</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- Delete account start -->
+
+
+<!-- Add credit Card Popup end -->
+
+
+    
+<!-- Add debit Card  Popup end -->
+    {% endblock content %}

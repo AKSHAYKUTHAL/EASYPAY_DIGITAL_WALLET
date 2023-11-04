@@ -6,9 +6,10 @@ from account.models import Account
 import datetime
 from decimal import Decimal
 from account.models import KYC
+from itertools import chain
 
 
-def all_credit_cards(request):
+def all_cards(request):
     try:
         kyc = KYC.objects.get(user=request.user)
     except:
@@ -16,13 +17,19 @@ def all_credit_cards(request):
         return redirect('account:kyc_reg')
     
     account = Account.objects.get(user=request.user)
-    credit_card = CreditCard.objects.filter(user=request.user)
+    all_card =chain(
+        CreditCard.objects.filter(user=request.user).order_by('-id'),
+        DebitCard.objects.filter(user=request.user)
+    ) 
+    all_card_list = list(all_card)
 
     context = {
         "account":account,
-        "credit_card":credit_card,
+        "all_card_list":all_card_list,
     }
-    return render(request, "credit_card/all_credit_cards.html", context)
+    return render(request, "credit_card/all_cards.html", context)
+
+
 
 def credit_card_detail(request,credit_card_id):
     account = Account.objects.get(user=request.user)

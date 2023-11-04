@@ -170,3 +170,13 @@ def forex_withdraw_confirm_process(request,transaction_id):
     else:
         messages.error(request,'An Error Occcured, Try Again Later.')
         return redirect('account:forex_dashboard')
+
+
+def forex_withdraw_completed(request,transaction_id):
+    transaction = TransactionForex.objects.get(transaction_id=transaction_id)
+
+    context = {
+        'transaction':transaction
+    }
+
+    return render(request,'forex/withdraw/forex_withdraw_completed.html',context)

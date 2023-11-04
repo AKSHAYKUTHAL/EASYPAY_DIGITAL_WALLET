@@ -7,6 +7,9 @@ from core.forms import CreditCardForm
 from core.models import CreditCard,Notification,History,DebitCard
 import datetime
 from django.contrib.auth import logout
+from account.mixins import MessageHandler
+from userauths.models import User
+import random
 
 
 
@@ -171,3 +174,52 @@ def is_2fa(request):
         messages.success(request,'You Enabled the 2FA')
         return redirect('account:account')
     
+
+
+def change_pin_number(request):
+    user = request.user
+    kyc = KYC.objects.get(user=user)
+
+    user.otp = random.randint(100000,999999)
+    user.save()
+
+    def format_phone_number(phone_number):
+        phone_number = phone_number.replace(" ", "")
+        if not phone_number.startswith('+'):
+            phone_number = '+' + phone_number
+        return phone_number
+    user.user_id = random.randint(12345678,99999999)
+    user.save()
+    
+    phone_number = format_phone_number(kyc.mobile)
+
+    message_handler = MessageHandler(phone_number,user.otp).send_otp_on_phone()
+    messages.success(request,'The OTP to change the pin number is sent to your phone number.')
+    return redirect('account:pin_change_confirm_otp',user.user_id)
+
+
+
+
+def pin_change_confirm_otp(request,user_id):
+    user = User.objects.get(user_id=user_id)
+    account = Account.objects.get(user=user)
+
+    if request.method == 'POST':
+        user = User.objects.get(user_id=user_id)
+        otp_number = request.POST.get('otp_number')
+
+        if otp_number == user.otp:
+            messages.get_messages(request).used = True
+            new_pin = random.randint(1111,9999)
+            account.pin_number = new_pin
+            account.save()
+            messages.success(request, 'You changed your Pin Succesfully')
+            return redirect('account:dashboard')
+        else:
+            messages.error(request,'Incorrect OTP,Try again.')
+    
+    context = {
+        'user_id':user_id
+    }
+    
+    return render(request,'account/pin_change_confirm_otp.html',context)

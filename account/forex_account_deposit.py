@@ -155,7 +155,7 @@ def forex_deposit_confirm_process(request,transaction_id):
 
 
                 messages.success(request,'Deposit Successful')
-                return redirect('account:forex_dashboard')
+                return redirect('account:forex_deposit_completed')
             else:
                 messages.error(request,'Incorrect Pin.')
                 return redirect('account:forex_deposit_confirm',transaction_forex.transaction_id)
@@ -165,3 +165,14 @@ def forex_deposit_confirm_process(request,transaction_id):
     else:
         messages.error(request,'An Error Occcured, Try Again Later.')
         return redirect('account:forex_dashboard')
+
+
+
+def forex_deposit_completed(request,transaction_id):
+    transaction = TransactionForex.objects.get(transaction_id=transaction_id)
+
+    context = {
+        'transaction':transaction
+    }
+
+    return render(request,'forex/deposit/forex_deposit_completed.html',context)
