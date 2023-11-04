@@ -444,7 +444,7 @@ def forex_sent_completed(request,transaction_id):
     user = request.user
     transaction = TransactionForex.objects.get(transaction_id=transaction_id)
 
-    if transaction.transaction_status == 'Forex Sent Completed' and request.META.get('HTTP_REFERER') != 'http://127.0.0.1:8000/account/dashboard/inr/':
+    if transaction.transaction_status == 'Forex Sent Completed' and request.META.get('HTTP_REFERER') != 'http://127.0.0.1:8000/account/dashboard/':
         messages.success(request, 'Your Money has been Sent')
 
 

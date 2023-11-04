@@ -206,7 +206,7 @@ def delete_credit_card(request, credit_card_id):
                 )
 
                 messages.success(request, "Credit Card Deleted Successfull")
-                return redirect("account:dashboard", request.user.account.account_currency)
+                return redirect("account:dashboard")
             else:
                 credit_card.delete()
 
@@ -227,7 +227,7 @@ def delete_credit_card(request, credit_card_id):
                 user_account.credit_card_count -= 1
                 user_account.save()
                 messages.success(request, "Credit Card Deleted Successfull")
-                return redirect("account:dashboard" , request.user.account.account_currency)
+                return redirect("account:dashboard")
         else:
             messages.error(request, "Incorrect Pin")
             return redirect("core:credit_card_detail", credit_card.credit_card_id)

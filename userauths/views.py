@@ -113,7 +113,7 @@ def login_view(request):
                 login(request, user)
                 messages.get_messages(request).used = True
                 messages.success(request, 'You are logged in successfully.')
-                return redirect('account:account')
+                return redirect('account:dashboard')
             else:
                 messages.get_messages(request).used = True
                 messages.error(request, 'Incorrect Email or password.')
@@ -126,7 +126,7 @@ def login_view(request):
     if request.user.is_authenticated:
         messages.get_messages(request).used = True
         messages.error(request, 'You are already logged in.')
-        return redirect('account:account')
+        return redirect('account:dashboard')
 
     return render(request, 'userauths/sign_in.html')
 

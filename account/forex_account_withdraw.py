@@ -79,8 +79,12 @@ def forex_withdraw_confirm(request,transaction_id):
 def forex_withdraw_confirm_process(request,transaction_id):
     transaction_forex = TransactionForex.objects.get(transaction_id=transaction_id)
     sender_account = transaction_forex.sender_account
+
     receiver_account = transaction_forex.receiver_account
 
+    sender_account_pin_number = receiver_account.pin_number
+
+    print(f"sender_account_pin_number = {sender_account_pin_number}")
     try:
         sender_debit_card = ForexDebitCard.objects.get(user=request.user)
     except:
@@ -96,7 +100,7 @@ def forex_withdraw_confirm_process(request,transaction_id):
 
             pin_number = request.POST.get('pin_number')
 
-            if pin_number == sender_account.pin_number:
+            if pin_number == sender_account_pin_number:
                 transaction_forex.transaction_status = "Withdraw Completed"
                 transaction_forex.save()
 
@@ -120,50 +124,28 @@ def forex_withdraw_confirm_process(request,transaction_id):
                     receiver_debit_card.amount += Decimal(transaction_forex.recipient_gets)
                     receiver_debit_card.save()
 
-                # if receiver_debit_card is not None:
-                #     receiver_debit_card.amount += transaction.receiving_amount()
-                #     receiver_debit_card.save()
-
-                # Notification.objects.create(
-                #     amount=transaction.receiving_amount(),
-                #     user=account.user,
-                #     notification_type="Credit Alert",
-                #     sender = request.user,
-                #     receiver = account.user,
-                #     transaction_id = transaction.transaction_id
-                # )
-                # History.objects.create(
-                #     amount=transaction.receiving_amount(),
-                #     user=account.user,
-                #     history_type="Credit Alert",
-                #     sender = request.user,
-                #     receiver = account.user,
-                #     transaction_id = transaction.transaction_id
-                # )
-                
-                # Notification.objects.create(
-                #     user=sender,
-                #     notification_type="Debit Alert",
-                #     amount=transaction.amount,
-                #     sender = request.user,
-                #     receiver = account.user,
-                #     transaction_id = transaction.transaction_id
-                # )
-                # History.objects.create(
-                #     user=sender,
-                #     history_type="Debit Alert",
-                #     amount=transaction.amount,
-                #     sender = request.user,
-                #     receiver = account.user,
-                #     transaction_id = transaction.transaction_id
-                # )
-
+                Notification.objects.create(
+                    amount=transaction_forex.original_currency_amount,
+                    user=sender_account.user,
+                    notification_type="Withdraw Completed",
+                    forex_sender_account_number = receiver_account.account_number,
+                    forex_reciever_account_number = sender_account.account_number,
+                    transaction_id = transaction_forex.transaction_id
+                )
+                History.objects.create(
+                    amount=transaction_forex.original_currency_amount,
+                    user=sender_account.user,
+                    history_type="Withdraw Completed",
+                    forex_sender_account_number = receiver_account.account_number,
+                    forex_reciever_account_number = sender_account.account_number,
+                    transaction_id = transaction_forex.transaction_id
+                )
 
                 messages.success(request,'Withdarw Successful')
                 return redirect('account:forex_dashboard')
             else:
                 messages.error(request,'Incorrect Pin.')
-                return redirect('account:forex_deposit_confirm',transaction_forex.transaction_id)
+                return redirect('account:forex_withdraw_confirm',transaction_forex.transaction_id)
         else:
             messages.error(request,'You already completed this transaction')
             return redirect('account:forex_dashboard')

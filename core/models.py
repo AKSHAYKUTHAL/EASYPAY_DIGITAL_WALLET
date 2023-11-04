@@ -81,12 +81,22 @@ NOTIFICATION_TYPE = (
     ("Deleted Credit Card", "Deleted Credit Card"),
     ("Added Credit Card", "Added Credit Card"),
     ("Activated Credit Card", "Activated Credit Card"),
-
     ("De-Activated Credit Card", "De-Activated Credit Card"),
+
     ("Deleted Debit Card", "Deleted Debit Card"),
     ("Added Debit Card", "Added Debit Card"),
     ("Activated Debit Card", "Activated Debit Card"),
     ("De-Activated Debit Card", "De-Activated Debit Card"),
+
+    ('Deposit Processing','Deposit Processing'),
+    ('Deposit Completed','Deposit Completed'),
+    ('Withdraw Processing','Withdraw Processing'),
+    ('Withdraw Completed','Withdraw Completed'),
+    
+    ('Forex Sent Processing','Forex Sent Processing'),
+    ('Forex Sent Waiting','Forex Sent Waiting'),
+    ('Forex Sent Completed','Forex Sent Completed'),
+    ('Forex Sent Failed','Forex Sent Failed'),
     
 
 )
@@ -98,19 +108,32 @@ HISTORY_TYPE = (
     ("Credit Alert", "Credit Alert"),
     ("Debit Alert", "Debit Alert"),
     ("Sent Payment Request", "Sent Payment Request"),
+
     ("Recieved Payment Request", "Recieved Payment Request"),
     ("Settled Payment Request To", "Settled Payment Request To"),
     ("Settled Payment Request From", "Settled Payment Request From"),
+    
     ("Funded Credit Card", "Funded Credit Card"),
     ("Withdrew Credit Card Funds", "Withdrew Credit Card Funds"),
     ("Deleted Credit Card", "Deleted Credit Card"),
     ("Added Credit Card", "Added Credit Card"),
     ("Activated Credit Card", "Activated Credit Card"),
     ("De-Activated Credit Card", "De-Activated Credit Card"),
+
     ("Deleted Debit Card", "Deleted Debit Card"),
     ("Added Debit Card", "Added Debit Card"),
     ("Activated Debit Card", "Activated Debit Card"),
     ("De-Activated Debit Card", "De-Activated Debit Card"),
+
+    ('Deposit Processing','Deposit Processing'),
+    ('Deposit Completed','Deposit Completed'),
+    ('Withdraw Processing','Withdraw Processing'),
+    ('Withdraw Completed','Withdraw Completed'),
+    
+    ('Forex Sent Processing','Forex Sent Processing'),
+    ('Forex Sent Waiting','Forex Sent Waiting'),
+    ('Forex Sent Completed','Forex Sent Completed'),
+    ('Forex Sent Failed','Forex Sent Failed'),
 
 )
 
@@ -219,6 +242,8 @@ class Notification(models.Model):
     card_type = models.CharField(max_length=50,blank=True,null=True)
     card_tier = models.CharField(max_length=50,blank=True,null=True)
     transaction_id = models.CharField(max_length=100,blank=True,null=True)
+    forex_sender_account_number = models.CharField(max_length=100,blank=True,null=True)
+    forex_reciever_account_number = models.CharField(max_length=100,blank=True,null=True)
 
 
     class Meta:
@@ -242,6 +267,8 @@ class History(models.Model):
     card_type = models.CharField(max_length=50,blank=True,null=True)
     card_tier = models.CharField(max_length=50,blank=True,null=True)
     transaction_id = models.CharField(max_length=100,blank=True,null=True)
+    forex_sender_account_number = models.CharField(max_length=100,blank=True,null=True)
+    forex_reciever_account_number = models.CharField(max_length=100,blank=True,null=True)
 
 
 

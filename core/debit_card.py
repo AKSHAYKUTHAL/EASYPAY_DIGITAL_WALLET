@@ -45,10 +45,10 @@ def add_debit_card(request):
                 account.debit_card_count += 1
                 account.save()
                 messages.success(request,'Debit Card Added Successfully.')
-                return redirect('account:dashboard', request.user.account.account_currency)
+                return redirect('account:dashboard')
         else:
             messages.error(request,'You can only have 1 debit cards at a time')
-            return redirect('account:dashboard', request.user.account.account_currency)
+            return redirect('account:dashboard')
     
 
 
@@ -152,7 +152,7 @@ def delete_debit_card(request, debit_card_id):
                 card_tier = debit_card.card_tier
             )
             messages.success(request, "Debit Card Deleted Successfull")
-            return redirect("account:dashboard", request.user.account.account_currency)
+            return redirect("account:dashboard")
     else:
         messages.error(request, "Incorrect Pin")
         return redirect("core:debit_card_detail", debit_card.debit_card_id)

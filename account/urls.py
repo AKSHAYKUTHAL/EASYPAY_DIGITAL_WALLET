@@ -4,7 +4,7 @@ from account import dashboard,account, forex_sent,recipients,forex_account,forex
 app_name = "account"
 
 urlpatterns = [
-    path('dashboard/<currency>/',dashboard.dashboard,name='dashboard'),
+    path('dashboard/',dashboard.dashboard,name='dashboard'),
     path('search_user_transactions',dashboard.search_user_transactions,name='search_user_transactions'),
 
 
@@ -29,6 +29,7 @@ urlpatterns = [
     path('forex_account_details',forex_account.forex_account_details,name='forex_account_details'),
     path('change_pin_number_forex',forex_account.change_pin_number_forex,name='change_pin_number_forex'),
     path('forex_pin_change_confirm_otp/<user_id>/',forex_account.forex_pin_change_confirm_otp,name='forex_pin_change_confirm_otp'),
+    path('delete_forex_account/<id>/',forex_account.delete_forex_account,name='delete_forex_account'),
 
 
 

@@ -58,7 +58,7 @@
                                         <a href="{% url  'core:request_payment_search_account' %}" class="cmn-btn">Request Money</a>
                                         <a href="{% url 'core:all_cards' %}" class="cmn-btn">All Cards</a>
                                         
-                                        {% if user.accountforex  %}
+                                        {% if user.accountforex and user.accountforex.deleted_account == False  %}
                                             <a href="{% url 'account:forex_dashboard' %}" class="cmn-btn">Forex</a>
                                         {% else %}
                                             <a href="{% url 'account:forex_account_add' %}" class="cmn-btn">Add Forex</a>
@@ -655,15 +655,7 @@
                             <div class="single-item">
                                 <div class="section-text d-flex align-items-center justify-content-between">
                                     <h6>Payment Analytics</h6>
-                                    <div class="select-box">
-                                        <select>
-                                            <option>Monthly</option>
-                                            <option value="1">Jan</option>
-                                            <option value="2">Feb</option>
-                                            <option value="3">Mar</option>
-                                            
-                                        </select>
-                                    </div>
+                                    
                                 </div>
                                 <div id="pie_chart"></div>
                             </div>
@@ -760,7 +752,7 @@
                                                         <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
                                                     {% endif %}
                                                     {% if h.history_type == "Sent Payment Request"  %}
-                                                        <p class="mdr">You sent a <b>payment request</b> of <br> <b>₹ {{h.amount}} </b> to <b> {{h.receiver.kyc.full_name}}</b></p>
+                                                        <p class="mdr">You sent a <b>payment request</b> of <b>₹ {{h.amount}} </b> to <b> {{h.receiver.kyc.full_name}}</b></p>
                                                         <p class="mdr time-area">{{h.date}}</p>
                                                         <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
                                                     {% endif %}
@@ -770,7 +762,7 @@
                                                         <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
                                                     {% endif %}
                                                     {% if h.history_type == "Settled Payment Request From"  %}
-                                                        <p class="mdr">You settled a <b>payment(request)</b> of <b>₹ {{h.amount}} </b> to <b> {{h.receiver.kyc.full_name}}</b></p>
+                                                        <p class="mdr">You settled a <b>payment(request)</b> of <b> ₹ {{h.amount}} </b> to <b> {{h.receiver.kyc.full_name}}</b></p>
                                                         <p class="mdr time-area">{{h.date}}</p>
                                                         <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
                                                     {% endif %}
@@ -829,7 +821,16 @@
                                                         <p class="mdr time-area">{{h.date}}</p>
                                                         <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
                                                     {% endif %}
-                                                    
+                                                    {% if h.history_type == "Deposit Completed" %}
+                                                        <p class="mdr" style="font-size: 14px;">You made a Deposit of <b>{{h.amount}} INR</b> from <b>{{h.forex_sender_account_number}}</b> to <b>{{h.forex_reciever_account_number}}</b> </p >
+                                                        <p class="mdr time-area">{{h.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
+                                                    {% if h.history_type == "Withdraw Completed" %}
+                                                        <p class="mdr" style="font-size: 14px;">You Withdraw amount of</p><b>{{h.amount}} USD</b> from <b>{{h.forex_sender_account_number}}</b><br> to <b>{{h.forex_reciever_account_number}}</b> </p >
+                                                        <p class="mdr time-area">{{h.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
                                                 </div>
                                             </a>
                                         </li>

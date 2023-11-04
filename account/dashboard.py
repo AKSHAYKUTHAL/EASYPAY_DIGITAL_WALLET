@@ -10,7 +10,7 @@ from itertools import chain
 
 
 
-def dashboard(request,currency):
+def dashboard(request):
     ######### sent transactions ###########
 
     sent_transaction_all = chain(
@@ -135,15 +135,15 @@ def dashboard(request,currency):
                     account.credit_card_count += 1
                     account.save()
                     messages.success(request,'Card Added Successfully.')
-                    return redirect('account:dashboard', request.user.account.account_currency)
+                    return redirect('account:dashboard')
             else:
                 messages.error(request,'You can only have 2 credit cards at a time')
-                return redirect('account:dashboard' , request.user.account.account_currency)
+                return redirect('account:dashboard')
         else:
             form = CreditCardForm()
 
     else:
-        messages.error(request,'You need to login to access the dashboard' , request.user.account.account_currency)
+        messages.error(request,'You need to login to access the dashboard')
         return redirect('userauths:sign_in')
     
     context = {
@@ -249,14 +249,14 @@ def add_debit_card(request):
                     account.credit_card_count += 1
                     account.save()
                     messages.success(request,'Card Added Successfully.')
-                    return redirect('account:dashboard', request.user.account.account_currency)
+                    return redirect('account:dashboard')
             else:
                 messages.error(request,'You can only have 1 credit cards at a time')
-                return redirect('account:dashboard', request.user.account.account_currency)
+                return redirect('account:dashboard')
         else:
             form = CreditCardForm()
 
     else:
-        messages.error(request,'You need to login to access the dashboard', request.user.account.account_currency)
+        messages.error(request,'You need to login to access the dashboard')
         return redirect('userauths:sign_in')
     

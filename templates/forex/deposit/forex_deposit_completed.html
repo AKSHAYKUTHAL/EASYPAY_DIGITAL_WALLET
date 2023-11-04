@@ -17,10 +17,11 @@
                         <div class="top-area">
                             <h6> Details</h6>
                             <div class="right">
-                                <a href="" onclick="location.href = document.referrer; return false;">
+                                <a href="javascript:history.back()">
                                     <i class="fa fa-arrow-left"></i>
                                     Back
                                 </a>
+                                                                
                             </div>
                         </div>
                         <div class="row">
@@ -77,10 +78,12 @@
                                 </ul>
                             </div>
                         </div>
+                    
+
                     </div>
                 <br>
                     
-
+                <h5><a href="{% url 'account:forex_deposit_check_rate' %}"><b>Make Another Deposit</b></a>  </h5>
                     
                 </div>
             </div>

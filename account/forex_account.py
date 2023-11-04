@@ -279,3 +279,29 @@ def forex_pin_change_confirm_otp(request,user_id):
     }
     
     return render(request,'forex/forex_pin_change_confirm_otp.html',context)
+
+
+
+def delete_forex_account(request,id):
+    account = AccountForex.objects.get(id=id, user=request.user)
+
+
+    if request.method == 'POST':
+        pin_number = request.POST.get('pin_number')
+
+
+        if account.account_balance <= 0 and account.deleted_account == False :
+                if pin_number == account.pin_number:
+                    account.deleted_account = True
+                    account.save()
+                    logout(request)
+                    messages.success(request,'Your Account has been deleted, For any assistance please contact the Customer Service')
+                    return redirect('account:dashboard')
+                else:
+                    messages.error(request,'Incorrect pin number')
+                    return redirect('account:forex_account_details')
+
+            
+        else:
+            messages.error(request,'You have balance amount in one your account, Please move the money first.')
+            return redirect('account:forex_account_details')

@@ -203,6 +203,16 @@
                                                         <p class="mdr time-area">{{n.date}}</p>
                                                         <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
                                                     {% endif %}
+                                                    {% if n.notification_type == "Deposit Completed" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You made a Deposit of</p><b>{{n.amount}} INR</b> from <b>{{n.forex_sender_account_number}}</b><br> to <b>{{n.forex_reciever_account_number}}</b> </p >
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
+                                                    {% if n.notification_type == "Withdraw Completed" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You Withdraw amount of</p><b>{{n.amount}} USD</b> from <b>{{n.forex_sender_account_number}}</b><br> to <b>{{n.forex_reciever_account_number}}</b> </p >
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
                                                     
                                                 </div>
                                             </a>
@@ -251,7 +261,7 @@
                                     </div>
                                     <ul>
                                         <li class="border-area">
-                                            <a href="{% url 'account:dashboard' request.user.account.account_currency %}"><i class="fas fa-user"></i>Dashboard</a>
+                                            <a href="{% url 'account:dashboard' %}"><i class="fas fa-user"></i>Dashboard</a>
                                         </li>
                                         
                                         {% if user.is_superuser == True %}
@@ -280,7 +290,7 @@
                         </div>
                         <ul>
                             <li>
-                                <a href="{% url 'account:dashboard'  request.user.account.account_currency %}">
+                                <a href="{% url 'account:dashboard' %}">
                                     <img src="{% static 'assets1/images/icon/dashboard.png' %}" alt="Dashboard"> <span>Dashboard</span>
                                 </a>
                             </li>
@@ -300,13 +310,18 @@
                                 </a>
                             </li>
                             <li>
-                                {% if user.accountforex  %}
+                                <a href="{% url 'account:recipients' %}">
+                                    <img src="{% static 'assets1/images/icon/recipients.png' %}" alt="Recipients"> <span>Recipients</span>
+                                </a>
+                            </li>
+                            <li>
+                                {% if user.accountforex and user.accountforex.deleted_account == False  %}
                                     <a href="{% url 'account:forex_dashboard' %}">
                                         <img src="{% static 'assets1/images/icon/exchange.png' %}" alt="forex"> <span>Forex</span>
                                     </a>
                                 {% else %}
                                     <a href="{% url 'account:forex_account_add' %}">
-                                        <img src="{% static 'assets1/images/icon/exchange.png' %}" alt="forex"> <span>Forex</span>
+                                        <img src="{% static 'assets1/images/icon/exchange.png' %}" alt="forex"> <span>Add Forex</span>
                                     </a>
                                 {% endif %}
                             </li>
@@ -316,23 +331,18 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{% url 'account:recipients' %}">
-                                    <img src="{% static 'assets1/images/icon/recipients.png' %}" alt="Recipients"> <span>Recipients</span>
+                                <a href="{% url 'account:forex_deposit_check_rate' %}">
+                                    <img src="{% static 'assets1/images/icon/deposit.png' %}" alt="Deposit"> <span>Forex Deposit</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'account:forex_withdraw_check_rate' %}">
+                                    <img src="{% static 'assets1/images/icon/withdraw.png' %}" alt="Withdraw"> <span>Forex Withdraw</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="{% url 'core:crypto' %}">
                                     <img src="{% static 'assets1/images/icon/crypto.png' %}" alt="Crypto"> <span>Crypto</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="deposit-money.html">
-                                    <img src="{% static 'assets1/images/icon/deposit.png' %}" alt="Deposit"> <span>Deposit Money</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="withdraw-money-step-1.html">
-                                    <img src="{% static 'assets1/images/icon/withdraw.png' %}" alt="Withdraw"> <span>Withdraw Money</span>
                                 </a>
                             </li>
                         </ul>
@@ -342,11 +352,11 @@
                                     <img src="{% static 'assets1/images/icon/account.png' %}" alt="Account"> <span>Account</span>
                                 </a>
                             </li>
-                            <li>
+                            <!-- <li>
                                 <a href="javascript:void(0)">
                                     <img src="{% static 'assets1/images/icon/support.png' %}" alt="Support"> <span>Support</span>
                                 </a>
-                            </li>
+                            </li> -->
                             <li>
                                 <a href="{% url 'core:index' %}">
                                     <img src="{% static 'assets1/images/icon/quit.png' %}" alt="Quit"> <span>Quit</span>

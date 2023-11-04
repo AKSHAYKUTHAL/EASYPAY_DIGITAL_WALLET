@@ -943,5 +943,23 @@
             </div>
         </div>
     </section>
+
+{% elif notification.notification_type == "Deposit Completed" %}
+    <script>
+        // Simulate a delay of 10 minutes
+        setTimeout(function () {
+            // Redirect to the next page after the delay
+            window.location.href = "{% url 'account:forex_deposit_completed' notification.transaction_id %}";
+        }, 0); // 10 minutes in milliseconds
+    </script>
+
+{% elif notification.notification_type == "Withdraw Completed" %}
+    <script>
+        // Simulate a delay of 10 minutes
+        setTimeout(function () {
+            // Redirect to the next page after the delay
+            window.location.href = "{% url 'account:forex_withdraw_completed' notification.transaction_id %}";
+        }, 0); // 10 minutes in milliseconds
+    </script>
 {% endif %}
 {% endblock content %}

@@ -135,7 +135,7 @@
                                         <br><br><br>
                                         <div class="main-content">
                                             <p>Enter your pin number below</p>
-                                            <form action="{account:delete_account' account.id  %}" method="POST">
+                                            <form action="{% url 'account:delete_forex_account' account_forex.id  %}" method="POST">
                                                 {% csrf_token %}
                                                 <div class="userInput">
                                                     <input minlength="4" maxlength="4" name="pin_number" type="text">

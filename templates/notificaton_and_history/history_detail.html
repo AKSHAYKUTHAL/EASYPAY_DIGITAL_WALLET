@@ -954,5 +954,23 @@
         </div>
     </section>
 
+{% elif history.history_type == "Deposit Completed" %}
+<script>
+    // Simulate a delay of 10 minutes
+    setTimeout(function () {
+        // Redirect to the next page after the delay
+        window.location.href = "{% url 'account:forex_deposit_completed' history.transaction_id %}";
+    }, 0); // 10 minutes in milliseconds
+</script>
+
+{% elif history.history_type == "Withdraw Completed" %}
+    <script>
+        // Simulate a delay of 10 minutes
+        setTimeout(function () {
+            // Redirect to the next page after the delay
+            window.location.href = "{% url 'account:forex_withdraw_completed' history.transaction_id %}";
+        }, 0); // 10 minutes in milliseconds
+    </script>
+
 {% endif %}
 {% endblock content %}

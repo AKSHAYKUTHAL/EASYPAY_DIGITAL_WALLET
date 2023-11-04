@@ -3,7 +3,7 @@ from account.models import Account
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib import messages
-from core.models import Transaction,Notification,CreditCard,History
+from core.models import Transaction,Notification,CreditCard,History,TransactionForex
 import time
 from decimal import Decimal
 
@@ -15,10 +15,13 @@ def notification_detail(request,nid):
         notification.delete()
     except Notification.DoesNotExist:
         messages.error(request, 'Your Notification is removed,For more information check the History')
-        return redirect('account:dashboard', request.user.account.account_currency)
+        return redirect('account:dashboard')
 
     if notification.transaction_id:
-        transaction = Transaction.objects.get(transaction_id=notification.transaction_id)
+        try:
+            transaction = Transaction.objects.get(transaction_id=notification.transaction_id)
+        except:
+            transaction = TransactionForex.objects.get(transaction_id=notification.transaction_id)
     else:
         transaction = None
 
@@ -44,7 +47,7 @@ def history_detail(request,nid):
         history.save()       
     except:
         messages.error(request, 'An Error Occured')
-        return redirect('account:dashboard', request.user.account.account_currency)
+        return redirect('account:dashboard')
 
     try:
         transaction = Transaction.objects.get(transaction_id=history.transaction_id)
