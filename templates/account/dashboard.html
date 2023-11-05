@@ -118,7 +118,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in sent_transaction_all_list|slice:"10" %}
+                                                    {% for s in sent_transaction_all_list|slice:"25" %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactions_details_sent">
                                                             {% if s.transaction_type != 'forex' %}
                                                                 <th scope="row">
@@ -148,8 +148,10 @@
                                                                 </td>
                                                                 <td>
                                                                     {% if s.transaction_status == 'completed' %}
-                                                                    <p style="color: #eb0a0a;">–{{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
-                                                                    {% endif %}
+                                                                        <p style="color: #eb0a0a;">–{{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
+                                                                    {% else %}
+                                                                        <p>{{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
+                                                                    {% endif %} 
                                                                 </td>
                                                                 <td>
                                                                     {% if s.transaction_status == 'completed' or s.transaction_status == 'failed' or   s.transaction_status == 'cancelled' %}
@@ -238,7 +240,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in recieved_transaction_all_list|slice:"10" %}
+                                                    {% for s in recieved_transaction_all_list|slice:"25" %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactions_details_sent">
                                                             {% if s.transaction_type != 'forex'  %}
                                                                 <th scope="row">
@@ -325,7 +327,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in request_sent_transaction|slice:"10" %}
+                                                    {% for s in request_sent_transaction|slice:"25" %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
                                                             <th scope="row">
                                                                 <p>{{s.reciever.kyc.full_name|title}}</p>
@@ -409,7 +411,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for r in request_recieved_transaction|slice:"10" %}
+                                                    {% for r in request_recieved_transaction|slice:"25" %}
                                                         {% if r.transaction_status != 'request_processing' %}   
                                                             <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
                                                                 <th scope="row">
@@ -1145,74 +1147,5 @@
     </div>
     
     
-<!-- Add debit Card  Popup end -->
 
-    <!-- Transactions Popup start -->
-    <!-- <div class="transactions-popup">
-        <div class="container-fruid">
-            <div class="row">
-                <div class="col-lg-6">
-                    <div class="modal fade" id="transactions_details_sent" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered">
-                            <div class="modal-content">
-                                <div class="modal-header justify-content-between">
-                                    <h5>Transaction Details</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
-                                </div>
-                                <div class="main-content">
-                                    <div class="row">
-                                        <div class="col-sm-5 text-center">
-                                            <div class="icon-area">
-                                                <img src="{% static 'assets1/images/icon/transaction-details-icon.png' %}" alt="icon">
-                                            </div>
-                                            <div class="text-area">
-                                                <h6>Envato Pty Ltd</h6>
-                                                <p>16 Jan 2022</p>
-                                                <h3>717.14 USD</h3>
-                                                <p class="com">Completed</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <div class="right-area">
-                                                <h6>Transaction Details</h6>
-                                                <ul class="payment-details">
-                                                    <li>
-                                                        <span>Payment Amount</span>
-                                                        <span>718.64 USD</span>
-                                                    </li>
-                                                    <li>
-                                                        <span>Fee</span>
-                                                        <span>1.50 USD</span>
-                                                    </li>
-                                                    <li>
-                                                        <span>Total Amount</span>
-                                                        <span>717.14 USD</span>
-                                                    </li>
-                                                </ul>
-                                                <ul class="payment-info">
-                                                    <li>
-                                                        <p>Payment From</p>
-                                                        <span class="mdr">Envato Pty Ltd</span>
-                                                    </li>
-                                                    <li>
-                                                        <p>Payment Description</p>
-                                                        <span class="mdr">Envato Feb 2022 Member Payment</span>
-                                                    </li>
-                                                    <li>
-                                                        <p>Transaction ID:</p>
-                                                        <span class="mdr">6559595979565959895559595</span>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> -->
-    <!-- Transactions Popup start -->
     {% endblock content %}

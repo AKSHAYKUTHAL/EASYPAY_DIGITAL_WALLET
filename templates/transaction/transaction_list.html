@@ -85,7 +85,9 @@
                                                                 <td>
                                                                     {% if s.transaction_status == 'completed' %}
                                                                     <p style="color: #eb0a0a;">–{{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
-                                                                    {% endif %}
+                                                                    {% else %}
+                                                                        <p>{{s.amount|intcomma}} {{s.user.account.account_currency | upper}}</p>
+                                                                    {% endif %} 
                                                                 </td>
                                                                 <td>
                                                                     {% if s.transaction_status == 'completed' or s.transaction_status == 'failed' or   s.transaction_status == 'cancelled' %}
@@ -443,14 +445,23 @@
                                                                 {% if s.transaction_status == 'Deposit Completed' %}
                                                                     <p class="text-success">Deposit Completed</p>
                                                                 {% endif %}
+                                                                {% if s.transaction_status == 'Deposit Processing' %}
+                                                                    <p class="text-danger">Deposit Interrupted</p>
+                                                                {% endif %}
                                                                 
                                                             </td>
                                                             <td>
-                                                                <p style="color: rgb(12, 184, 29);">+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
+                                                                {% if s.transaction_status == 'Deposit Completed' %}
+                                                                    <p style="color: rgb(12, 184, 29);">+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
+                                                                {% else %}
+                                                                    <p> {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
+                                                                {% endif %}
                                                             </td>
                                                             <td>
                                                                 {% if s.transaction_status == 'Deposit Completed' %}
                                                                     <a href="{% url 'account:forex_deposit_completed' s.transaction_id %}" class="btn btn-success"><i class="fas fa-arrow-circle-right"></i></a>
+                                                                {% else %}
+                                                                    <a href="{% url 'account:forex_deposit_check_rate' %}" class="btn btn-primary"><i class="fas fa-arrow-circle-right"></i> New </a>
                                                                 {% endif %}
                                                             </td>
                                                         </tr>
@@ -489,14 +500,23 @@
                                                                 {% if s.transaction_status == 'Withdraw Completed' %}
                                                                     <p class="text-success">Withdraw Completed</p>
                                                                 {% endif %}
+                                                                {% if s.transaction_status == 'Withdraw Processing' %}
+                                                                    <p class="text-danger">Withdraw Interrupted</p>
+                                                                {% endif %}
                                                                 
                                                             </td>
                                                             <td>
-                                                                <p style="color: rgb(12, 184, 29);">+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
+                                                                {% if s.transaction_status == 'Withdraw Completed' %}
+                                                                    <p style="color: rgb(12, 184, 29);">+ {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
+                                                                {% else %}
+                                                                    <p> {{s.recipient_gets|intcomma}} {{s.reciever_account_currency}}</p>
+                                                                {% endif %}
                                                             </td>
                                                             <td>
                                                                 {% if s.transaction_status == 'Withdraw Completed' %}
                                                                     <a href="{% url 'account:forex_withdraw_completed' s.transaction_id %}" class="btn btn-success"><i class="fas fa-arrow-circle-right"></i></a>
+                                                                {% else %}
+                                                                    <a href="{% url 'account:forex_withdraw_check_rate' %}" class="btn btn-primary"><i class="fas fa-arrow-circle-right"></i> New </a>
                                                                 {% endif %}
                                                             </td>
                                                         </tr>

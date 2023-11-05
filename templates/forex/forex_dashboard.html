@@ -32,7 +32,6 @@
                                     <div class="-side">
                                             <div class="-top">
                                                 <h2>{{account_forex.account_currency |upper}}</h2>
-                                                <h6 style="color: white;">{{account_forex.pin_number}}</h6>
                                                 <!-- <div class="dropdown-area">
                                                     <button type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                                                         <img src="{% static 'assets1/images/icon/option.png' %}" alt="icon">
@@ -111,7 +110,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in sent_forex_transaction_list %}
+                                                    {% for s in sent_forex_transaction_list|slice:"10" %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactions_details_sent">
                                                             
                                                                 <th scope="row">
@@ -189,7 +188,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in recieved_forex_transaction_list %}
+                                                    {% for s in recieved_forex_transaction_list|slice:"10" %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactions_details_sent">
                                                             {% if s.transaction_type == 'forex' and s.transaction_status != 'Forex Sent Waiting' and s.transaction_status != 'None' and s.transaction_status != 'Forex Sent Processing' and s.transaction_status != 'Forex Sent Failed' %}
                                                                 <th scope="row">
@@ -237,7 +236,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in forex_deposit_list %}
+                                                    {% for s in forex_deposit_list|slice:"10" %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
                                                             <th scope="row">
                                                                 <p style="font-weight: lighter;">{{s.sender_account_currency}} <i class="fa fa-arrow-circle-right"></i> {{s.reciever_account_currency}}</p>
@@ -283,7 +282,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for s in forex_withdraw_list %}
+                                                    {% for s in forex_withdraw_list|slice:"10" %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactionsMod">
                                                             <th scope="row">
                                                                 <p style="font-weight: lighter;">{{s.sender_account_currency}} <i class="fa fa-arrow-circle-right"></i> {{s.reciever_account_currency}}</p>
