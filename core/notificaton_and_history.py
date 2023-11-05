@@ -71,7 +71,8 @@ def history_detail(request,nid):
 
 def all_history(request):
     all_history = History.objects.filter(user=request.user)
-    transactions = [] 
+    print(all_history.count())
+    transactions = []
     credit_cards = []
 
     

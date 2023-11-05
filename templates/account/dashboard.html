@@ -57,6 +57,8 @@
                                         <a href="{% url 'core:search_account' %}" class="cmn-btn">Transfer Money</a>
                                         <a href="{% url  'core:request_payment_search_account' %}" class="cmn-btn">Request Money</a>
                                         <a href="{% url 'core:all_cards' %}" class="cmn-btn">All Cards</a>
+                                        <a href="{% url 'core:all_history' %}" class="cmn-btn">History</a>
+
                                         
                                         {% if user.accountforex and user.accountforex.deleted_account == False  %}
                                             <a href="{% url 'account:forex_dashboard' %}" class="cmn-btn">Forex</a>

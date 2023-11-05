@@ -50,7 +50,7 @@
                                                 </thead>
                                                 <tbody>
                                                     
-                                                    {% for h in history %}
+                                                    {% for h in all_history %}
                                                         <tr data-bs-toggle="modal" data-bs-target="#transactionsMod" class="{% if h.is_read %}custom-bg-gray{% endif %}">
                                                             <th scope="row">
                                                                 <p>{{h.history_type|title}}</p>

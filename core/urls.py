@@ -54,7 +54,7 @@ urlpatterns = [
     path('deactivate_credit_card/<credit_card_id>/',credit_card.deactivate_credit_card,name='deactivate_credit_card'),
 
 
-    # notifications
+    # notifications and history
     path('notification_detail/<nid>/',notificaton_and_history.notification_detail,name='notification_detail'),
     path('history_detail/<nid>/',notificaton_and_history.history_detail,name='history_detail'),
     path('all_history',notificaton_and_history.all_history,name='all_history'),
