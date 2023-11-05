@@ -110,8 +110,8 @@ def forex_dashboard(request):
     recieved_forex_transaction_list = list(recieved_forex_transaction)
     recieved_forex_transaction_list_count = len(recieved_forex_transaction_list)
 
-    for r in recieved_forex_transaction_list:
-        print(f"recieved_forex_transaction_list = {r.transaction_status}")
+    # for r in recieved_forex_transaction_list:
+    #     print(f"recieved_forex_transaction_list = {r.transaction_status}")
 
 
     forex_deposit = chain(
@@ -214,7 +214,7 @@ def forex_dashboard(request):
 
     }
 
-    print(f"forex_deposit_list= {forex_deposit_list}")
+    # print(f"forex_deposit_list= {forex_deposit_list}")
 
     return render(request,'forex/forex_dashboard.html',context)
 

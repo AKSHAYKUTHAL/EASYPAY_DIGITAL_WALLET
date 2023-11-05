@@ -84,7 +84,7 @@ def forex_withdraw_confirm_process(request,transaction_id):
 
     sender_account_pin_number = receiver_account.pin_number
 
-    print(f"sender_account_pin_number = {sender_account_pin_number}")
+    # print(f"sender_account_pin_number = {sender_account_pin_number}")
     try:
         sender_debit_card = ForexDebitCard.objects.get(user=request.user)
     except:

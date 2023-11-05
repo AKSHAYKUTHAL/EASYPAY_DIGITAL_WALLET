@@ -97,8 +97,8 @@ def forex_deposit_confirm_process(request,transaction_id):
 
             pin_number = request.POST.get('pin_number')
 
-            print(f"pin_number = {pin_number}")
-            print(f"sender_account.pin_number = {sender_account.pin_number}")
+            # print(f"pin_number = {pin_number}")
+            # print(f"sender_account.pin_number = {sender_account.pin_number}")
 
             if pin_number == sender_account.pin_number:
                 transaction_forex.transaction_status = "Deposit Completed"
