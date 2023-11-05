@@ -831,6 +831,32 @@
                                                         <p class="mdr time-area">{{h.date}}</p>
                                                         <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
                                                     {% endif %}
+                                                    {% if h.history_type == "De-Activated Forex Debit Card" %}
+                                                        <p class="mdr" style="font-size: 14px;">You de-activated forex your debit card.</p><br>Card Number :<b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p>
+                                                        <p class="mdr time-area">{{h.date}}</p>
+                                                    {% endif %}
+                                                    {% if h.history_type == "Activated Forex Debit Card" %}
+                                                        <p class="mdr" style="font-size: 14px;">You activated forex your debit card.</p><br>Card Number :<b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p>
+                                                        <p class="mdr time-area">{{h.date}}</p>
+                                                    {% endif %}
+                                                    {% if h.history_type == "Deleted Forex Debit Card" %}
+                                                    <p class="mdr" style="font-size: 14px;">You deleted forex your debit card.</p><br>Card Number :<b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p>
+                                                    <p class="mdr time-area">{{h.date}}</p>
+                                                    {% endif %}
+                                                    {% if h.history_type == "Added Forex Debit Card" %}
+                                                    <p class="mdr" style="font-size: 14px;">You added a forex debit card.</p><br>Card Number :<b>{{h.card_number}}</b><br>Card Type : <b>{{h.card_type | upper}}</b><br>Card Tier : <b>{{h.card_tier | upper}}</b> </p>
+                                                    <p class="mdr time-area">{{h.date}}</p>
+                                                    {% endif %}
+                                                    {% if h.history_type == "Forex Sent Completed" %}
+                                                        <p class="mdr" style="font-size: 14px;">You Sent amount of</p><b>{{h.amount}}</b> from <b>{{h.forex_sender_account_number}}</b><br> to <b>{{h.forex_reciever_account_number}}</b> </p >
+                                                        <p class="mdr time-area">{{h.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
+                                                    {% if h.history_type == "Forex Sent Failed" %}
+                                                        <p class="mdr" style="font-size: 14px;">Your forex transaction failed <br></p><b>{{h.amount}}</b> from <b>{{h.forex_sender_account_number}}</b><br> to <b>{{h.forex_reciever_account_number}}</b> </p >
+                                                        <p class="mdr time-area">{{h.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
                                                 </div>
                                             </a>
                                         </li>

@@ -88,6 +88,11 @@ NOTIFICATION_TYPE = (
     ("Activated Debit Card", "Activated Debit Card"),
     ("De-Activated Debit Card", "De-Activated Debit Card"),
 
+    ("De-Activated Forex Debit Card","De-Activated Forex Debit Card"),
+    ("De-Activated Forex Debit Card","De-Activated Forex Debit Card"),
+    ("Deleted Forex Debit Card","Deleted Forex Debit Card"),
+    ("Added Forex Debit Card","Added Forex Debit Card"),
+
     ('Deposit Processing','Deposit Processing'),
     ('Deposit Completed','Deposit Completed'),
     ('Withdraw Processing','Withdraw Processing'),
@@ -124,6 +129,12 @@ HISTORY_TYPE = (
     ("Added Debit Card", "Added Debit Card"),
     ("Activated Debit Card", "Activated Debit Card"),
     ("De-Activated Debit Card", "De-Activated Debit Card"),
+
+    ("De-Activated Forex Debit Card","De-Activated Forex Debit Card"),
+    ("De-Activated Forex Debit Card","De-Activated Forex Debit Card"),
+    ("Deleted Forex Debit Card","Deleted Forex Debit Card"),
+    ("Added Forex Debit Card","Added Forex Debit Card"),
+
 
     ('Deposit Processing','Deposit Processing'),
     ('Deposit Completed','Deposit Completed'),

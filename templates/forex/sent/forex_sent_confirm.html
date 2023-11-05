@@ -96,8 +96,8 @@
                                     </li>
                                     <li>
                                         <span>Sending From  </span>
-                                        {% if transaction.reciever_account_currency == 'USD' %}
-                                            <b>{{account_forex.account_number}} ({{account_forex.account_currency}})</b>
+                                        {% if transaction.sender_account_currency == 'USD' %}
+                                            <b>{{account_forex.account_number}} {{account_forex.account_currency|upper }}</b>
                                         {% else %}
                                             <b>{{account.account_number}} ({{account.account_currency}})</b>
                                         {% endif %}

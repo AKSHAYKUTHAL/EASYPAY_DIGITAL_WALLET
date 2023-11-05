@@ -1,4 +1,4 @@
-from core.models import Transaction,TransactionForex,ForexDebitCard,DebitCard
+from core.models import Transaction,TransactionForex,ForexDebitCard,DebitCard,History,Notification
 from account.models import Account,KYC,AccountForex
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -274,10 +274,16 @@ def forex_sent_confirmation(request,transaction_id):
             recipient_account = None
 
         if recipient_account is not None:
-          
+            
+            print(f"transaction.ifsc_code = {transaction.ifsc_code}")
+            print(f"recipient_account.ifsc_code = {recipient_account.ifsc_code}")
+
 
             if transaction.ifsc_code != 'None':
-                if transaction.ifsc_code == recipient_account.ifsc_code :
+                clean_transaction_ifsc_code = transaction.ifsc_code.strip() if transaction.ifsc_code else None
+                clean_recipient_ifsc_code = recipient_account.ifsc_code.strip() if recipient_account.ifsc_code else None
+
+                if clean_transaction_ifsc_code == clean_recipient_ifsc_code :
                     transaction.transaction_status = 'Forex Sent Completed'
                     transaction.save()
 
@@ -287,6 +293,23 @@ def forex_sent_confirmation(request,transaction_id):
                     if reciever_debit_card is not None:
                         reciever_debit_card.amount += Decimal(transaction.recipient_gets)
                         reciever_debit_card.save()
+
+                    Notification.objects.create(
+                        user=request.user,
+                        notification_type="Forex Sent Completed",
+                        amount = Decimal(transaction.original_currency_amount),
+                        transaction_id = transaction_id,
+                        forex_sender_account_number = transaction.from_account_number,
+                        forex_reciever_account_number = recipient_account_number
+                    )
+                    History.objects.create(
+                        user=request.user,
+                        history_type="Forex Sent Completed",
+                        amount = Decimal(transaction.original_currency_amount),
+                        transaction_id = transaction_id,
+                        forex_sender_account_number = transaction.from_account_number,
+                        forex_reciever_account_number = recipient_account_number,
+                    )
                     
                     
                     return redirect('account:forex_sent_confirm_loader',transaction_id)
@@ -300,6 +323,23 @@ def forex_sent_confirmation(request,transaction_id):
 
                     sender_debit_card.amount += Decimal(transaction.original_currency_amount)
                     sender_debit_card.save()
+
+                    Notification.objects.create(
+                        user=request.user,
+                        notification_type="Forex Sent Failed",
+                        amount = Decimal(transaction.original_currency_amount),
+                        transaction_id = transaction_id,
+                        forex_sender_account_number = transaction.from_account_number,
+                        forex_reciever_account_number = recipient_account_number
+                    )
+                    History.objects.create(
+                        user=request.user,
+                        history_type="Forex Sent Failed",
+                        amount = Decimal(transaction.original_currency_amount),
+                        transaction_id = transaction_id,
+                        forex_sender_account_number = transaction.from_account_number,
+                        forex_reciever_account_number = recipient_account_number,
+                    )
 
                     
                     messages.error(request,'Not a valid IFSC code. Transaction Failed. Your Money is Returned')
@@ -319,6 +359,23 @@ def forex_sent_confirmation(request,transaction_id):
                         reciever_debit_card.amount += Decimal(transaction.recipient_gets)
                         reciever_debit_card.save()
 
+                    Notification.objects.create(
+                        user=request.user,
+                        notification_type="Forex Sent Completed",
+                        amount = Decimal(transaction.original_currency_amount),
+                        transaction_id = transaction_id,
+                        forex_sender_account_number = transaction.from_account_number,
+                        forex_reciever_account_number = recipient_account_number
+                    )
+                    History.objects.create(
+                        user=request.user,
+                        history_type="Forex Sent Completed",
+                        amount = Decimal(transaction.original_currency_amount),
+                        transaction_id = transaction_id,
+                        forex_sender_account_number = transaction.from_account_number,
+                        forex_reciever_account_number = recipient_account_number,
+                    )
+
                     return redirect('account:forex_sent_confirm_loader',transaction_id)
                 
                 else:
@@ -330,6 +387,23 @@ def forex_sent_confirmation(request,transaction_id):
 
                     sender_debit_card.amount += Decimal(transaction.original_currency_amount)
                     sender_debit_card.save()
+
+                    Notification.objects.create(
+                        user=request.user,
+                        notification_type="Forex Sent Failed",
+                        amount = Decimal(transaction.original_currency_amount),
+                        transaction_id = transaction_id,
+                        forex_sender_account_number = transaction.from_account_number,
+                        forex_reciever_account_number = recipient_account_number
+                    )
+                    History.objects.create(
+                        user=request.user,
+                        history_type="Forex Sent Failed",
+                        amount = Decimal(transaction.original_currency_amount),
+                        transaction_id = transaction_id,
+                        forex_sender_account_number = transaction.from_account_number,
+                        forex_reciever_account_number = recipient_account_number,
+                    )
     
                     messages.error(request,'Not a valid Swift code. Transaction Failed. Your Money is Returned.')
                     return redirect('account:forex_dashboard')
@@ -343,6 +417,23 @@ def forex_sent_confirmation(request,transaction_id):
 
             sender_debit_card.amount += Decimal(transaction.original_currency_amount)
             sender_debit_card.save()
+
+            Notification.objects.create(
+                user=request.user,
+                notification_type="Forex Sent Failed",
+                amount = Decimal(transaction.original_currency_amount),
+                transaction_id = transaction_id,
+                forex_sender_account_number = transaction.from_account_number,
+                forex_reciever_account_number = recipient_account_number
+            )
+            History.objects.create(
+                user=request.user,
+                history_type="Forex Sent Failed",
+                amount = Decimal(transaction.original_currency_amount),
+                transaction_id = transaction_id,
+                forex_sender_account_number = transaction.from_account_number,
+                forex_reciever_account_number = recipient_account_number,
+            )
 
             messages.error(request,'Not a valid Account Number. Transaction Failed. Your Money is Returned.')
             return redirect('account:forex_dashboard')
@@ -367,6 +458,23 @@ def forex_sent_confirmation(request,transaction_id):
                         if reciever_debit_card is not None:
                             reciever_debit_card.amount += Decimal(transaction.recipient_gets)
                             reciever_debit_card.save()
+
+                        Notification.objects.create(
+                            user=request.user,
+                            notification_type="Forex Sent Completed",
+                            amount = Decimal(transaction.original_currency_amount),
+                            transaction_id = transaction_id,
+                            forex_sender_account_number = transaction.from_account_number,
+                            forex_reciever_account_number = recipient_account_number
+                        )
+                        History.objects.create(
+                            user=request.user,
+                            history_type="Forex Sent Completed",
+                            amount = Decimal(transaction.original_currency_amount),
+                            transaction_id = transaction_id,
+                            forex_sender_account_number = transaction.from_account_number,
+                            forex_reciever_account_number = recipient_account_number,
+                        )
                         
                         return redirect('account:forex_sent_confirm_loader',transaction_id)
                     
@@ -379,6 +487,23 @@ def forex_sent_confirmation(request,transaction_id):
 
                         sender_debit_card.amount += Decimal(transaction.original_currency_amount)
                         sender_debit_card.save()
+
+                        Notification.objects.create(
+                            user=request.user,
+                            notification_type="Forex Sent Failed",
+                            amount = Decimal(transaction.original_currency_amount),
+                            transaction_id = transaction_id,
+                            forex_sender_account_number = transaction.from_account_number,
+                            forex_reciever_account_number = recipient_account_number
+                        )
+                        History.objects.create(
+                            user=request.user,
+                            history_type="Forex Sent Failed",
+                            amount = Decimal(transaction.original_currency_amount),
+                            transaction_id = transaction_id,
+                            forex_sender_account_number = transaction.from_account_number,
+                            forex_reciever_account_number = recipient_account_number,
+                        )
 
                         messages.error(request,'Not a valid IFSC code. Transaction Failed. Your Money is Returned')
                         return redirect('account:forex_dashboard')
@@ -397,6 +522,23 @@ def forex_sent_confirmation(request,transaction_id):
                             reciever_debit_card.amount += Decimal(transaction.recipient_gets)
                             reciever_debit_card.save()
 
+                        Notification.objects.create(
+                            user=request.user,
+                            notification_type="Forex Sent Completed",
+                            amount = Decimal(transaction.original_currency_amount),
+                            transaction_id = transaction_id,
+                            forex_sender_account_number = transaction.from_account_number,
+                            forex_reciever_account_number = recipient_account_number
+                        )
+                        History.objects.create(
+                            user=request.user,
+                            history_type="Forex Sent Completed",
+                            amount = Decimal(transaction.original_currency_amount),
+                            transaction_id = transaction_id,
+                            forex_sender_account_number = transaction.from_account_number,
+                            forex_reciever_account_number = recipient_account_number,
+                        )
+
                         return redirect('account:forex_sent_confirm_loader',transaction_id)
                     
                     else:
@@ -408,6 +550,23 @@ def forex_sent_confirmation(request,transaction_id):
 
                         sender_debit_card.amount += Decimal(transaction.original_currency_amount)
                         sender_debit_card.save()
+
+                        Notification.objects.create(
+                            user=request.user,
+                            notification_type="Forex Sent Failed",
+                            amount = Decimal(transaction.original_currency_amount),
+                            transaction_id = transaction_id,
+                            forex_sender_account_number = transaction.from_account_number,
+                            forex_reciever_account_number = recipient_account_number
+                        )
+                        History.objects.create(
+                            user=request.user,
+                            history_type="Forex Sent Failed",
+                            amount = Decimal(transaction.original_currency_amount),
+                            transaction_id = transaction_id,
+                            forex_sender_account_number = transaction.from_account_number,
+                            forex_reciever_account_number = recipient_account_number,
+                        )
 
                         messages.error(request,'Not a valid Swift code. Transaction Failed. Your Money is Returned.')
                         return redirect('account:forex_dashboard')
@@ -422,6 +581,23 @@ def forex_sent_confirmation(request,transaction_id):
                 sender_debit_card.amount += Decimal(transaction.original_currency_amount)
                 sender_debit_card.save()
                 
+
+                Notification.objects.create(
+                    user=request.user,
+                    notification_type="Forex Sent Failed",
+                    amount = Decimal(transaction.original_currency_amount),
+                    transaction_id = transaction_id,
+                    forex_sender_account_number = transaction.from_account_number,
+                    forex_reciever_account_number = recipient_account_number
+                )
+                History.objects.create(
+                    user=request.user,
+                    history_type="Forex Sent Failed",
+                    amount = Decimal(transaction.original_currency_amount),
+                    transaction_id = transaction_id,
+                    forex_sender_account_number = transaction.from_account_number,
+                    forex_reciever_account_number = recipient_account_number,
+                )
 
                 messages.error(request,'Not a valid Account Number. Transaction Failed. Your Money is Returned.')
                 return redirect('account:forex_dashboard')

@@ -36,14 +36,14 @@ def deactivate_debit_card(request,debit_card_id):
 
                 Notification.objects.create(
                     user=request.user,
-                    notification_type="De-Activated Debit Card",
+                    notification_type="De-Activated Forex Debit Card",
                     card_number = debit_card.format_card_number(),
                     card_type = debit_card.card_type,
                     card_tier = debit_card.card_tier
                 )
                 History.objects.create(
                     user=request.user,
-                    history_type="De-Activated Debit Card",
+                    history_type="De-Activated Forex Debit Card",
                     card_number = debit_card.format_card_number(),
                     card_type = debit_card.card_type,
                     card_tier = debit_card.card_tier
@@ -57,14 +57,14 @@ def deactivate_debit_card(request,debit_card_id):
 
                 Notification.objects.create(
                     user=request.user,
-                    notification_type="Activated Debit Card",
+                    notification_type="Activated Forex Debit Card",
                     card_number = debit_card.format_card_number(),
                     card_type = debit_card.card_type,
                     card_tier = debit_card.card_tier
                 )
                 History.objects.create(
                     user=request.user,
-                    history_type="Activated Debit Card",
+                    history_type="Activated Forex Debit Card",
                     card_number = debit_card.format_card_number(),
                     card_type = debit_card.card_type,
                     card_tier = debit_card.card_tier
@@ -94,14 +94,14 @@ def delete_debit_card(request, debit_card_id):
 
             Notification.objects.create(
                 user=request.user,
-                notification_type="Deleted Debit Card",
+                notification_type="Deleted Forex Debit Card",
                 card_number = debit_card.format_card_number(),
                 card_type = debit_card.card_type,
                 card_tier = debit_card.card_tier
             )
             History.objects.create(
                 user=request.user,
-                history_type="Deleted Debit Card",
+                history_type="Deleted Forex Debit Card",
                 card_number = debit_card.format_card_number(),
                 card_type = debit_card.card_type,
                 card_tier = debit_card.card_tier

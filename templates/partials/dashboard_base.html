@@ -213,6 +213,32 @@
                                                         <p class="mdr time-area">{{n.date}}</p>
                                                         <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
                                                     {% endif %}
+                                                    {% if n.notification_type == "De-Activated Forex Debit Card" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You de-activated forex your debit card.</p><br>Card Number :<b>{{n.card_number}}</b><br>Card Type : <b>{{n.card_type | upper}}</b><br>Card Tier : <b>{{n.card_tier | upper}}</b> </p>
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                    {% endif %}
+                                                    {% if n.notification_type == "Activated Forex Debit Card" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You activated forex your debit card.</p><br>Card Number :<b>{{n.card_number}}</b><br>Card Type : <b>{{n.card_type | upper}}</b><br>Card Tier : <b>{{n.card_tier | upper}}</b> </p>
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                    {% endif %}
+                                                    {% if n.notification_type == "Deleted Forex Debit Card" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You deleted forex your debit card.</p><br>Card Number :<b>{{n.card_number}}</b><br>Card Type : <b>{{n.card_type | upper}}</b><br>Card Tier : <b>{{n.card_tier | upper}}</b> </p>
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                    {% endif %}
+                                                    {% if n.notification_type == "Added Forex Debit Card" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You Added a forex debit card.</p><br>Card Number :<b>{{n.card_number}}</b><br>Card Type : <b>{{n.card_type | upper}}</b><br>Card Tier : <b>{{n.card_tier | upper}}</b> </p>
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                    {% endif %}
+                                                    {% if n.notification_type == "Forex Sent Completed" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">You Sent amount of</p><b>{{n.amount}}</b> from <b>{{n.forex_sender_account_number}}</b><br> to <b>{{n.forex_reciever_account_number}}</b> </p >
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
+                                                    {% if n.notification_type == "Forex Sent Failed" and n.is_read == False %}
+                                                        <p class="mdr" style="font-size: 14px;">Your forex transaction failed <br></p><b>{{n.amount}}</b> from <b>{{n.forex_sender_account_number}}</b><br> to <b>{{n.forex_reciever_account_number}}</b> </p >
+                                                        <p class="mdr time-area">{{n.date}}</p>
+                                                        <i class="fa fa-arrow-circle-right fa-lg" aria-hidden="true" style="color: green;" ></i>
+                                                    {% endif %}
                                                     
                                                 </div>
                                             </a>

@@ -169,14 +169,14 @@ def forex_dashboard(request):
 
                 Notification.objects.create(
                     user=request.user,
-                    notification_type="Added Debit Card",
+                    notification_type="Added Forex Debit Card",
                     card_number = new_form.format_card_number(),
                     card_type = new_form.card_type,
                     card_tier = new_form.card_tier
                 )
                 History.objects.create(
                     user=request.user,
-                    history_type="Added Debit Card",
+                    history_type="Added Forex Debit Card",
                     card_number = new_form.format_card_number(),
                     card_type = new_form.card_type,
                     card_tier = new_form.card_tier

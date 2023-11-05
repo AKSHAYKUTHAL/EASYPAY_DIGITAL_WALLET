@@ -972,5 +972,186 @@
         }, 0); // 10 minutes in milliseconds
     </script>
 
+{% elif history.history_type == "De-Activated Forex Debit Card" %}
+    <section class="dashboard-section body-collapse">
+        <div class="overlay pt-120">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-11 col-lg-11">
+                        <div class="section-content">
+                            <div class="transactions-popup">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header justify-content-between">
+                                                        <h5>Forex Debit Card De-Activated</h5>
+                                                        <a href="#" onclick="location.href = document.referrer; return false;"><i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i></a>
+
+                                                    </div>
+                                                    <div class="right-area">
+                                                        <h6>Card Details</h6>               
+                                                        <ul class="payment-info">
+                                                            <li>
+                                                                <p>Card Details</p>
+                                                                <span class="mdr">{{history.card_number|title}}</span><br>
+                                                                <span class="mdr">{{history.card_type|title}}</span><br>
+                                                                <span class="mdr">{{history.card_tier|title}}</span><br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% elif history.history_type == "Activated Forex Debit Card" %}
+    <section class="dashboard-section body-collapse">
+        <div class="overlay pt-120">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-11 col-lg-11">
+                        <div class="section-content">
+                            <div class="transactions-popup">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header justify-content-between">
+                                                        <h5>Forex Debit Card Activated</h5>
+                                                        <a href="#" onclick="location.href = document.referrer; return false;"><i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i></a>
+
+                                                    </div>
+                                                    <div class="right-area">
+                                                        <h6>Card Details</h6>               
+                                                        <ul class="payment-info">
+                                                            <li>
+                                                                <p>Card Details</p>
+                                                                <span class="mdr">{{history.card_number|title}}</span><br>
+                                                                <span class="mdr">{{history.card_type|title}}</span><br>
+                                                                <span class="mdr">{{history.card_tier|title}}</span><br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% elif history.history_type == "Deleted Forex Debit Card" %}
+    <section class="dashboard-section body-collapse">
+        <div class="overlay pt-120">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-11 col-lg-11">
+                        <div class="section-content">
+                            <div class="transactions-popup">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header justify-content-between">
+                                                        <h5>Deleted Forex Debit Card</h5>
+                                                        <a href="#" onclick="location.href = document.referrer; return false;"><i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i></a>
+
+                                                    </div>
+                                                    <div class="right-area">
+                                                        <h6>Card Details</h6>               
+                                                        <ul class="payment-info">
+                                                            <li>
+                                                                <p>Card Details</p>
+                                                                <span class="mdr">{{history.card_number|title}}</span><br>
+                                                                <span class="mdr">{{history.card_type|title}}</span><br>
+                                                                <span class="mdr">{{history.card_tier|title}}</span><br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% elif history.history_type == "Added Forex Debit Card" %}
+    <section class="dashboard-section body-collapse">
+        <div class="overlay pt-120">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-11 col-lg-11">
+                        <div class="section-content">
+                            <div class="transactions-popup">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content">
+                                                    <div class="modal-header justify-content-between">
+                                                        <h5>Forex Debit Card Added </h5>
+                                                        <a href="#" onclick="location.href = document.referrer; return false;"><i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i></a>
+
+                                                    </div>
+                                                    <div class="right-area">
+                                                        <h6>Card Details</h6>               
+                                                        <ul class="payment-info">
+                                                            <li>
+                                                                <p>Card Details</p>
+                                                                <span class="mdr">{{history.card_number|title}}</span><br>
+                                                                <span class="mdr">{{history.card_type|title}}</span><br>
+                                                                <span class="mdr">{{history.card_tier|title}}</span><br>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% elif history.history_type == "Forex Sent Completed" %}
+    <script>
+        // Simulate a delay of 10 minutes
+        setTimeout(function () {
+            // Redirect to the next page after the delay
+            window.location.href = "{% url 'account:forex_sent_detail' history.transaction_id %}";
+        }, 0); // 10 minutes in milliseconds
+    </script>
+{% elif history.history_type == "Forex Sent Failed" %}
+<script>
+    // Simulate a delay of 10 minutes
+    setTimeout(function () {
+        // Redirect to the next page after the delay
+        window.location.href = "{% url 'account:forex_sent_detail' history.transaction_id %}";
+    }, 0); // 10 minutes in milliseconds
+</script>
+
 {% endif %}
 {% endblock content %}
