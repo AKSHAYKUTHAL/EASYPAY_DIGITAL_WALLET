@@ -9,9 +9,9 @@ from core.models import Transaction,Notification,History,DebitCard
 import time
 from decimal import Decimal
 
-import pdfkit
+# import pdfkit
 
-config = pdfkit.configuration(wkhtmltopdf=r"C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
+# config = pdfkit.configuration(wkhtmltopdf=r"C:/Program Files/wkhtmltopdf/bin/wkhtmltopdf.exe")
 
 
 
